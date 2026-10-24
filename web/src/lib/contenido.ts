@@ -31,6 +31,13 @@ const consulta = `{
   }
 }`;
 
+// El CDN de Sanity redimensiona y convierte la imagen al vuelo con parámetros en la URL.
+// Así una foto de varios MB subida desde el móvil no llega entera a la web.
+export function optimizada(url: string | null | undefined, parametros: string): string {
+  if (!url || !url.startsWith('https://cdn.sanity.io/')) return url ?? '';
+  return `${url}${url.includes('?') ? '&' : '?'}${parametros}`;
+}
+
 async function desdeSanity(): Promise<Contenido> {
   const cliente = createClient({ projectId, dataset, apiVersion: '2025-01-01', useCdn: false });
   const r = await cliente.fetch(consulta);
@@ -39,17 +46,17 @@ async function desdeSanity(): Promise<Contenido> {
     ...datos,
     esEjemplo: false,
     negocio: { ...datos.negocio, ...r.negocio },
-    portada: { ...datos.portada, ...r.portada, imagen: r.portada?.imagen ?? datos.portada.imagen, alt: r.portada?.alt ?? '' },
+    portada: { ...datos.portada, ...r.portada, imagen: r.portada?.imagen ? optimizada(r.portada.imagen, 'w=1000&auto=format') : datos.portada.imagen, alt: r.portada?.alt ?? '' },
     servicios: r.servicios,
     sobre: { ...datos.sobre, ...r.sobre, puntos: r.sobre?.puntos ?? [] },
     preguntas: r.preguntas,
     contacto: { ...datos.contacto, ...r.contacto },
-    buscadores: { ...datos.buscadores, ...r.buscadores },
+    buscadores: { ...datos.buscadores, ...r.buscadores, imagenCompartir: optimizada(r.buscadores?.imagenCompartir, 'w=1200&h=630&fit=crop&fm=jpg&q=80') },
     legal: { ...datos.legal, ...r.legal },
     blog: {
       ...datos.blog,
       ...r.blogAjustes,
-      entradas: r.entradas.map((e: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: e.imagen ?? '', alt: e.alt ?? '', cuerpo: e.cuerpo ?? [] })),
+      entradas: r.entradas.map((e: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: optimizada(e.imagen, 'w=800&auto=format'), alt: e.alt ?? '', cuerpo: e.cuerpo ?? [] })),
     },
   } as Contenido;
 }
