@@ -104,7 +104,7 @@ Cuando termine, abre `https://nombre-de-tu-panel.sanity.studio` y comprueba que 
 El formulario de suscripción viene preparado pero apagado. Para activarlo:
 
 1. Crea una cuenta gratuita en <https://www.brevo.com>.
-2. En **Contactos → Listas** crea una lista y anota su número (ID).
+2. En **CRM → Contactos → Listas** crea una lista y ábrela: su número (ID) aparece como `#número` junto al nombre en el filtro «Miembro de».
 3. En **SMTP y API → Claves de API** genera una clave. Cópiala ahora: no se vuelve a mostrar.
 4. Recomendado: crea la plantilla de **doble confirmación** en Brevo (la persona recibe un email y confirma que quiere suscribirse) y anota su ID.
 5. En Netlify, **Site configuration → Environment variables**, añade:
