@@ -1,0 +1,60 @@
+---
+// Aviso de cookies. Solo se pinta si hay Google Analytics o píxel de Meta configurados.
+// Hasta que la persona pulsa «Aceptar» no se carga ningún script de seguimiento.
+interface Props { ga4: string; pixel: string }
+const { ga4, pixel } = Astro.props;
+---
+<div id="cookies" class="cookies" role="dialog" aria-label="Cookies" hidden>
+  <p>Usamos cookies de analítica y publicidad para medir las visitas y mejorar nuestros anuncios. Solo se activan si las aceptas. Más información en la <a href="/privacidad">política de privacidad</a>.</p>
+  <div class="acciones">
+    <button type="button" class="boton" data-cookies="si">Aceptar</button>
+    <button type="button" class="boton" data-cookies="no">Rechazar</button>
+  </div>
+</div>
+<script is:inline define:vars={{ ga4, pixel }}>
+  (function () {
+    var caja = document.getElementById('cookies');
+    var cargado = false;
+    function cargar() {
+      if (cargado) return;
+      cargado = true;
+      if (ga4) {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', ga4);
+      }
+      if (pixel) {
+        !function (f, b, e, v, n, t, s) {
+          if (f.fbq) return;
+          n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+          if (!f._fbq) f._fbq = n;
+          n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+          t = b.createElement(e); t.async = true; t.src = v;
+          s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        window.fbq('init', pixel);
+        window.fbq('track', 'PageView');
+      }
+    }
+    function guardada() { try { return localStorage.getItem('cookies'); } catch (e) { return null; } }
+    function guardar(v) { try { localStorage.setItem('cookies', v); } catch (e) {} }
+    caja.addEventListener('click', function (ev) {
+      var v = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-cookies');
+      if (!v) return;
+      guardar(v);
+      caja.hidden = true;
+      if (v === 'si') cargar();
+      else if (cargado) location.reload();
+    });
+    // Enlace del pie para cambiar la decisión
+    window.abrirCookies = function () { caja.hidden = false; };
+    var g = guardada();
+    if (g === 'si') cargar();
+    else if (g !== 'no') caja.hidden = false;
+  })();
+</script>

@@ -6,8 +6,10 @@ import About from '../components/About.astro';
 import LatestPosts from '../components/LatestPosts.astro';
 import FAQ from '../components/FAQ.astro';
 import Contact from '../components/Contact.astro';
+import DatosEstructurados from '../components/DatosEstructurados.astro';
 ---
 <BaseLayout>
+  <DatosEstructurados slot="head" />
   <Hero />
   <Services />
   <About />

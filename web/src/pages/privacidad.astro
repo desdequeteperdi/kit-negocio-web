@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getContenido } from '../lib/contenido';
-const { legal, negocio } = await getContenido();
+const { legal, negocio, buscadores } = await getContenido();
+const seguimiento = Boolean(buscadores.ga4 || buscadores.metaPixel);
 ---
 <BaseLayout titulo={`Política de privacidad | ${negocio.nombre}`}>
   <div class="texto-legal">
@@ -13,6 +14,7 @@ const { legal, negocio } = await getContenido();
     <p><strong>Base jurídica:</strong> tu consentimiento al enviar el formulario.</p>
     <p><strong>Conservación:</strong> {legal.plazoConservacion}.</p>
     <p><strong>Destinatarios:</strong> el servicio de alojamiento y formularios (Netlify) actúa como encargado del tratamiento.</p>
+    {seguimiento && <p><strong>Cookies:</strong> con tu consentimiento, usamos {buscadores.ga4 && 'Google Analytics (medición de visitas)'}{buscadores.ga4 && buscadores.metaPixel && ' y '}{buscadores.metaPixel && 'el píxel de Meta (medición de anuncios)'}. No se activan hasta que pulsas «Aceptar» y puedes cambiar tu decisión en el enlace «Cookies» del pie de página. Estos proveedores pueden tratar datos fuera del Espacio Económico Europeo.</p>}
     <p><strong>Tus derechos:</strong> acceso, rectificación, supresión, oposición, limitación y portabilidad, escribiendo a {negocio.email}. Puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
     <p><a href="/">Volver al inicio</a></p>
   </div>

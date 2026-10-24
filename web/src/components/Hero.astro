@@ -16,6 +16,6 @@ const wa = negocio.whatsapp
         {wa && <a class="boton secundario" href={wa}>Escríbenos por WhatsApp</a>}
       </div>
     </div>
-    {portada.imagen && <img src={portada.imagen} alt="" width="800" height="600" />}
+    {portada.imagen && <img src={portada.imagen} alt={portada.alt ?? ""} width="800" height="600" />}
   </div>
 </section>

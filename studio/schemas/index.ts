@@ -59,6 +59,22 @@ const buscadores = defineType({
   fields: [
     texto('titulo', 'Título en Google', { validation: (r) => r.max(70) }),
     parrafo('descripcion', 'Descripción en Google', { validation: (r) => r.max(160) }),
+    defineField({
+      name: 'imagenCompartir', title: 'Imagen al compartir la web', type: 'image',
+      description: 'Se ve al compartir el enlace en WhatsApp, redes o LinkedIn. Mejor horizontal, de 1200 × 630 px. Si la dejas vacía se usa la de la portada.',
+    }),
+    texto('searchConsole', 'Código de Google Search Console', {
+      description: 'Solo el código de verificación (el valor de "content" de la etiqueta meta). Déjalo vacío si no lo usas.',
+      validation: (r) => r.regex(/^[\w-]{20,100}$/, { name: 'código' }).warning('Pega solo el código, sin la etiqueta completa'),
+    }),
+    texto('ga4', 'ID de Google Analytics 4', {
+      description: 'Empieza por G- (por ejemplo G-ABC123XYZ9). Si lo rellenas, la web pedirá consentimiento de cookies.',
+      validation: (r) => r.regex(/^G-[A-Z0-9]{4,20}$/, { name: 'ID de GA4' }).warning('Debe tener el formato G-XXXXXXXXXX'),
+    }),
+    texto('metaPixel', 'ID del píxel de Meta', {
+      description: 'Solo números (15 o 16 cifras). Si lo rellenas, la web pedirá consentimiento de cookies.',
+      validation: (r) => r.regex(/^\d{8,20}$/, { name: 'ID del píxel' }).warning('Debe ser un número, sin letras ni espacios'),
+    }),
   ],
   preview: { prepare: () => ({ title: 'Google y buscadores' }) },
 });

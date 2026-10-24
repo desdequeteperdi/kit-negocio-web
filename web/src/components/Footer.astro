@@ -2,10 +2,11 @@
 import { getContenido } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
+const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
 ---
 <footer>
   <div class="contenedor">
     <p><strong>{n.nombre}</strong> · {n.zona} · {n.telefono} · {n.email}</p>
-    <p><a href="/aviso-legal">Aviso legal</a> · <a href="/privacidad">Privacidad</a></p>
+    <p><a href="/aviso-legal">Aviso legal</a> · <a href="/privacidad">Privacidad</a>{seguimiento && <> · <a href="#cookies" onclick="window.abrirCookies && window.abrirCookies(); return false;">Cookies</a></>}</p>
   </div>
 </footer>

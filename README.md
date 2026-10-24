@@ -40,6 +40,10 @@ Nombre y datos de contacto, tema de color (`verde`, `azul`, `terracota`), portad
 
 El kit sirve también para blogs. En `negocio.json`, `blog.mostrar` lo activa: aparecen el enlace «Blog», las últimas 3 entradas en la portada, el listado en `/blog`, cada entrada en `/blog/<slug>` y el feed `/rss.xml`. Apagado, no se genera nada. Cada entrada tiene título, slug, fecha, categoría, resumen, imagen y cuerpo (en la fase 2 el cuerpo pasará a texto enriquecido de Sanity).
 
+## Dominio y SEO
+
+La web genera sitemap (`/sitemap-index.xml`), `robots.txt`, URL canónica, etiquetas Open Graph y datos estructurados `LocalBusiness` en la portada. Todo parte del dominio, que se toma de la variable de entorno `SITE_URL` (en Netlify: *Site configuration → Environment variables*), por ejemplo `https://www.minegocio.es`. Si no existe, usa la URL que Netlify asigna al sitio. Tras cambiarla hay que volver a desplegar.
+
 ## Formulario
 
 Usa Netlify Forms: las consultas llegan al panel de Netlify (*Forms*). Hay que probar la recepción tras desplegar.

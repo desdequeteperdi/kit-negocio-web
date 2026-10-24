@@ -48,3 +48,7 @@ footer a { color: #fff; }
 .articulo img { border-radius: .75rem; margin: 1rem 0; width: 100%; }
 video, iframe, svg { max-width: 100%; }
 .check input { flex: none; margin-top: .35rem; }
+.cookies { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: #fff; border-top: 3px solid var(--principal); padding: 1rem 1.25rem; box-shadow: 0 -4px 16px rgba(0,0,0,.15); }
+.cookies[hidden] { display: none; }
+.cookies p { margin: 0 0 .75rem; max-width: 52rem; }
+.cookies .acciones { margin-top: 0; }

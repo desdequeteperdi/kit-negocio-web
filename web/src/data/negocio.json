@@ -14,7 +14,8 @@
     "titular": "Una terraza o un jardín que da gusto usar todo el año",
     "presentacion": "Diseñamos y cuidamos espacios exteriores pequeños para viviendas y comunidades de vecinos. Te explicamos cada paso y el presupuesto antes de empezar.",
     "textoBoton": "Pide presupuesto",
-    "imagen": "/img-portada.svg"
+    "imagen": "/img-portada.svg",
+    "alt": "Imagen de ejemplo"
   },
   "servicios": [
     {
@@ -62,7 +63,11 @@
   },
   "buscadores": {
     "titulo": "Jardinería y terrazas en Madrid | Estudio Almendro",
-    "descripcion": "Diseño y mantenimiento de terrazas y jardines pequeños en Madrid. Pide presupuesto sin compromiso."
+    "descripcion": "Diseño y mantenimiento de terrazas y jardines pequeños en Madrid. Pide presupuesto sin compromiso.",
+    "searchConsole": "",
+    "ga4": "",
+    "metaPixel": "",
+    "imagenCompartir": ""
   },
   "legal": {
     "titular": "Nombre o razón social (ejemplo)",
@@ -82,6 +87,7 @@
         "categoria": "Terrazas",
         "resumen": "Cinco plantas resistentes al calor y al viento, y cómo regarlas sin pasarte.",
         "imagen": "/img-portada.svg",
+        "alt": "Imagen de ejemplo",
         "cuerpo": [
           "En una terraza orientada al sur, el problema no es solo el sol: es el calor que acumula el suelo y el viento.",
           "Las plantas aromáticas, como el romero o la lavanda, aguantan bien. Elige macetas grandes: se secan más despacio.",
@@ -95,6 +101,7 @@
         "categoria": "Mantenimiento",
         "resumen": "No todo se poda ahora: una guía corta para no cortar a destiempo.",
         "imagen": "",
+        "alt": "",
         "cuerpo": [
           "Muchas plantas florecen sobre la madera del año anterior; si podas ahora, pierdes la flor de primavera.",
           "Retira solo lo seco o enfermo y deja la poda de formación para el final del invierno."

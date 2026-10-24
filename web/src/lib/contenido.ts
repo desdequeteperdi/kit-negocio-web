@@ -17,16 +17,16 @@ const dataset = import.meta.env.SANITY_DATASET ?? 'production';
 
 const consulta = `{
   "negocio": *[_id == "negocio"][0]{nombre, descripcion, telefono, email, whatsapp, zona, tema},
-  "portada": *[_id == "portada"][0]{titular, presentacion, textoBoton, "imagen": imagen.asset->url},
+  "portada": *[_id == "portada"][0]{titular, presentacion, textoBoton, "imagen": imagen.asset->url, "alt": imagen.alt},
   "servicios": *[_type == "servicio"] | order(orden asc){orden, nombre, descripcion, precio},
   "sobre": *[_id == "sobre"][0]{mostrar, titulo, texto, puntos},
   "preguntas": *[_type == "pregunta"] | order(orden asc){pregunta, respuesta},
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
-  "buscadores": *[_id == "buscadores"][0]{titulo, descripcion},
+  "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion},
   "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
   "entradas": *[_type == "entrada" && defined(slug.current)] | order(fecha desc){
-    "slug": slug.current, titulo, fecha, categoria, resumen, "imagen": imagen.asset->url,
+    "slug": slug.current, titulo, fecha, categoria, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
     "cuerpo": cuerpo[_type == "block"]{"texto": pt::text(@)}.texto
   }
 }`;
@@ -39,7 +39,7 @@ async function desdeSanity(): Promise<Contenido> {
     ...datos,
     esEjemplo: false,
     negocio: { ...datos.negocio, ...r.negocio },
-    portada: { ...datos.portada, ...r.portada, imagen: r.portada?.imagen ?? datos.portada.imagen },
+    portada: { ...datos.portada, ...r.portada, imagen: r.portada?.imagen ?? datos.portada.imagen, alt: r.portada?.alt ?? '' },
     servicios: r.servicios,
     sobre: { ...datos.sobre, ...r.sobre, puntos: r.sobre?.puntos ?? [] },
     preguntas: r.preguntas,
@@ -49,7 +49,7 @@ async function desdeSanity(): Promise<Contenido> {
     blog: {
       ...datos.blog,
       ...r.blogAjustes,
-      entradas: r.entradas.map((e: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: e.imagen ?? '', cuerpo: e.cuerpo ?? [] })),
+      entradas: r.entradas.map((e: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: e.imagen ?? '', alt: e.alt ?? '', cuerpo: e.cuerpo ?? [] })),
     },
   } as Contenido;
 }

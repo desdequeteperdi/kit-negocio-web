@@ -35,7 +35,7 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 
 1. Abre el bloque (por ejemplo, Portada).
 2. Arrastra la foto al campo **Imagen** o pulsa para elegirla.
-3. Rellena **Descripción de la imagen**: sirve para personas que usan lector de pantalla y para Google.
+3. Rellena **Descripción de la imagen**: sirve para personas que usan lector de pantalla y para Google. La web la usa como texto alternativo.
 4. Pulsa **Publish**.
 
 ## Añadir, ordenar y quitar elementos de una lista
@@ -51,6 +51,20 @@ Al publicar, la web se vuelve a generar. Tarda uno o dos minutos. Si no ves el c
 1. Espera un par de minutos y recarga la página (Ctrl+F5 o Cmd+Shift+R).
 2. Comprueba que pulsaste **Publish** y que no quedó en borrador.
 3. Entra en Netlify, pestaña **Deploys**: el último debe poner *Published*. Si pone *Failed*, abre el registro y enséñaselo a quien te da el curso.
+
+## Imagen al compartir la web
+
+En **Google y buscadores** puedes subir una **Imagen al compartir la web**: es la que se ve cuando alguien pega el enlace en WhatsApp, redes o LinkedIn. Mejor horizontal, de 1200 × 630 px, en JPG o PNG. Si la dejas vacía se usa la de la portada, siempre que no sea un SVG.
+
+## Google Analytics, píxel de Meta y Search Console
+
+En **Google y buscadores** hay tres campos opcionales. Pega solo el código, no el script completo:
+
+- **Código de Google Search Console:** el valor de `content` de la etiqueta meta de verificación.
+- **ID de Google Analytics 4:** empieza por `G-`.
+- **ID del píxel de Meta:** un número de 15 o 16 cifras.
+
+Si rellenas Analytics o el píxel, la web muestra un aviso de cookies. Los scripts solo se cargan si la persona pulsa **Aceptar**. Con el campo vacío no se carga nada. La política de privacidad añade un párrafo de cookies por sí sola. Como todos los textos legales del kit, es un punto de partida: revísalo antes de usarlo con datos reales.
 
 ## Qué no se puede hacer desde el panel
 

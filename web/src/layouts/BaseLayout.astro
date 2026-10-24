@@ -3,11 +3,22 @@ import '../styles/global.css';
 import { getContenido, temas } from '../lib/contenido';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Consentimiento from '../components/Consentimiento.astro';
 
-interface Props { titulo?: string; descripcion?: string; noindex?: boolean }
+interface Props { titulo?: string; descripcion?: string; noindex?: boolean; imagen?: string; tipo?: 'website' | 'article' }
 const c = await getContenido();
-const { titulo = c.buscadores.titulo, descripcion = c.buscadores.descripcion, noindex = false } = Astro.props;
+const { titulo = c.buscadores.titulo, descripcion = c.buscadores.descripcion, noindex = false, imagen, tipo = 'website' } = Astro.props;
 const t = temas[c.negocio.tema] ?? temas.verde;
+// Solo se aceptan códigos con el formato esperado; cualquier otra cosa se ignora
+const valido = (v: string | undefined, re: RegExp) => (v && re.test(v) ? v : '');
+const searchConsole = valido(c.buscadores.searchConsole, /^[\w-]{20,100}$/);
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+// Las redes no muestran SVG: solo se usa una imagen para compartir si es de otro formato
+const ogImagen = [imagen, c.buscadores.imagenCompartir, c.portada.imagen]
+  .filter((i): i is string => Boolean(i) && !/\.svg(\?|$)/i.test(i as string))
+  .map((i) => new URL(i, Astro.site).href)[0];
+const ga4 = valido(c.buscadores.ga4, /^G-[A-Z0-9]{4,20}$/);
+const pixel = valido(c.buscadores.metaPixel, /^\d{8,20}$/);
 ---
 <!doctype html>
 <html lang="es" style={`--principal:${t.principal};--oscuro:${t.oscuro};--suave:${t.suave}`}>
@@ -17,11 +28,24 @@ const t = temas[c.negocio.tema] ?? temas.verde;
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonica} />
+    <meta property="og:type" content={tipo} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content={c.negocio.nombre} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    {ogImagen && <meta property="og:image" content={ogImagen} />}
+    <meta name="twitter:card" content={ogImagen ? 'summary_large_image' : 'summary'} />
+    {ogImagen && <meta name="twitter:image" content={ogImagen} />}
+    <slot name="head" />
+    {searchConsole && <meta name="google-site-verification" content={searchConsole} />}
   </head>
   <body>
     {c.esEjemplo && <div class="aviso-ejemplo">Negocio ficticio de ejemplo para el curso: los datos no son reales.</div>}
     <Header />
     <main><slot /></main>
     <Footer />
+    {(ga4 || pixel) && <Consentimiento ga4={ga4} pixel={pixel} />}
   </body>
 </html>
