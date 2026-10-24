@@ -1,6 +1,7 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
+import { esESLocale } from '@sanity/locale-es-es';
 import { schemaTypes, singletons } from './schemas';
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? 'REEMPLAZAR';
@@ -23,6 +24,7 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
+    esESLocale(),
     structureTool({
       structure: (S) =>
         S.list()
