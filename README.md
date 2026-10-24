@@ -42,7 +42,7 @@ El kit sirve también para blogs. En `negocio.json`, `blog.mostrar` lo activa: a
 
 ## Dominio y SEO
 
-La web genera sitemap (`/sitemap-index.xml`), `robots.txt`, URL canónica, etiquetas Open Graph y datos estructurados `LocalBusiness` en la portada. Todo parte del dominio, que se toma de la variable de entorno `SITE_URL` (en Netlify: *Site configuration → Environment variables*), por ejemplo `https://www.minegocio.es`. Si no existe, usa la URL que Netlify asigna al sitio. Tras cambiarla hay que volver a desplegar.
+La web genera sitemap (`/sitemap-index.xml`), `robots.txt`, URL canónica, etiquetas Open Graph y datos estructurados `LocalBusiness` en la portada. Todo parte del dominio, que se toma de la variable de entorno `SITE_URL` (en Netlify: *Site configuration → Environment variables*), por ejemplo `https://www.minegocio.es`. Si no existe, usa la URL que Netlify asigna al sitio. Tras cambiarla hay que volver a desplegar. En `web/.env.example` tienes la lista de variables (`SANITY_PROJECT_ID`, `SANITY_DATASET`, `SITE_URL`) con una explicación de cada una.
 
 ## Formulario
 
