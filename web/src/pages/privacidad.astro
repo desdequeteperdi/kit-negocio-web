@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getContenido } from '../lib/contenido';
+const { legal, negocio } = await getContenido();
+---
+<BaseLayout titulo={`Política de privacidad | ${negocio.nombre}`}>
+  <div class="texto-legal">
+    <h1>Política de privacidad</h1>
+    <!-- Borrador de partida: identifica necesidades, no certifica cumplimiento. Revisar antes de recoger datos reales. Si se añade analítica o cookies no técnicas, hace falta información y consentimiento. -->
+    <p><strong>Responsable:</strong> {legal.titular} · {legal.nif} · {legal.domicilio} · {negocio.email}</p>
+    <p><strong>Datos que recogemos:</strong> los del formulario de contacto (nombre, email, teléfono opcional y mensaje).</p>
+    <p><strong>Para qué:</strong> responder a tu consulta.</p>
+    <p><strong>Base jurídica:</strong> tu consentimiento al enviar el formulario.</p>
+    <p><strong>Conservación:</strong> {legal.plazoConservacion}.</p>
+    <p><strong>Destinatarios:</strong> el servicio de alojamiento y formularios (Netlify) actúa como encargado del tratamiento.</p>
+    <p><strong>Tus derechos:</strong> acceso, rectificación, supresión, oposición, limitación y portabilidad, escribiendo a {negocio.email}. Puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
+    <p><a href="/">Volver al inicio</a></p>
+  </div>
+</BaseLayout>

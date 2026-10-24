@@ -1,0 +1,29 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+const { contacto, negocio } = c;
+---
+<section class="alt" id="contacto">
+  <div class="contenedor">
+    <h2>Contacto</h2>
+    <p>{contacto.texto}</p>
+    <ul>
+      {negocio.telefono && <li>Teléfono: <a href={`tel:${negocio.telefono.replace(/\s/g, '')}`}>{negocio.telefono}</a></li>}
+      {negocio.email && <li>Email: <a href={`mailto:${negocio.email}`}>{negocio.email}</a></li>}
+      {negocio.zona && <li>Zona: {negocio.zona}</li>}
+    </ul>
+    {contacto.mostrarFormulario && (
+      <form name="contacto" method="POST" action="/gracias" data-netlify="true" netlify-honeypot="campo-trampa">
+        <input type="hidden" name="form-name" value="contacto" />
+        <p class="oculto"><label>No rellenar: <input name="campo-trampa" /></label></p>
+        <label>Nombre <input name="nombre" required autocomplete="name" /></label>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label>Teléfono (opcional) <input type="tel" name="telefono" autocomplete="tel" /></label>
+        <label>¿En qué podemos ayudarte? <textarea name="mensaje" rows="4" required></textarea></label>
+        <label class="check"><input type="checkbox" name="privacidad" required />
+          <span>He leído la <a href="/privacidad">política de privacidad</a>.</span></label>
+        <button class="boton" type="submit">Enviar consulta</button>
+      </form>
+    )}
+  </div>
+</section>

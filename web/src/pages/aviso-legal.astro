@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getContenido } from '../lib/contenido';
+const { legal, negocio } = await getContenido();
+---
+<BaseLayout titulo={`Aviso legal | ${negocio.nombre}`}>
+  <div class="texto-legal">
+    <h1>Aviso legal</h1>
+    <!-- Borrador de partida: identifica necesidades, no certifica cumplimiento. Revisar antes de publicar con datos reales. -->
+    <p><strong>Titular:</strong> {legal.titular}</p>
+    <p><strong>NIF/CIF:</strong> {legal.nif}</p>
+    <p><strong>Domicilio:</strong> {legal.domicilio}</p>
+    <p><strong>Email de contacto:</strong> {negocio.email}</p>
+    <p><a href="/">Volver al inicio</a></p>
+  </div>
+</BaseLayout>

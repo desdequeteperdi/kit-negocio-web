@@ -1,0 +1,15 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+---
+<header>
+  <div class="contenedor">
+    <a class="marca" href="/">{c.negocio.nombre}</a>
+    <nav aria-label="Principal">
+      <a href="/#servicios">Servicios</a>
+      {c.sobre.mostrar && <a href="/#sobre">Quiénes somos</a>}
+      {c.blog.mostrar && <a href="/blog">Blog</a>}
+      <a href="/#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>

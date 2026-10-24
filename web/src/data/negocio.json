@@ -1,0 +1,105 @@
+{
+  "_aviso": "NEGOCIO FICTICIO DE EJEMPLO. Todos los datos son inventados para el curso.",
+  "esEjemplo": true,
+  "negocio": {
+    "nombre": "Estudio Almendro",
+    "descripcion": "Diseño y mantenimiento de jardines y terrazas pequeñas en Madrid.",
+    "telefono": "600 000 000",
+    "email": "hola@ejemplo.invalid",
+    "whatsapp": "34600000000",
+    "zona": "Madrid capital y zona norte",
+    "tema": "verde"
+  },
+  "portada": {
+    "titular": "Una terraza o un jardín que da gusto usar todo el año",
+    "presentacion": "Diseñamos y cuidamos espacios exteriores pequeños para viviendas y comunidades de vecinos. Te explicamos cada paso y el presupuesto antes de empezar.",
+    "textoBoton": "Pide presupuesto",
+    "imagen": "/img-portada.svg"
+  },
+  "servicios": [
+    {
+      "orden": 1,
+      "nombre": "Diseño de terraza",
+      "descripcion": "Visita, propuesta de plantas y distribución, y lista de compra ajustada a tu presupuesto.",
+      "precio": "Desde 150 €"
+    },
+    {
+      "orden": 2,
+      "nombre": "Mantenimiento mensual",
+      "descripcion": "Poda, riego, abonado y revisión de plagas, con visita fija cada mes.",
+      "precio": "Desde 60 € al mes"
+    },
+    {
+      "orden": 3,
+      "nombre": "Jardines de comunidad",
+      "descripcion": "Plan de cuidado anual para zonas comunes, con informe de cada visita.",
+      "precio": "Solicita presupuesto"
+    }
+  ],
+  "sobre": {
+    "mostrar": true,
+    "titulo": "Quiénes somos",
+    "texto": "Somos un estudio pequeño de jardinería. Trabajamos en persona, vamos a ver tu espacio y proponemos solo lo que de verdad necesita.",
+    "puntos": [
+      "Ciclo formativo en jardinería y floristería",
+      "Atendemos Madrid capital y zona norte",
+      "Presupuesto por escrito antes de empezar"
+    ]
+  },
+  "preguntas": [
+    {
+      "pregunta": "¿Hacéis visita previa?",
+      "respuesta": "Sí. Vamos a ver el espacio y después te enviamos el presupuesto por escrito."
+    },
+    {
+      "pregunta": "¿Qué zona cubrís?",
+      "respuesta": "Madrid capital y zona norte. Si estás fuera, escríbenos y lo valoramos."
+    }
+  ],
+  "contacto": {
+    "texto": "Cuéntanos qué necesitas y te respondemos en cuanto podamos.",
+    "mostrarFormulario": true
+  },
+  "buscadores": {
+    "titulo": "Jardinería y terrazas en Madrid | Estudio Almendro",
+    "descripcion": "Diseño y mantenimiento de terrazas y jardines pequeños en Madrid. Pide presupuesto sin compromiso."
+  },
+  "legal": {
+    "titular": "Nombre o razón social (ejemplo)",
+    "nif": "00000000X (ejemplo)",
+    "domicilio": "Calle Ejemplo 1, Madrid",
+    "plazoConservacion": "durante el tiempo necesario para atender tu consulta"
+  },
+  "blog": {
+    "mostrar": false,
+    "titulo": "Blog",
+    "introduccion": "Consejos prácticos para cuidar tu terraza o tu jardín.",
+    "entradas": [
+      {
+        "slug": "que-plantas-aguantan-el-sol-de-madrid",
+        "titulo": "Qué plantas aguantan el sol de Madrid en una terraza",
+        "fecha": "2026-09-15",
+        "categoria": "Terrazas",
+        "resumen": "Cinco plantas resistentes al calor y al viento, y cómo regarlas sin pasarte.",
+        "imagen": "/img-portada.svg",
+        "cuerpo": [
+          "En una terraza orientada al sur, el problema no es solo el sol: es el calor que acumula el suelo y el viento.",
+          "Las plantas aromáticas, como el romero o la lavanda, aguantan bien. Elige macetas grandes: se secan más despacio.",
+          "Riega a primera o última hora y comprueba la tierra con el dedo antes de volver a regar."
+        ]
+      },
+      {
+        "slug": "cuando-podar-en-otono",
+        "titulo": "Cuándo podar en otoño (y cuándo esperar)",
+        "fecha": "2026-10-05",
+        "categoria": "Mantenimiento",
+        "resumen": "No todo se poda ahora: una guía corta para no cortar a destiempo.",
+        "imagen": "",
+        "cuerpo": [
+          "Muchas plantas florecen sobre la madera del año anterior; si podas ahora, pierdes la flor de primavera.",
+          "Retira solo lo seco o enfermo y deja la poda de formación para el final del invierno."
+        ]
+      }
+    ]
+  }
+}

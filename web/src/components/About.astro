@@ -1,0 +1,14 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+const { sobre } = c;
+---
+{sobre.mostrar && (
+  <section class="alt" id="sobre">
+    <div class="contenedor">
+      <h2>{sobre.titulo}</h2>
+      <p>{sobre.texto}</p>
+      {sobre.puntos.length > 0 && <ul>{sobre.puntos.map((p) => <li>{p}</li>)}</ul>}
+    </div>
+  </section>
+)}

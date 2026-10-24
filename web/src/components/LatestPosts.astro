@@ -1,0 +1,16 @@
+---
+import { getContenido, entradasOrdenadas } from '../lib/contenido';
+import EntradaTarjeta from './EntradaTarjeta.astro';
+const c = await getContenido();
+const ultimas = entradasOrdenadas(c).slice(0, 3);
+---
+{c.blog.mostrar && ultimas.length > 0 && (
+  <section id="blog">
+    <div class="contenedor">
+      <h2>{c.blog.titulo}</h2>
+      <p>{c.blog.introduccion}</p>
+      <div class="entradas">{ultimas.map((e) => <EntradaTarjeta entrada={e} />)}</div>
+      <p><a href="/blog">Ver todas las entradas</a></p>
+    </div>
+  </section>
+)}

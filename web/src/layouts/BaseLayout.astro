@@ -1,0 +1,27 @@
+---
+import '../styles/global.css';
+import { getContenido, temas } from '../lib/contenido';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props { titulo?: string; descripcion?: string; noindex?: boolean }
+const c = await getContenido();
+const { titulo = c.buscadores.titulo, descripcion = c.buscadores.descripcion, noindex = false } = Astro.props;
+const t = temas[c.negocio.tema] ?? temas.verde;
+---
+<!doctype html>
+<html lang="es" style={`--principal:${t.principal};--oscuro:${t.oscuro};--suave:${t.suave}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    {noindex && <meta name="robots" content="noindex" />}
+  </head>
+  <body>
+    {c.esEjemplo && <div class="aviso-ejemplo">Negocio ficticio de ejemplo para el curso: los datos no son reales.</div>}
+    <Header />
+    <main><slot /></main>
+    <Footer />
+  </body>
+</html>

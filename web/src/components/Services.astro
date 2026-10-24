@@ -1,0 +1,21 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+const servicios = [...c.servicios].sort((a, b) => a.orden - b.orden);
+---
+{servicios.length > 0 && (
+  <section id="servicios">
+    <div class="contenedor">
+      <h2>Servicios</h2>
+      <div class="tarjetas">
+        {servicios.map((s) => (
+          <article class="tarjeta">
+            <h3>{s.nombre}</h3>
+            <p>{s.descripcion}</p>
+            {s.precio && <p class="precio">{s.precio}</p>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

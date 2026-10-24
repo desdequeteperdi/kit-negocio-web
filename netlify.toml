@@ -1,0 +1,5 @@
+# Netlify compila la web de Astro y publica el resultado.
+[build]
+  base = "web"
+  command = "npm run build"
+  publish = "dist"

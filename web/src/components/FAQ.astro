@@ -1,0 +1,17 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+---
+{c.preguntas.length > 0 && (
+  <section id="preguntas">
+    <div class="contenedor">
+      <h2>Preguntas frecuentes</h2>
+      {c.preguntas.map((p) => (
+        <details>
+          <summary>{p.pregunta}</summary>
+          <p>{p.respuesta}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+)}

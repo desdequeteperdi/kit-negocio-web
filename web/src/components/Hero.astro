@@ -1,0 +1,21 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+const { portada, negocio } = c;
+const wa = negocio.whatsapp
+  ? `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent('Hola, quiero información')}`
+  : null;
+---
+<section class="portada">
+  <div class="contenedor">
+    <div>
+      <h1>{portada.titular}</h1>
+      <p>{portada.presentacion}</p>
+      <div class="acciones">
+        {portada.textoBoton && <a class="boton" href="#contacto">{portada.textoBoton}</a>}
+        {wa && <a class="boton secundario" href={wa}>Escríbenos por WhatsApp</a>}
+      </div>
+    </div>
+    {portada.imagen && <img src={portada.imagen} alt="" width="800" height="600" />}
+  </div>
+</section>

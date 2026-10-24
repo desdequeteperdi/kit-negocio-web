@@ -1,0 +1,11 @@
+{
+  "name": "kit-negocio",
+  "private": true,
+  "description": "Kit del curso: web de presentación y captación (Astro) con contenido editable",
+  "scripts": {
+    "empezar": "node scripts/empezar.mjs",
+    "instalar": "node scripts/empezar.mjs --sin-servidor",
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build"
+  }
+}

@@ -1,0 +1,13 @@
+---
+interface Props { entrada: { slug: string; titulo: string; fecha: string; categoria?: string; resumen: string; imagen?: string } }
+const { entrada: e } = Astro.props;
+const fecha = new Date(e.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<article class="entrada">
+  {e.imagen && <img src={e.imagen} alt="" width="800" height="450" />}
+  <div class="cuerpo">
+    <p class="meta">{fecha}{e.categoria && ` · ${e.categoria}`}</p>
+    <h3><a href={`/blog/${e.slug}`}>{e.titulo}</a></h3>
+    <p>{e.resumen}</p>
+  </div>
+</article>

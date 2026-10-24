@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getContenido } from '../../lib/contenido';
+
+export async function getStaticPaths() {
+  const c = await getContenido();
+  if (!c.blog.mostrar) return [];
+  return c.blog.entradas.map((entrada) => ({ params: { slug: entrada.slug }, props: { entrada } }));
+}
+const { entrada: e } = Astro.props;
+const fecha = new Date(e.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<BaseLayout titulo={`${e.titulo} | Blog`} descripcion={e.resumen}>
+  <article class="articulo">
+    <p class="meta"><a href="/blog">← Blog</a> · {fecha}{e.categoria && ` · ${e.categoria}`}</p>
+    <h1>{e.titulo}</h1>
+    {e.imagen && <img src={e.imagen} alt="" width="800" height="450" />}
+    {e.cuerpo.map((p) => <p>{p}</p>)}
+  </article>
+</BaseLayout>

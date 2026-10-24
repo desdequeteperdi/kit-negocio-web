@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EntradaTarjeta from '../../components/EntradaTarjeta.astro';
+import { getContenido, entradasOrdenadas } from '../../lib/contenido';
+const c = await getContenido();
+if (!c.blog.mostrar) return Astro.redirect('/404');
+const entradas = entradasOrdenadas(c);
+---
+<BaseLayout titulo={`${c.blog.titulo} | ${c.negocio.nombre}`} descripcion={c.blog.introduccion}>
+  <section>
+    <div class="contenedor">
+      <h1>{c.blog.titulo}</h1>
+      <p>{c.blog.introduccion}</p>
+      <div class="entradas">{entradas.map((e) => <EntradaTarjeta entrada={e} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,11 @@
+---
+import { getContenido } from '../lib/contenido';
+const c = await getContenido();
+const n = c.negocio;
+---
+<footer>
+  <div class="contenedor">
+    <p><strong>{n.nombre}</strong> · {n.zona} · {n.telefono} · {n.email}</p>
+    <p><a href="/aviso-legal">Aviso legal</a> · <a href="/privacidad">Privacidad</a></p>
+  </div>
+</footer>
