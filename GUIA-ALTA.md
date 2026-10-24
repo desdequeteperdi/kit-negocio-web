@@ -105,8 +105,12 @@ El formulario de suscripción viene preparado pero apagado. Para activarlo:
 
 1. Crea una cuenta gratuita en <https://www.brevo.com>.
 2. En **CRM → Contactos → Listas** crea una lista y ábrela: su número (ID) aparece como `#número` junto al nombre en el filtro «Miembro de».
-3. En **SMTP y API → Claves de API** genera una clave. Cópiala ahora: no se vuelve a mostrar.
-4. Recomendado: crea la plantilla de **doble confirmación** en Brevo (la persona recibe un email y confirma que quiere suscribirse) y anota su ID.
+3. Pulsa tu nombre (arriba a la derecha) → **SMTP y API** → pestaña **Claves API y MCP** (no la de SMTP) y genera una clave:
+   - **Acceso:** Restringido, con permiso **Todos** solo en **contacto**. El resto en **Ninguno**.
+   - Cópiala ahora: no se vuelve a mostrar.
+   - No actives el aviso «Activar bloqueo de IPs no autorizadas»: las funciones de Netlify no tienen IP fija y Brevo rechazaría todas las altas.
+   - Aunque pongas «Sin vencimiento», la clave caduca tras 90 días sin usarse. Si pasa ese tiempo sin suscripciones, genera otra y actualízala en Netlify.
+4. Recomendado: crea la plantilla de **doble confirmación** en Brevo (la persona recibe un email y confirma que quiere suscribirse) y anota su ID. Si con la doble confirmación falla el alta, da también permiso a la clave en **Emails transaccionales**.
 5. En Netlify, **Site configuration → Environment variables**, añade:
 
    | Variable | Valor |
