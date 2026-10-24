@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes'];
+export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter'];
 
 const texto = (name: string, title: string, extra: Record<string, unknown> = {}) =>
   defineField({ name, title, type: 'string', ...extra });
@@ -77,6 +77,18 @@ const contacto = defineType({
   name: 'contacto', title: 'Contacto', type: 'document',
   fields: [parrafo('texto', 'Texto de invitación'), interruptor('mostrarFormulario', 'Mostrar formulario')],
   preview: { prepare: () => ({ title: 'Contacto' }) },
+});
+
+const newsletter = defineType({
+  name: 'newsletter', title: 'Newsletter', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Mostrar el formulario de suscripción', false),
+    texto('titulo', 'Título'),
+    parrafo('texto', 'Texto de invitación'),
+    texto('textoBoton', 'Texto del botón'),
+    parrafo('consentimiento', 'Texto de consentimiento', { description: 'Qué recibirá la persona y que puede darse de baja cuando quiera.' }),
+  ],
+  preview: { prepare: () => ({ title: 'Newsletter' }) },
 });
 
 const buscadores = defineType({
@@ -199,4 +211,4 @@ const seccion = defineType({
   preview: { select: { title: 'titulo', subtitle: 'lugar' }, prepare: ({ title, subtitle }) => ({ title: title || 'Sección sin título', subtitle }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, servicio, pregunta, entrada, seccion, bloqueImagen, bloqueHtml];
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, servicio, pregunta, entrada, seccion, bloqueImagen, bloqueHtml];

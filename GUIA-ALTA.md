@@ -99,6 +99,27 @@ Cuando termine, abre `https://nombre-de-tu-panel.sanity.studio` y comprueba que 
 - [ ] Cambias un texto en el panel, pulsas **Publish** y, al relanzar el despliegue en Netlify, la web lo muestra.
 - [ ] Envías una consulta desde el formulario y aparece en Netlify, pestaña **Forms**.
 
+## Newsletter con Brevo (opcional)
+
+El formulario de suscripción viene preparado pero apagado. Para activarlo:
+
+1. Crea una cuenta gratuita en <https://www.brevo.com>.
+2. En **Contactos → Listas** crea una lista y anota su número (ID).
+3. En **SMTP y API → Claves de API** genera una clave. Cópiala ahora: no se vuelve a mostrar.
+4. Recomendado: crea la plantilla de **doble confirmación** en Brevo (la persona recibe un email y confirma que quiere suscribirse) y anota su ID.
+5. En Netlify, **Site configuration → Environment variables**, añade:
+
+   | Variable | Valor |
+   |---|---|
+   | `BREVO_API_KEY` | tu clave de API (marca **Contains secret values**) |
+   | `BREVO_LIST_ID` | el número de tu lista |
+   | `BREVO_DOI_TEMPLATE_ID` | el ID de la plantilla de doble confirmación (opcional) |
+
+6. Relanza el despliegue (**Deploys → Trigger deploy**).
+7. En el panel, abre **Newsletter**, activa **Mostrar el formulario de suscripción**, revisa los textos y pulsa **Publish**.
+
+Nunca pegues la clave de API en un archivo del proyecto ni en el panel: solo en Netlify.
+
 ## Dominio propio (opcional)
 
 Puedes comprar un dominio donde quieras y conectarlo en Netlify: **Site configuration → Domain management → Add a domain**. Después cambia `SITE_URL` por la dirección final y vuelve a desplegar.

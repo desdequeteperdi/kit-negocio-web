@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Newsletter from '../../components/Newsletter.astro';
 import DatosArticulo from '../../components/DatosArticulo.astro';
 import { getContenido, slugEtiqueta } from '../../lib/contenido';
 
@@ -43,4 +44,5 @@ const actualizada = e.actualizada && e.actualizada !== e.fecha ? new Date(e.actu
       </p>
     )}
   </article>
+  <Newsletter />
 </BaseLayout>

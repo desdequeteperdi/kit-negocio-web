@@ -16,6 +16,7 @@ const apartados: Record<string, string> = {
   buscadores: 'Google y buscadores',
   legal: 'Datos legales',
   blogAjustes: 'Blog: ajustes',
+  newsletter: 'Newsletter',
 };
 
 export default defineConfig({

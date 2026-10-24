@@ -12,6 +12,7 @@ const { imagen, ...portada } = d.portada; // la imagen de ejemplo es un SVG loca
 unico('portada', portada);
 unico('sobre', d.sobre);
 unico('contacto', d.contacto);
+unico('newsletter', d.newsletter);
 unico('buscadores', d.buscadores);
 unico('legal', d.legal);
 unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introduccion: d.blog.introduccion });

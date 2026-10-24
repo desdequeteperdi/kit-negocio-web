@@ -1,0 +1,21 @@
+---
+// Formulario de suscripción a la newsletter. Se envía a la función de Netlify (netlify/functions/suscribir.mjs),
+// que guarda el contacto en Brevo. Solo se muestra si está activado en el panel.
+import { getContenido } from '../lib/contenido';
+const { newsletter: n } = await getContenido();
+---
+{n.mostrar && (
+  <section class="alt" id="newsletter">
+    <div class="contenedor">
+      <h2>{n.titulo}</h2>
+      <p>{n.texto}</p>
+      <form method="POST" action="/.netlify/functions/suscribir">
+        <p class="oculto"><label>No rellenar: <input name="campo-trampa" tabindex="-1" autocomplete="off" /></label></p>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label class="check"><input type="checkbox" name="privacidad" required />
+          <span>{n.consentimiento} Más información en la <a href="/privacidad">política de privacidad</a>.</span></label>
+        <button class="boton" type="submit">{n.textoBoton}</button>
+      </form>
+    </div>
+  </section>
+)}

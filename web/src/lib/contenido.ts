@@ -36,6 +36,7 @@ const consulta = `{
   "sobre": *[_id == "sobre"][0]{mostrar, titulo, texto, puntos},
   "preguntas": *[_type == "pregunta"] | order(orden asc){pregunta, respuesta},
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
+  "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion},
   "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
@@ -82,6 +83,7 @@ async function desdeSanity(): Promise<Contenido> {
     sobre: { ...datos.sobre, ...r.sobre, puntos: r.sobre?.puntos ?? [] },
     preguntas: r.preguntas,
     contacto: { ...datos.contacto, ...r.contacto },
+    newsletter: { ...datos.newsletter, ...r.newsletter },
     buscadores: { ...datos.buscadores, ...r.buscadores, imagenCompartir: optimizada(r.buscadores?.imagenCompartir, 'w=1200&h=630&fit=crop&fm=jpg&q=80') },
     legal: { ...datos.legal, ...r.legal },
     blog: {
