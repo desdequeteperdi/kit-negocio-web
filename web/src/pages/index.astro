@@ -5,6 +5,7 @@ import Services from '../components/Services.astro';
 import About from '../components/About.astro';
 import LatestPosts from '../components/LatestPosts.astro';
 import FAQ from '../components/FAQ.astro';
+import Secciones from '../components/Secciones.astro';
 import Contact from '../components/Contact.astro';
 import DatosEstructurados from '../components/DatosEstructurados.astro';
 ---
@@ -12,8 +13,11 @@ import DatosEstructurados from '../components/DatosEstructurados.astro';
   <DatosEstructurados slot="head" />
   <Hero />
   <Services />
+  <Secciones lugar="despues-servicios" />
   <About />
+  <Secciones lugar="despues-sobre" />
   <LatestPosts />
   <FAQ />
+  <Secciones lugar="antes-contacto" />
   <Contact />
 </BaseLayout>

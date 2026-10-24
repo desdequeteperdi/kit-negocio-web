@@ -39,6 +39,7 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem('servicio').title('Servicios'),
             S.documentTypeListItem('pregunta').title('Preguntas frecuentes'),
+            S.documentTypeListItem('seccion').title('Secciones extra de la portada'),
             S.documentTypeListItem('entrada').title('Entradas del blog'),
           ]),
     }),

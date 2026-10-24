@@ -3,8 +3,18 @@
 // si no, usa el archivo local src/data/negocio.json (datos de ejemplo).
 import { createClient } from '@sanity/client';
 import datos from '../data/negocio.json';
+import { optimizada } from './imagenes';
+import { aHtml, parrafosAHtml } from './texto';
 
-export type Contenido = typeof datos;
+export { optimizada };
+
+// El texto de cada entrada se guarda ya convertido a HTML (cuerpoHtml)
+type Entrada = Omit<(typeof datos.blog.entradas)[number], 'cuerpo'> & { cuerpoHtml: string };
+export type Seccion = { orden: number; lugar: string; titulo: string; html: string };
+export type Contenido = Omit<typeof datos, 'blog'> & {
+  blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
+  secciones: Seccion[];
+};
 
 export const temas: Record<string, { principal: string; oscuro: string; suave: string }> = {
   verde: { principal: '#2f842b', oscuro: '#1b3a1a', suave: '#f0f7ec' },
@@ -27,16 +37,13 @@ const consulta = `{
   "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
   "entradas": *[_type == "entrada" && defined(slug.current)] | order(fecha desc){
     "slug": slug.current, titulo, fecha, categoria, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
-    "cuerpo": cuerpo[_type == "block"]{"texto": pt::text(@)}.texto
+    cuerpo[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
+  },
+  "secciones": *[_type == "seccion" && mostrar != false] | order(orden asc){
+    orden, lugar, titulo,
+    contenido[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
   }
 }`;
-
-// El CDN de Sanity redimensiona y convierte la imagen al vuelo con parámetros en la URL.
-// Así una foto de varios MB subida desde el móvil no llega entera a la web.
-export function optimizada(url: string | null | undefined, parametros: string): string {
-  if (!url || !url.startsWith('https://cdn.sanity.io/')) return url ?? '';
-  return `${url}${url.includes('?') ? '&' : '?'}${parametros}`;
-}
 
 async function desdeSanity(): Promise<Contenido> {
   const cliente = createClient({ projectId, dataset, apiVersion: '2025-01-01', useCdn: false });
@@ -56,13 +63,23 @@ async function desdeSanity(): Promise<Contenido> {
     blog: {
       ...datos.blog,
       ...r.blogAjustes,
-      entradas: r.entradas.map((e: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: optimizada(e.imagen, 'w=800&auto=format'), alt: e.alt ?? '', cuerpo: e.cuerpo ?? [] })),
+      entradas: r.entradas.map(({ cuerpo, ...e }: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: optimizada(e.imagen, 'w=800&auto=format'), alt: e.alt ?? '', cuerpoHtml: aHtml(cuerpo) })),
     },
+    secciones: (r.secciones ?? []).map((x: any) => ({ orden: x.orden ?? 1, lugar: x.lugar ?? 'antes-contacto', titulo: x.titulo ?? '', html: aHtml(x.contenido) })),
   } as Contenido;
 }
 
+// Datos de ejemplo: los párrafos de negocio.json pasan a HTML y no hay secciones extra
+function desdeArchivo(): Contenido {
+  return {
+    ...datos,
+    blog: { ...datos.blog, entradas: datos.blog.entradas.map(({ cuerpo, ...e }) => ({ ...e, cuerpoHtml: parrafosAHtml(cuerpo) })) },
+    secciones: [],
+  };
+}
+
 export async function getContenido(): Promise<Contenido> {
-  return projectId ? desdeSanity() : datos;
+  return projectId ? desdeSanity() : desdeArchivo();
 }
 
 // Entradas del blog, de la más reciente a la más antigua.

@@ -15,6 +15,6 @@ const fecha = new Date(e.fecha).toLocaleDateString('es-ES', { day: 'numeric', mo
     <p class="meta"><a href="/blog">← Blog</a> · {fecha}{e.categoria && ` · ${e.categoria}`}</p>
     <h1>{e.titulo}</h1>
     {e.imagen && <img src={e.imagen} alt={e.alt ?? ""} width="800" height="450" />}
-    {e.cuerpo.map((p) => <p>{p}</p>)}
+    <div class="texto-libre" set:html={e.cuerpoHtml} />
   </article>
 </BaseLayout>

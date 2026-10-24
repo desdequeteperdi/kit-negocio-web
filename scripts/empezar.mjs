@@ -10,8 +10,9 @@ const sinServidor = process.argv.includes('--sin-servidor');
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 const [mayor, menor] = process.versions.node.split('.').map(Number);
-if (mayor < 18 || (mayor === 18 && menor < 20)) {
-  console.error(`\nNecesitas Node 18.20 o superior (tienes ${process.versions.node}).`);
+// El panel de Sanity 6 pide Node 22.12 o superior; la web, con menos, ya funcionaría.
+if (mayor < 22 || (mayor === 22 && menor < 12)) {
+  console.error(`\nNecesitas Node 22.12 o superior (tienes ${process.versions.node}).`);
   console.error('Descarga la versión LTS en https://nodejs.org y vuelve a intentarlo.\n');
   process.exit(1);
 }

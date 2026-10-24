@@ -5,6 +5,8 @@
   "scripts": {
     "empezar": "node scripts/empezar.mjs",
     "instalar": "node scripts/empezar.mjs --sin-servidor",
+    "semilla": "node scripts/panel.mjs semilla",
+    "publicar-panel": "node scripts/panel.mjs publicar",
     "dev": "npm --prefix web run dev",
     "build": "npm --prefix web run build"
   }

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
+    "@portabletext/to-html": "^6.0.0",
     "@sanity/client": "^7.0.0",
     "astro": "^5.0.0"
   }

@@ -46,6 +46,11 @@ footer a { color: #fff; }
 .meta { font-size: .9rem; color: #555; }
 .articulo { max-width: 44rem; margin: 0 auto; padding: 2.5rem 1.25rem; }
 .articulo img { border-radius: .75rem; margin: 1rem 0; width: 100%; }
+.texto-libre img { display: block; max-width: 100%; height: auto; border-radius: .75rem; }
+.texto-libre figure { margin: 1.25rem 0; }
+.texto-libre figcaption { font-size: .9rem; color: #555; margin-top: .4rem; }
+.texto-libre iframe, .texto-libre video { max-width: 100%; }
+.texto-libre iframe { width: 100%; border: 0; }
 video, iframe, svg { max-width: 100%; }
 .check input { flex: none; margin-top: .35rem; }
 .cookies { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: #fff; border-top: 3px solid var(--principal); padding: 1rem 1.25rem; box-shadow: 0 -4px 16px rgba(0,0,0,.15); }

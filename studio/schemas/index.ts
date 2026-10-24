@@ -9,6 +9,31 @@ const parrafo = (name: string, title: string, extra: Record<string, unknown> = {
 const interruptor = (name: string, title: string, initialValue = true) =>
   defineField({ name, title, type: 'boolean', initialValue });
 
+// Bloques que se pueden colocar dentro de un texto largo
+const bloqueImagen = defineType({
+  name: 'bloqueImagen', title: 'Imagen', type: 'object',
+  fields: [
+    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, validation: (r) => r.required() }),
+    texto('alt', 'Descripción de la imagen'),
+    texto('pie', 'Pie de foto (opcional)'),
+  ],
+  preview: { select: { title: 'alt', subtitle: 'pie', media: 'imagen' }, prepare: ({ title, subtitle, media }) => ({ title: title || 'Imagen', subtitle, media }) },
+});
+
+const bloqueHtml = defineType({
+  name: 'bloqueHtml', title: 'Código HTML', type: 'object',
+  fields: [
+    defineField({
+      name: 'codigo', title: 'Código HTML', type: 'text', rows: 8,
+      description: 'Pega aquí el código tal cual (un vídeo de YouTube, un mapa, un botón…). Se publica sin revisar: usa solo código de fuentes de confianza. No pegues scripts de seguimiento (Analytics, píxel de Meta): para eso están los campos de «Google y buscadores», que piden consentimiento de cookies.',
+    }),
+  ],
+  preview: { select: { codigo: 'codigo' }, prepare: ({ codigo }) => ({ title: 'Código HTML', subtitle: (codigo ?? '').slice(0, 60) }) },
+});
+
+const textoLibre = (name: string, title: string) =>
+  defineField({ name, title, type: 'array', of: [{ type: 'block' }, { type: 'bloqueImagen' }, { type: 'bloqueHtml' }] });
+
 const negocio = defineType({
   name: 'negocio', title: 'Datos del negocio', type: 'document',
   fields: [
@@ -128,10 +153,33 @@ const entrada = defineType({
     texto('categoria', 'Categoría'),
     parrafo('resumen', 'Resumen'),
     defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
-    defineField({ name: 'cuerpo', title: 'Texto', type: 'array', of: [{ type: 'block' }] }),
+    textoLibre('cuerpo', 'Texto'),
   ],
   orderings: [{ title: 'Más recientes', name: 'fecha', by: [{ field: 'fecha', direction: 'desc' }] }],
   preview: { select: { title: 'titulo', subtitle: 'fecha' } },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, servicio, pregunta, entrada];
+const seccion = defineType({
+  name: 'seccion', title: 'Sección extra de la portada', type: 'document',
+  fields: [
+    defineField({ name: 'orden', title: 'Orden (1 sale primero)', type: 'number', initialValue: 1 }),
+    defineField({
+      name: 'lugar', title: 'Dónde aparece', type: 'string', initialValue: 'antes-contacto',
+      options: {
+        list: [
+          { title: 'Después de Servicios', value: 'despues-servicios' },
+          { title: 'Después de Quiénes somos', value: 'despues-sobre' },
+          { title: 'Antes de Contacto', value: 'antes-contacto' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    interruptor('mostrar', 'Mostrar esta sección'),
+    texto('titulo', 'Título (opcional)'),
+    textoLibre('contenido', 'Contenido'),
+  ],
+  orderings: [{ title: 'Orden', name: 'orden', by: [{ field: 'orden', direction: 'asc' }] }],
+  preview: { select: { title: 'titulo', subtitle: 'lugar' }, prepare: ({ title, subtitle }) => ({ title: title || 'Sección sin título', subtitle }) },
+});
+
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, servicio, pregunta, entrada, seccion, bloqueImagen, bloqueHtml];

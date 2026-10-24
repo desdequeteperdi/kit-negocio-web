@@ -23,6 +23,7 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 
 - Servicios
 - Preguntas frecuentes
+- Secciones extra de la portada
 - Entradas del blog
 
 ## Cambiar un texto
@@ -43,6 +44,26 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 - **Añadir:** abre la lista (Servicios, Preguntas frecuentes o Entradas del blog) y pulsa el botón **+** (Create). Rellena los campos y pulsa **Publish**.
 - **Ordenar:** en Servicios y Preguntas frecuentes, el campo **Orden** decide la posición. El 1 sale primero.
 - **Quitar:** abre el elemento, pulsa los tres puntos y elige **Delete**. Después de borrar, la web se actualiza igual que al publicar.
+
+## Imágenes, vídeos y código HTML dentro de un texto
+
+El texto de una entrada del blog y el contenido de una sección extra admiten tres tipos de bloque. Pulsa el **+** que aparece entre bloques y elige:
+
+- **Texto:** párrafos con negrita, cursiva, enlaces y listas.
+- **Imagen:** sube la foto, rellena la **Descripción de la imagen** y, si quieres, un **Pie de foto**. La web la reduce sola para que no pese.
+- **Código HTML:** pega el código que te da otro servicio (un vídeo de YouTube, un mapa de Google Maps, un botón de reserva…). Se publica tal cual.
+
+Usa solo código de fuentes de confianza. Un código mal pegado puede romper el aspecto de esa página, y un `<script>` se ejecuta en tu web. No pegues aquí Analytics ni el píxel de Meta: para eso están los campos de **Google y buscadores**, que piden consentimiento de cookies.
+
+## Secciones extra en la portada
+
+En **Secciones extra de la portada** pulsa **+** para añadir un bloque a la portada. Rellena:
+
+- **Dónde aparece:** después de Servicios, después de Quiénes somos o antes de Contacto.
+- **Orden:** si hay varias en el mismo sitio, el 1 sale primero.
+- **Título:** opcional.
+- **Contenido:** texto, imágenes y código HTML, como en el blog.
+- **Mostrar esta sección:** desmárcalo para ocultarla sin borrarla.
 
 ## Ver el cambio en la web
 
@@ -68,7 +89,7 @@ Si rellenas Analytics o el píxel, la web muestra un aviso de cookies. Los scrip
 
 ## Qué no se puede hacer desde el panel
 
-- Cambiar el diseño ni mover secciones.
+- Cambiar el diseño de las secciones fijas ni su orden. Las secciones extra solo se colocan en los tres sitios indicados.
 - Añadir campos nuevos que no estén en el panel.
 
 Eso se hace en el código (GitHub) y, si necesita un campo nuevo en el panel, hace falta además un comando en terminal.

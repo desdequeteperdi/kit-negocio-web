@@ -3,3 +3,7 @@
   base = "web"
   command = "npm run build"
   publish = "dist"
+
+# Las dependencias del kit piden Node 22.12 o superior
+[build.environment]
+  NODE_VERSION = "22"

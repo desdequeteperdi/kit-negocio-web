@@ -1,0 +1,16 @@
+---
+// Secciones extra de la portada (texto, imágenes y código HTML) creadas desde el panel.
+import { getContenido } from '../lib/contenido';
+interface Props { lugar: string }
+const { lugar } = Astro.props;
+const c = await getContenido();
+const lista = c.secciones.filter((s) => s.lugar === lugar && s.html);
+---
+{lista.map((s) => (
+  <section class="libre">
+    <div class="contenedor">
+      {s.titulo && <h2>{s.titulo}</h2>}
+      <div class="texto-libre" set:html={s.html} />
+    </div>
+  </section>
+))}
