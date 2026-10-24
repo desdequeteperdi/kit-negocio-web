@@ -1,5 +1,6 @@
 ---
-interface Props { entrada: { slug: string; titulo: string; fecha: string; categoria?: string; resumen: string; imagen?: string; alt?: string } }
+import type { Entrada } from '../lib/contenido';
+interface Props { entrada: Entrada }
 const { entrada: e } = Astro.props;
 const fecha = new Date(e.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 ---

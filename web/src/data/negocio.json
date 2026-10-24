@@ -88,6 +88,25 @@
         "resumen": "Cinco plantas resistentes al calor y al viento, y cómo regarlas sin pasarte.",
         "imagen": "/img-portada.svg",
         "alt": "Imagen de ejemplo",
+        "autor": "Estudio Almendro",
+        "actualizada": "2026-10-01",
+        "etiquetas": [
+          "terrazas",
+          "plantas",
+          "sol"
+        ],
+        "faqs": [
+          {
+            "pregunta": "¿Qué planta resiste mejor el sol directo en Madrid?",
+            "respuesta": "El romero y la lavanda aguantan bien el sol y el viento, siempre que estén en macetas grandes."
+          },
+          {
+            "pregunta": "¿Cada cuánto hay que regar una terraza orientada al sur?",
+            "respuesta": "En verano, a primera o última hora y cuando la tierra esté seca a un dedo de profundidad."
+          }
+        ],
+        "seoTitulo": "",
+        "seoDescripcion": "",
         "cuerpo": [
           "En una terraza orientada al sur, el problema no es solo el sol: es el calor que acumula el suelo y el viento.",
           "Las plantas aromáticas, como el romero o la lavanda, aguantan bien. Elige macetas grandes: se secan más despacio.",
@@ -102,6 +121,14 @@
         "resumen": "No todo se poda ahora: una guía corta para no cortar a destiempo.",
         "imagen": "",
         "alt": "",
+        "autor": "",
+        "actualizada": "",
+        "etiquetas": [
+          "poda"
+        ],
+        "faqs": [],
+        "seoTitulo": "",
+        "seoDescripcion": "",
         "cuerpo": [
           "Muchas plantas florecen sobre la madera del año anterior; si podas ahora, pierdes la flor de primavera.",
           "Retira solo lo seco o enfermo y deja la poda de formación para el final del invierno."

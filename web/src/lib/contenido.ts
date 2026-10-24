@@ -9,7 +9,11 @@ import { aHtml, parrafosAHtml } from './texto';
 export { optimizada };
 
 // El texto de cada entrada se guarda ya convertido a HTML (cuerpoHtml)
-type Entrada = Omit<(typeof datos.blog.entradas)[number], 'cuerpo'> & { cuerpoHtml: string };
+export type Entrada = {
+  slug: string; titulo: string; fecha: string; categoria: string; resumen: string; imagen: string; alt: string;
+  autor: string; actualizada: string; etiquetas: string[]; faqs: { pregunta: string; respuesta: string }[];
+  seoTitulo: string; seoDescripcion: string; cuerpoHtml: string;
+};
 export type Seccion = { orden: number; lugar: string; titulo: string; html: string };
 export type Contenido = Omit<typeof datos, 'blog'> & {
   blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
@@ -37,6 +41,7 @@ const consulta = `{
   "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
   "entradas": *[_type == "entrada" && defined(slug.current)] | order(fecha desc){
     "slug": slug.current, titulo, fecha, categoria, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
+    autor, actualizada, etiquetas, faqs[]{pregunta, respuesta}, seoTitulo, seoDescripcion,
     cuerpo[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
   },
   "secciones": *[_type == "seccion" && mostrar != false] | order(orden asc){
@@ -44,6 +49,25 @@ const consulta = `{
     contenido[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
   }
 }`;
+
+// Rellena lo que falte en una entrada para que la web nunca se rompa
+function normalizar(e: any, cuerpoHtml: string): Entrada {
+  return {
+    slug: e.slug, titulo: e.titulo, fecha: e.fecha,
+    categoria: e.categoria ?? '', resumen: e.resumen ?? '',
+    imagen: optimizada(e.imagen, 'w=800&auto=format'), alt: e.alt ?? '',
+    autor: e.autor ?? '', actualizada: e.actualizada ?? '',
+    etiquetas: (e.etiquetas ?? []).filter(Boolean),
+    faqs: (e.faqs ?? []).filter((f: any) => f?.pregunta && f?.respuesta),
+    seoTitulo: e.seoTitulo ?? '', seoDescripcion: e.seoDescripcion ?? '',
+    cuerpoHtml,
+  };
+}
+
+// «Terrazas y jardín» -> «terrazas-y-jardin»: dirección de la página de cada etiqueta
+export function slugEtiqueta(t: string): string {
+  return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
 
 async function desdeSanity(): Promise<Contenido> {
   const cliente = createClient({ projectId, dataset, apiVersion: '2025-01-01', useCdn: false });
@@ -63,7 +87,7 @@ async function desdeSanity(): Promise<Contenido> {
     blog: {
       ...datos.blog,
       ...r.blogAjustes,
-      entradas: r.entradas.map(({ cuerpo, ...e }: any) => ({ ...e, categoria: e.categoria ?? '', resumen: e.resumen ?? '', imagen: optimizada(e.imagen, 'w=800&auto=format'), alt: e.alt ?? '', cuerpoHtml: aHtml(cuerpo) })),
+      entradas: r.entradas.map(({ cuerpo, ...e }: any) => normalizar(e, aHtml(cuerpo))),
     },
     secciones: (r.secciones ?? []).map((x: any) => ({ orden: x.orden ?? 1, lugar: x.lugar ?? 'antes-contacto', titulo: x.titulo ?? '', html: aHtml(x.contenido) })),
   } as Contenido;
@@ -73,7 +97,7 @@ async function desdeSanity(): Promise<Contenido> {
 function desdeArchivo(): Contenido {
   return {
     ...datos,
-    blog: { ...datos.blog, entradas: datos.blog.entradas.map(({ cuerpo, ...e }) => ({ ...e, cuerpoHtml: parrafosAHtml(cuerpo) })) },
+    blog: { ...datos.blog, entradas: datos.blog.entradas.map(({ cuerpo, ...e }) => normalizar(e, parrafosAHtml(cuerpo))) },
     secciones: [],
   };
 }

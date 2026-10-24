@@ -151,11 +151,28 @@ const entrada = defineType({
     defineField({ name: 'slug', title: 'Dirección web', type: 'slug', options: { source: 'titulo', maxLength: 80 }, validation: (r) => r.required() }),
     defineField({ name: 'fecha', title: 'Fecha', type: 'date', validation: (r) => r.required() }),
     texto('categoria', 'Categoría'),
+    defineField({
+      name: 'etiquetas', title: 'Etiquetas', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' },
+      description: 'Palabras clave de la entrada. Cada etiqueta tiene su propia página en la web (/blog/etiqueta/…).',
+    }),
+    texto('autor', 'Autor o autora', { description: 'Aparece en la entrada y en los datos para Google. Si lo dejas vacío, se usa el nombre del negocio.' }),
     parrafo('resumen', 'Resumen'),
     defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
     textoLibre('cuerpo', 'Texto'),
+    defineField({
+      name: 'faqs', title: 'Preguntas frecuentes de esta entrada', type: 'array',
+      description: 'Preguntas con respuestas cortas y directas. Se muestran al final de la entrada y se envían a Google y a los asistentes de IA como datos estructurados.',
+      of: [{
+        type: 'object', name: 'faq', title: 'Pregunta',
+        fields: [texto('pregunta', 'Pregunta', { validation: (r) => r.required() }), parrafo('respuesta', 'Respuesta', { validation: (r) => r.required() })],
+        preview: { select: { title: 'pregunta', subtitle: 'respuesta' } },
+      }],
+    }),
+    defineField({ name: 'actualizada', title: 'Fecha de última actualización', type: 'date', description: 'Rellénala cuando revises o amplíes la entrada.' }),
+    texto('seoTitulo', 'Título en Google (opcional)', { description: 'Si lo dejas vacío se usa el título de la entrada.', validation: (r) => r.max(70) }),
+    parrafo('seoDescripcion', 'Descripción en Google (opcional)', { description: 'Si la dejas vacía se usa el resumen.', validation: (r) => r.max(160) }),
   ],
-  orderings: [{ title: 'Más recientes', name: 'fecha', by: [{ field: 'fecha', direction: 'desc' }] }],
+  orderings: [{ title: 'Más recientes, name: 'fecha', by: [{ field: 'fecha', direction: 'desc' }] }],
   preview: { select: { title: 'titulo', subtitle: 'fecha' } },
 });
 

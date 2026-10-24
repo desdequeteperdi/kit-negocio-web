@@ -57,3 +57,7 @@ video, iframe, svg { max-width: 100%; }
 .cookies[hidden] { display: none; }
 .cookies p { margin: 0 0 .75rem; max-width: 52rem; }
 .cookies .acciones { margin-top: 0; }
+
+.faqs-entrada { margin-top: 2.5rem; }
+.etiquetas { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2rem; }
+.etiquetas a { font-size: .9rem; padding: .2rem .65rem; border: 1px solid #e0e0e0; border-radius: 999px; text-decoration: none; }

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getContenido } from '../../lib/contenido';
+import DatosArticulo from '../../components/DatosArticulo.astro';
+import { getContenido, slugEtiqueta } from '../../lib/contenido';
 
 export async function getStaticPaths() {
   const c = await getContenido();
@@ -8,13 +9,38 @@ export async function getStaticPaths() {
   return c.blog.entradas.map((entrada) => ({ params: { slug: entrada.slug }, props: { entrada } }));
 }
 const { entrada: e } = Astro.props;
-const fecha = new Date(e.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+const formato = { day: 'numeric', month: 'long', year: 'numeric' } as const;
+const fecha = new Date(e.fecha).toLocaleDateString('es-ES', formato);
+const actualizada = e.actualizada && e.actualizada !== e.fecha ? new Date(e.actualizada).toLocaleDateString('es-ES', formato) : '';
 ---
-<BaseLayout titulo={`${e.titulo} | Blog`} descripcion={e.resumen} tipo="article" imagen={e.imagen}>
+<BaseLayout titulo={e.seoTitulo || `${e.titulo} | Blog`} descripcion={e.seoDescripcion || e.resumen} tipo="article" imagen={e.imagen}>
+  <DatosArticulo slot="head" entrada={e} />
   <article class="articulo">
-    <p class="meta"><a href="/blog">← Blog</a> · {fecha}{e.categoria && ` · ${e.categoria}`}</p>
+    <p class="meta"><a href="/blog">← Blog</a> · <time datetime={e.fecha}>{fecha}</time>{e.categoria && ` · ${e.categoria}`}</p>
     <h1>{e.titulo}</h1>
+    {(e.autor || actualizada) && (
+      <p class="meta">
+        {e.autor && <>Por {e.autor}</>}{e.autor && actualizada && ' · '}
+        {actualizada && <>Actualizado el <time datetime={e.actualizada}>{actualizada}</time></>}
+      </p>
+    )}
     {e.imagen && <img src={e.imagen} alt={e.alt ?? ""} width="800" height="450" />}
     <div class="texto-libre" set:html={e.cuerpoHtml} />
+    {e.faqs.length > 0 && (
+      <section class="faqs-entrada">
+        <h2>Preguntas frecuentes</h2>
+        {e.faqs.map((f) => (
+          <details>
+            <summary>{f.pregunta}</summary>
+            <p>{f.respuesta}</p>
+          </details>
+        ))}
+      </section>
+    )}
+    {e.etiquetas.length > 0 && (
+      <p class="etiquetas">
+        {e.etiquetas.map((t) => <a href={`/blog/etiqueta/${slugEtiqueta(t)}`}>#{t}</a>)}
+      </p>
+    )}
   </article>
 </BaseLayout>

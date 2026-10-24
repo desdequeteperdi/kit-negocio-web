@@ -55,6 +55,18 @@ El texto de una entrada del blog y el contenido de una sección extra admiten tr
 
 Usa solo código de fuentes de confianza. Un código mal pegado puede romper el aspecto de esa página, y un `<script>` se ejecuta en tu web. No pegues aquí Analytics ni el píxel de Meta: para eso están los campos de **Google y buscadores**, que piden consentimiento de cookies.
 
+## Posicionar una entrada del blog (Google y asistentes de IA)
+
+Cada entrada tiene estos campos, además del título y el texto:
+
+- **Etiquetas:** palabras clave de la entrada. Cada etiqueta tiene su propia página en la web con todas las entradas que la usan.
+- **Autor o autora:** aparece en la entrada y en los datos para Google. Si lo dejas vacío se usa el nombre del negocio.
+- **Fecha de última actualización:** rellénala cuando revises o amplíes la entrada.
+- **Preguntas frecuentes de esta entrada:** pulsa **+** y escribe pregunta y respuesta, cortas y directas. Se muestran al final de la entrada y se envían a buscadores y asistentes de IA. Escribe solo preguntas que de verdad se respondan en la entrada.
+- **Título y descripción en Google (opcionales):** si los dejas vacíos se usan el título y el resumen. Máximo 70 y 160 caracteres.
+
+La web añade sola los datos estructurados (artículo, migas de pan y preguntas frecuentes): no tienes que hacer nada más.
+
 ## Secciones extra en la portada
 
 En **Secciones extra de la portada** pulsa **+** para añadir un bloque a la portada. Rellena:

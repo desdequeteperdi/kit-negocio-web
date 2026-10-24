@@ -19,12 +19,13 @@ unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introducc
 d.servicios.forEach((s, i) => docs.push({ _id: `servicio-${i + 1}`, _type: 'servicio', ...s }));
 d.preguntas.forEach((p, i) => docs.push({ _id: `pregunta-${i + 1}`, _type: 'pregunta', orden: i + 1, ...p }));
 d.blog.entradas.forEach((e) => {
-  const { slug, imagen, cuerpo, ...resto } = e;
+  const { slug, imagen, cuerpo, faqs, ...resto } = e;
   docs.push({
     _id: `entrada-${slug}`,
     _type: 'entrada',
     ...resto,
     slug: { _type: 'slug', current: slug },
+    faqs: faqs.map((f) => ({ _type: 'faq', _key: randomUUID().slice(0, 12), ...f })),
     cuerpo: cuerpo.map((t) => ({
       _type: 'block', _key: randomUUID().slice(0, 12), style: 'normal', markDefs: [],
       children: [{ _type: 'span', _key: randomUUID().slice(0, 12), text: t, marks: [] }],
