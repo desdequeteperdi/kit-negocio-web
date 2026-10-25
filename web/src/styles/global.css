@@ -66,6 +66,7 @@ video, iframe, svg { max-width: 100%; }
 .pie p { margin: 0 0 .5rem; }
 .pie ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
 .pie-titulo { font-weight: 700; }
+.creditos { margin-top: 1.5rem; margin-bottom: 0; text-align: right; font-size: .75rem; }
 .redes { display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-top: .75rem; }
 
 .carrusel { display: grid; grid-auto-flow: column; grid-auto-columns: min(80%, 16rem); gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
