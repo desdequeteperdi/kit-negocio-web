@@ -23,7 +23,7 @@ export type Producto = {
 export type Seccion = { orden: number; lugar: string; titulo: string; html: string };
 export type Contenido = Omit<typeof datos, 'blog' | 'catalogo'> & {
   blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
-  catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; textoBotonPago: string; categorias: Categoria[]; productos: Producto[] };
+  catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; tienda: boolean; textoBotonPago: string; categorias: Categoria[]; productos: Producto[] };
   secciones: Seccion[];
 };
 
@@ -48,7 +48,7 @@ const consulta = `{
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, plazoEntrega, devoluciones},
-  "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, textoBotonPago},
+  "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, tienda, textoBotonPago},
   "categorias": *[_type == "categoria" && defined(slug.current)] | order(orden asc){
     "slug": slug.current, nombre, descripcion, orden, "imagen": imagen.asset->url, "alt": imagen.alt
   },
@@ -176,8 +176,8 @@ export function precioProducto(p: Producto): string {
   return p.precio === null ? '' : new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(p.precio);
 }
 
-// Hay venta online si algún producto público tiene enlace de pago
-export const hayVenta = (c: Contenido) => catalogoVisible(c) && productosPublicos(c).some((p) => p.enlacePago);
+// Hay venta online si la tienda está activada y algún producto público tiene enlace de pago
+export const hayVenta = (c: Contenido) => catalogoVisible(c) && c.catalogo.tienda === true && productosPublicos(c).some((p) => p.enlacePago);
 
 export const urlProducto = (p: Producto) => `/catalogo/${p.categoria}/${p.slug}`;
 export const urlConsulta = (p: Producto) => `/?consulta=${encodeURIComponent(p.nombre)}#contacto`;

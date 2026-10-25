@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import DatosProducto from '../../../components/DatosProducto.astro';
-import { getContenido, catalogoVisible, productosPublicos, precioProducto, urlConsulta } from '../../../lib/contenido';
+import { getContenido, hayVenta, catalogoVisible, productosPublicos, precioProducto, urlConsulta } from '../../../lib/contenido';
 
 export async function getStaticPaths() {
   const c = await getContenido();
@@ -14,6 +14,7 @@ export async function getStaticPaths() {
 const { producto: p, categoria: k } = Astro.props;
 const c = await getContenido();
 const precio = precioProducto(p);
+const venta = hayVenta(c);
 ---
 <BaseLayout titulo={`${p.nombre} | ${k.nombre} | ${c.negocio.nombre}`} descripcion={p.resumen || k.descripcion || c.catalogo.introduccion} imagen={p.imagen}>
   <DatosProducto slot="head" producto={p} />
@@ -25,10 +26,10 @@ const precio = precioProducto(p);
     {!p.disponible && <p class="meta">No disponible ahora</p>}
     {p.resumen && <p>{p.resumen}</p>}
     <div class="texto-libre" set:html={p.descripcionHtml} />
-    {p.enlacePago && p.disponible && (
+    {venta && p.enlacePago && p.disponible && (
       <p><a class="boton" href={p.enlacePago} rel="noopener">{c.catalogo.textoBotonPago || 'Comprar'}</a></p>
       <p class="meta">Pago seguro con Stripe. <a href="/condiciones">Condiciones de venta</a>.</p>
     )}
-    <p><a class={p.enlacePago && p.disponible ? '' : 'boton'} href={urlConsulta(p)}>{c.catalogo.textoBoton || 'Consultar'}</a></p>
+    <p><a class={venta && p.enlacePago && p.disponible ? '' : 'boton'} href={urlConsulta(p)}>{c.catalogo.textoBoton || 'Consultar'}</a></p>
   </article>
 </BaseLayout>

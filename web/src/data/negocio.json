@@ -157,6 +157,7 @@
     "titulo": "Catálogo",
     "introduccion": "Plantas, macetas y accesorios que usamos en nuestros proyectos.",
     "textoBoton": "Consultar",
+    "tienda": false,
     "textoBotonPago": "Comprar",
     "categorias": [
       {

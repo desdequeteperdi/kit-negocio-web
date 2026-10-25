@@ -84,6 +84,7 @@ Sirve para enseñar lo que vendes, con o sin precio. Por defecto no cobra: cada 
 
 ### Vender con Stripe (enlaces de pago)
 
+0. En **Catálogo: ajustes** activa **Activar la tienda**. Sin eso, los enlaces de pago se ignoran.
 1. En <https://dashboard.stripe.com> crea una cuenta y, en **Catálogo de productos**, el producto con su precio.
 2. Pulsa **Crear enlace de pago**. Copia el enlace (empieza por `https://buy.stripe.com`).
 3. En el producto del panel, pégalo en **Enlace de pago** y pulsa **Publish**.
