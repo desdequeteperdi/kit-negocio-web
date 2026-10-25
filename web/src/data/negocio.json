@@ -87,7 +87,9 @@
     "titular": "Nombre o razón social (ejemplo)",
     "nif": "00000000X (ejemplo)",
     "domicilio": "Calle Ejemplo 1, Madrid",
-    "plazoConservacion": "durante el tiempo necesario para atender tu consulta"
+    "plazoConservacion": "durante el tiempo necesario para atender tu consulta",
+    "plazoEntrega": "3 a 5 días laborables (ejemplo)",
+    "devoluciones": "14 días naturales desde la recepción, con el producto sin usar (ejemplo)"
   },
   "blog": {
     "mostrar": false,
@@ -155,6 +157,7 @@
     "titulo": "Catálogo",
     "introduccion": "Plantas, macetas y accesorios que usamos en nuestros proyectos.",
     "textoBoton": "Consultar",
+    "textoBotonPago": "Comprar",
     "categorias": [
       {
         "slug": "plantas",

@@ -17,13 +17,13 @@ export type Entrada = {
 export type Categoria = { slug: string; nombre: string; descripcion: string; orden: number; imagen: string; alt: string };
 export type Producto = {
   slug: string; nombre: string; categoria: string; resumen: string; imagen: string; alt: string;
-  precio: number | null; precioTexto: string; disponible: boolean; destacado: boolean; orden: number; creado: string;
+  precio: number | null; precioTexto: string; enlacePago: string; disponible: boolean; destacado: boolean; orden: number; creado: string;
   descripcionHtml: string;
 };
 export type Seccion = { orden: number; lugar: string; titulo: string; html: string };
 export type Contenido = Omit<typeof datos, 'blog' | 'catalogo'> & {
   blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
-  catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; categorias: Categoria[]; productos: Producto[] };
+  catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; textoBotonPago: string; categorias: Categoria[]; productos: Producto[] };
   secciones: Seccion[];
 };
 
@@ -47,14 +47,14 @@ const consulta = `{
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
-  "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion},
-  "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton},
+  "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, plazoEntrega, devoluciones},
+  "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, textoBotonPago},
   "categorias": *[_type == "categoria" && defined(slug.current)] | order(orden asc){
     "slug": slug.current, nombre, descripcion, orden, "imagen": imagen.asset->url, "alt": imagen.alt
   },
   "productos": *[_type == "producto" && defined(slug.current) && defined(categoria->slug.current)] | order(orden asc){
     "slug": slug.current, nombre, "categoria": categoria->slug.current, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
-    precio, precioTexto, disponible, destacado, orden, "creado": _createdAt,
+    precio, precioTexto, enlacePago, disponible, destacado, orden, "creado": _createdAt,
     descripcion[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
   },
   "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
@@ -89,6 +89,7 @@ function normalizarProducto(p: any, descripcionHtml: string): Producto {
     slug: p.slug, nombre: p.nombre, categoria: p.categoria, resumen: p.resumen ?? '',
     imagen: optimizada(p.imagen, 'w=800&auto=format'), alt: p.alt ?? '',
     precio: typeof p.precio === 'number' ? p.precio : null, precioTexto: p.precioTexto ?? '',
+    enlacePago: /^https:\/\//.test(p.enlacePago ?? '') ? p.enlacePago : '',
     disponible: p.disponible !== false, destacado: p.destacado === true, orden: p.orden ?? 1, creado: p.creado ?? '',
     descripcionHtml,
   };
@@ -174,6 +175,9 @@ export function precioProducto(p: Producto): string {
   if (p.precioTexto) return p.precioTexto;
   return p.precio === null ? '' : new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(p.precio);
 }
+
+// Hay venta online si algún producto público tiene enlace de pago
+export const hayVenta = (c: Contenido) => catalogoVisible(c) && productosPublicos(c).some((p) => p.enlacePago);
 
 export const urlProducto = (p: Producto) => `/catalogo/${p.categoria}/${p.slug}`;
 export const urlConsulta = (p: Producto) => `/?consulta=${encodeURIComponent(p.nombre)}#contacto`;

@@ -1,5 +1,5 @@
 ---
-import { getContenido, catalogoVisible, redesSociales } from '../lib/contenido';
+import { getContenido, catalogoVisible, hayVenta, redesSociales } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
 const redes = redesSociales(n);
@@ -42,6 +42,7 @@ const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
       <ul>
         <li><a href="/aviso-legal">Aviso legal</a></li>
         <li><a href="/privacidad">Privacidad</a></li>
+        {hayVenta(c) && <li><a href="/condiciones">Condiciones de venta</a></li>}
         {seguimiento && <li><a href="#cookies" onclick="window.abrirCookies && window.abrirCookies(); return false;">Cookies</a></li>}
       </ul>
     </div>

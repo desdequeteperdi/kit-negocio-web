@@ -6,8 +6,8 @@ const texto = (name: string, title: string, extra: Record<string, unknown> = {})
   defineField({ name, title, type: 'string', ...extra });
 const parrafo = (name: string, title: string, extra: Record<string, unknown> = {}) =>
   defineField({ name, title, type: 'text', rows: 3, ...extra });
-const url = (name: string, title: string) =>
-  defineField({ name, title, type: 'url', description: 'Déjalo vacío para no mostrarla. Empieza por https://', validation: (r) => r.uri({ scheme: ['https'] }) });
+const url = (name: string, title: string, description = 'Déjalo vacío para no mostrarla. Empieza por https://') =>
+  defineField({ name, title, type: 'url', description, validation: (r) => r.uri({ scheme: ['https'] }) });
 const interruptor = (name: string, title: string, initialValue = true) =>
   defineField({ name, title, type: 'boolean', initialValue });
 
@@ -143,6 +143,8 @@ const legal = defineType({
     texto('nif', 'NIF'),
     texto('domicilio', 'Domicilio'),
     texto('plazoConservacion', 'Plazo de conservación de los datos de contacto'),
+    texto('plazoEntrega', 'Condiciones de venta: plazo de entrega', { description: 'Solo se usa si algún producto tiene enlace de pago. Por ejemplo: 3 a 5 días laborables en la península.' }),
+    parrafo('devoluciones', 'Condiciones de venta: devoluciones', { description: 'Solo se usa si algún producto tiene enlace de pago. Por ejemplo: 14 días naturales desde la recepción, con el producto sin usar.' }),
   ],
   preview: { prepare: () => ({ title: 'Datos legales' }) },
 });
@@ -214,6 +216,7 @@ const catalogoAjustes = defineType({
     interruptor('mostrar', 'Mostrar el catálogo', false),
     texto('titulo', 'Título'),
     parrafo('introduccion', 'Introducción'),
+    texto('textoBotonPago', 'Texto del botón de compra', { description: 'Aparece en los productos con enlace de pago. Por ejemplo: Comprar, Pagar ahora.' }),
     texto('textoBoton', 'Texto del botón de cada producto', { description: 'Lleva al formulario de contacto con el producto ya escrito. Por ejemplo: Consultar, Pedir presupuesto.' }),
   ],
   preview: { prepare: () => ({ title: 'Catálogo: ajustes' }) },
@@ -242,6 +245,7 @@ const producto = defineType({
     defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
     defineField({ name: 'precio', title: 'Precio en euros (opcional)', type: 'number', validation: (r) => r.min(0), description: 'Solo el número, por ejemplo 45 o 12.5. Si lo dejas vacío no se muestra precio.' }),
     texto('precioTexto', 'Texto del precio (opcional)', { description: 'Sustituye al precio en pantalla. Por ejemplo: Desde 45 € o 12 € el metro.' }),
+    url('enlacePago', 'Enlace de pago (opcional)', 'Pega el enlace de pago de Stripe (Payment Link), que empieza por https://buy.stripe.com. Si lo rellenas, el producto muestra el botón de compra. Déjalo vacío para solo consultar.'),
     interruptor('disponible', 'Disponible'),
     interruptor('destacado', 'Mostrar en la portada', false),
     defineField({ name: 'orden', title: 'Orden dentro de su categoría (1 sale primero)', type: 'number', initialValue: 1 }),

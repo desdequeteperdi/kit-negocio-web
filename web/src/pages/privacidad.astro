@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getContenido } from '../lib/contenido';
-const { legal, negocio, buscadores, newsletter } = await getContenido();
+import { getContenido, hayVenta } from '../lib/contenido';
+const contenido = await getContenido();
+const { legal, negocio, buscadores, newsletter } = contenido;
+const venta = hayVenta(contenido);
 const seguimiento = Boolean(buscadores.ga4 || buscadores.metaPixel);
 ---
 <BaseLayout titulo={`Política de privacidad | ${negocio.nombre}`}>
@@ -14,6 +16,7 @@ const seguimiento = Boolean(buscadores.ga4 || buscadores.metaPixel);
     <p><strong>Base jurídica:</strong> tu consentimiento al enviar el formulario.</p>
     <p><strong>Conservación:</strong> {legal.plazoConservacion}.</p>
     {newsletter.mostrar && <p><strong>Newsletter:</strong> si te suscribes, guardamos tu email para enviarte comunicaciones por correo, con tu consentimiento. Puedes darte de baja en cualquier momento desde el enlace de cada correo. Los datos se almacenan en Brevo, que actúa como encargado del tratamiento.</p>}
+    {venta && <p><strong>Compras:</strong> si compras, el pago lo gestiona Stripe en su propia página y nosotros no vemos los datos de tu tarjeta. Recibimos los datos necesarios para entregarte el pedido (nombre, email, dirección de envío) y los conservamos el tiempo que exijan las obligaciones fiscales y contables. Stripe actúa como responsable o encargado según el caso y puede tratar datos fuera del Espacio Económico Europeo.</p>}
     <p><strong>Destinatarios:</strong> el servicio de alojamiento y formularios (Netlify) actúa como encargado del tratamiento.</p>
     {seguimiento && <p><strong>Cookies:</strong> con tu consentimiento, usamos {buscadores.ga4 && 'Google Analytics (medición de visitas)'}{buscadores.ga4 && buscadores.metaPixel && ' y '}{buscadores.metaPixel && 'el píxel de Meta (medición de anuncios)'}. No se activan hasta que pulsas «Aceptar» y puedes cambiar tu decisión en el enlace «Cookies» del pie de página. Estos proveedores pueden tratar datos fuera del Espacio Económico Europeo.</p>}
     <p><strong>Tus derechos:</strong> acceso, rectificación, supresión, oposición, limitación y portabilidad, escribiendo a {negocio.email}. Puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>

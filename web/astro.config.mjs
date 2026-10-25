@@ -8,5 +8,5 @@ const site = (process.env.SITE_URL || process.env.URL || 'https://ejemplo.netlif
 
 export default defineConfig({
   site,
-  integrations: [sitemap({ filter: (url) => !/\/(gracias|404)\/?$/.test(url) })],
+  integrations: [sitemap({ filter: (url) => !/\/(gracias|404|condiciones)\/?$/.test(url) })],
 });

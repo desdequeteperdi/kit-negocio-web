@@ -15,7 +15,7 @@ unico('contacto', d.contacto);
 unico('newsletter', d.newsletter);
 unico('buscadores', d.buscadores);
 unico('legal', d.legal);
-unico('catalogoAjustes', { mostrar: d.catalogo.mostrar, titulo: d.catalogo.titulo, introduccion: d.catalogo.introduccion, textoBoton: d.catalogo.textoBoton });
+unico('catalogoAjustes', { mostrar: d.catalogo.mostrar, titulo: d.catalogo.titulo, introduccion: d.catalogo.introduccion, textoBoton: d.catalogo.textoBoton, textoBotonPago: d.catalogo.textoBotonPago });
 unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introduccion: d.blog.introduccion });
 
 d.servicios.forEach((s, i) => docs.push({ _id: `servicio-${i + 1}`, _type: 'servicio', ...s }));

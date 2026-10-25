@@ -72,7 +72,7 @@ La web añade sola los datos estructurados (artículo, migas de pan y preguntas 
 
 ## Catálogo de productos
 
-Sirve para enseñar lo que vendes, con o sin precio. No cobra: cada producto lleva un botón que abre el formulario de contacto con el nombre del producto ya escrito.
+Sirve para enseñar lo que vendes, con o sin precio. Por defecto no cobra: cada producto lleva un botón que abre el formulario de contacto con el nombre del producto ya escrito. Si quieres cobrar, mira «Vender con Stripe» más abajo.
 
 1. Abre **Catálogo: ajustes**, activa **Mostrar el catálogo**, revisa el título, la introducción y el texto del botón, y pulsa **Publish**.
 2. Crea al menos una **Categoría del catálogo** (nombre, orden y, si quieres, descripción e imagen).
@@ -81,6 +81,17 @@ Sirve para enseñar lo que vendes, con o sin precio. No cobra: cada producto lle
    - **Texto del precio:** sustituye al precio en pantalla («Desde 45 €»). Los datos para Google usan el precio numérico.
    - **Disponible:** si lo desactivas, el producto sigue visible con el aviso «No disponible ahora».
    - **Mostrar en la portada:** los marcados salen en la franja del catálogo de la portada. Si no marcas ninguno, salen los más recientes.
+
+### Vender con Stripe (enlaces de pago)
+
+1. En <https://dashboard.stripe.com> crea una cuenta y, en **Catálogo de productos**, el producto con su precio.
+2. Pulsa **Crear enlace de pago**. Copia el enlace (empieza por `https://buy.stripe.com`).
+3. En el producto del panel, pégalo en **Enlace de pago** y pulsa **Publish**.
+4. En **Datos legales** rellena **plazo de entrega** y **devoluciones**. La web crea sola la página «Condiciones de venta» y añade el aviso de compras a la política de privacidad.
+
+El producto muestra un botón de compra que lleva a la página de pago de Stripe, y debajo sigue el botón de consultar. Sin enlace de pago, solo hay consulta. Si desactivas **Disponible**, el botón de compra desaparece.
+
+Stripe cobra y emite el recibo; el IVA, los envíos y el stock los gestionas tú. No hay carrito: cada enlace cobra un solo producto. Prueba antes con el modo de pruebas de Stripe y revisa los textos legales (son un punto de partida).
 
 El catálogo aparece en el menú y en el pie solo cuando está activado y hay al menos un producto con categoría. Cada producto tiene su propia página, con datos estructurados para Google.
 

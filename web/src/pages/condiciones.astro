@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getContenido, hayVenta } from '../lib/contenido';
+const c = await getContenido();
+if (!hayVenta(c)) return Astro.redirect('/404');
+const { legal, negocio } = c;
+---
+<BaseLayout titulo={`Condiciones de venta | ${negocio.nombre}`}>
+  <div class="texto-legal">
+    <h1>Condiciones de venta</h1>
+    <!-- Borrador de partida: identifica necesidades, no certifica cumplimiento. Revisar antes de vender (precios con IVA, envíos, desistimiento de 14 días en ventas a consumidores). -->
+    <p><strong>Vendedor:</strong> {legal.titular} · {legal.nif} · {legal.domicilio} · {negocio.email}</p>
+    <p><strong>Precios:</strong> los precios mostrados incluyen impuestos, salvo que se indique lo contrario.</p>
+    <p><strong>Pago:</strong> se realiza en la página segura de Stripe. No almacenamos los datos de tu tarjeta.</p>
+    <p><strong>Plazo de entrega:</strong> {legal.plazoEntrega}</p>
+    <p><strong>Devoluciones y desistimiento:</strong> {legal.devoluciones}</p>
+    <p><strong>Atención al cliente:</strong> escribe a {negocio.email}.</p>
+    <p><a href="/">Volver al inicio</a></p>
+  </div>
+</BaseLayout>
