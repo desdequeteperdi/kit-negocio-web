@@ -1,8 +1,12 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getContenido, hayVenta } from '../lib/contenido';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getContenido, hayVenta } from '../../lib/contenido';
+export async function getStaticPaths() {
+  const c = await getContenido();
+  // Solo se genera /xxx/ si la función está activada: así no queda una página de redirección en el sitemap
+  return hayVenta(c) ? [{ params: { pagina: undefined } }] : [];
+}
 const c = await getContenido();
-if (!hayVenta(c)) return Astro.redirect('/404');
 const { legal, negocio } = c;
 const digital = legal.tipoVenta === 'digital';
 ---

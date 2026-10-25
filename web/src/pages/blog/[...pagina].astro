@@ -2,8 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EntradaTarjeta from '../../components/EntradaTarjeta.astro';
 import { getContenido, entradasOrdenadas } from '../../lib/contenido';
+export async function getStaticPaths() {
+  const c = await getContenido();
+  // Solo se genera /xxx/ si la función está activada: así no queda una página de redirección en el sitemap
+  return c.blog.mostrar ? [{ params: { pagina: undefined } }] : [];
+}
 const c = await getContenido();
-if (!c.blog.mostrar) return Astro.redirect('/404');
 const entradas = entradasOrdenadas(c);
 ---
 <BaseLayout titulo={`${c.blog.titulo} | ${c.negocio.nombre}`} descripcion={c.blog.introduccion}>

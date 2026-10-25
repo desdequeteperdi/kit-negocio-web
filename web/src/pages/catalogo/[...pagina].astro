@@ -2,8 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TarjetaProducto from '../../components/TarjetaProducto.astro';
 import { getContenido, catalogoVisible, productosPublicos } from '../../lib/contenido';
+export async function getStaticPaths() {
+  const c = await getContenido();
+  // Solo se genera /xxx/ si la función está activada: así no queda una página de redirección en el sitemap
+  return catalogoVisible(c) ? [{ params: { pagina: undefined } }] : [];
+}
 const c = await getContenido();
-if (!catalogoVisible(c)) return Astro.redirect('/404');
 const productos = productosPublicos(c);
 const categorias = c.catalogo.categorias.filter((k) => productos.some((p) => p.categoria === k.slug));
 ---
