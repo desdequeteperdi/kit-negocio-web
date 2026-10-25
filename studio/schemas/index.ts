@@ -184,7 +184,7 @@ const entrada = defineType({
     texto('seoTitulo', 'Título en Google (opcional)', { description: 'Si lo dejas vacío se usa el título de la entrada.', validation: (r) => r.max(70) }),
     parrafo('seoDescripcion', 'Descripción en Google (opcional)', { description: 'Si la dejas vacía se usa el resumen.', validation: (r) => r.max(160) }),
   ],
-  orderings: [{ title: 'Más recientes, name: 'fecha', by: [{ field: 'fecha', direction: 'desc' }] }],
+  orderings: [{ title: 'Más recientes', name: 'fecha', by: [{ field: 'fecha', direction: 'desc' }] }],
   preview: { select: { title: 'titulo', subtitle: 'fecha' } },
 });
 

@@ -71,6 +71,9 @@ if (orden === 'semilla') {
   sanity(['dataset', 'import', 'semilla.ndjson', dataset, ...extra]);
   console.log(`\n✔ Contenido de ejemplo cargado en el proyecto ${env.SANITY_STUDIO_PROJECT_ID} (dataset ${dataset}).`);
 } else if (orden === 'publicar') {
+  if (!/^[a-z0-9-]+$/.test(env.SANITY_STUDIO_HOST ?? '')) {
+    salir('Falta SANITY_STUDIO_HOST en studio/.env.\nEs el nombre de tu panel (solo minúsculas, números y guiones): tu dirección será https://<nombre>.sanity.studio');
+  }
   sanity(['deploy']);
   console.log('\n✔ Panel publicado.');
 } else {
