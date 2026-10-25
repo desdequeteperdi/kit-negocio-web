@@ -1,0 +1,44 @@
+/* Estilo «Editorial»: tipografía con serifa, mucho espacio, líneas finas y poca decoración.
+   Solo se aplica con <html data-estilo="editorial">. */
+[data-estilo="editorial"] h1, [data-estilo="editorial"] h2, [data-estilo="editorial"] h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -.01em; }
+[data-estilo="editorial"] h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); }
+[data-estilo="editorial"] section { padding: 5rem 0; }
+[data-estilo="editorial"] .alt, [data-estilo="editorial"] .portada { background: #fff; }
+[data-estilo="editorial"] .alt { border-top: 1px solid #ddd; }
+
+/* Cabecera centrada, discreta */
+[data-estilo="editorial"] header { border-bottom: 1px solid #ddd; }
+[data-estilo="editorial"] header .contenedor { flex-direction: column; padding-top: 1.5rem; padding-bottom: 1.25rem; gap: .75rem; }
+[data-estilo="editorial"] .marca { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 1.7rem; letter-spacing: .02em; }
+[data-estilo="editorial"] header nav a { color: var(--oscuro); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; margin: 0 .65rem; }
+[data-estilo="editorial"] header nav a:hover { text-decoration: underline; text-underline-offset: .35rem; }
+
+/* Portada con imagen grande */
+[data-estilo="editorial"] .portada { padding: 4rem 0 5rem; }
+[data-estilo="editorial"] .portada h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1.1; }
+[data-estilo="editorial"] .portada img { border-radius: 0; aspect-ratio: 4 / 5; }
+[data-estilo="editorial"] .portada p { font-size: 1.15rem; }
+
+/* Botones rectos y en mayúsculas pequeñas */
+[data-estilo="editorial"] .boton { border-radius: 0; text-transform: uppercase; letter-spacing: .12em; font-size: .8rem; padding: .9rem 1.6rem; }
+
+/* Líneas finas en lugar de tarjetas */
+[data-estilo="editorial"] .tarjetas { gap: 2.5rem; }
+[data-estilo="editorial"] .tarjeta { border: 0; border-top: 1px solid var(--oscuro); border-radius: 0; padding: 1.25rem 0 0; }
+[data-estilo="editorial"] .entrada { border: 0; border-radius: 0; }
+[data-estilo="editorial"] .entrada .cuerpo { padding: 1rem 0 0; }
+[data-estilo="editorial"] .entrada img, [data-estilo="editorial"] .articulo img, [data-estilo="editorial"] .texto-libre img { border-radius: 0; }
+[data-estilo="editorial"] input:not([type=checkbox]), [data-estilo="editorial"] textarea { border-radius: 0; border-color: var(--oscuro); }
+[data-estilo="editorial"] details { border-color: var(--oscuro); }
+
+/* Pie de página claro, con la navegación completa */
+[data-estilo="editorial"] footer { background: #fff; color: var(--texto); border-top: 1px solid var(--oscuro); padding: 3.5rem 0; }
+[data-estilo="editorial"] footer a { color: var(--texto); }
+[data-estilo="editorial"] .pie-titulo { font-size: .75rem; text-transform: uppercase; letter-spacing: .14em; }
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-estilo="editorial"] a { transition: color .2s ease; }
+  [data-estilo="editorial"] .portada img { animation: aparece 1.2s ease both; }
+  @keyframes aparece { from { opacity: 0; } to { opacity: 1; } }
+}
+[data-estilo="editorial"] header nav { text-align: center; }

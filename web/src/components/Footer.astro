@@ -5,8 +5,38 @@ const n = c.negocio;
 const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
 ---
 <footer>
-  <div class="contenedor">
-    <p><strong>{n.nombre}</strong> · {n.zona} · {n.telefono} · {n.email}</p>
-    <p><a href="/aviso-legal">Aviso legal</a> · <a href="/privacidad">Privacidad</a>{seguimiento && <> · <a href="#cookies" onclick="window.abrirCookies && window.abrirCookies(); return false;">Cookies</a></>}</p>
+  <div class="contenedor pie">
+    <div>
+      <p class="pie-titulo">{n.nombre}</p>
+      <p>{n.descripcion}</p>
+    </div>
+    <nav aria-label="Pie de página">
+      <p class="pie-titulo">Navegación</p>
+      <ul>
+        <li><a href="/">Inicio</a></li>
+        {c.servicios.length > 0 && <li><a href="/#servicios">Servicios</a></li>}
+        {c.sobre.mostrar && <li><a href="/#sobre">Quiénes somos</a></li>}
+        {c.blog.mostrar && <li><a href="/blog">{c.blog.titulo}</a></li>}
+        {c.preguntas.length > 0 && <li><a href="/#preguntas">Preguntas frecuentes</a></li>}
+        {c.newsletter.mostrar && <li><a href="/#newsletter">Newsletter</a></li>}
+        <li><a href="/#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="pie-titulo">Contacto</p>
+      <ul>
+        {n.telefono && <li><a href={`tel:${n.telefono.replace(/\s/g, '')}`}>{n.telefono}</a></li>}
+        {n.email && <li><a href={`mailto:${n.email}`}>{n.email}</a></li>}
+        {n.zona && <li>{n.zona}</li>}
+      </ul>
+    </div>
+    <div>
+      <p class="pie-titulo">Legal</p>
+      <ul>
+        <li><a href="/aviso-legal">Aviso legal</a></li>
+        <li><a href="/privacidad">Privacidad</a></li>
+        {seguimiento && <li><a href="#cookies" onclick="window.abrirCookies && window.abrirCookies(); return false;">Cookies</a></li>}
+      </ul>
+    </div>
   </div>
 </footer>

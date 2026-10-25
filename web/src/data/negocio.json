@@ -8,7 +8,8 @@
     "email": "hola@ejemplo.invalid",
     "whatsapp": "34600000000",
     "zona": "Madrid capital y zona norte",
-    "tema": "verde"
+    "tema": "verde",
+    "estilo": "clasico"
   },
   "portada": {
     "titular": "Una terraza o un jardín que da gusto usar todo el año",

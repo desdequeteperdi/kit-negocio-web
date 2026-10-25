@@ -14,7 +14,7 @@ h2 { font-size: 1.7rem; margin-top: 0; }
 header .contenedor { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: .75rem; padding-bottom: .75rem; }
 header { border-bottom: 1px solid #e5e5e5; }
 .marca { font-weight: 700; font-size: 1.2rem; text-decoration: none; color: var(--oscuro); }
-nav a { margin-right: 1rem; text-decoration: none; }
+header nav a { margin-right: 1rem; text-decoration: none; }
 .portada { background: var(--suave); }
 .portada .contenedor { display: grid; gap: 2rem; align-items: center; grid-template-columns: minmax(0, 1fr); }
 .portada .contenedor > * { min-width: 0; }
@@ -61,3 +61,8 @@ video, iframe, svg { max-width: 100%; }
 .faqs-entrada { margin-top: 2.5rem; }
 .etiquetas { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2rem; }
 .etiquetas a { font-size: .9rem; padding: .2rem .65rem; border: 1px solid #e0e0e0; border-radius: 999px; text-decoration: none; }
+
+.pie { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.pie p { margin: 0 0 .5rem; }
+.pie ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+.pie-titulo { font-weight: 700; }

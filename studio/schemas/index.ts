@@ -47,6 +47,18 @@ const negocio = defineType({
       name: 'tema', title: 'Colores de la web', type: 'string', initialValue: 'verde',
       options: { list: [{ title: 'Verde', value: 'verde' }, { title: 'Azul', value: 'azul' }, { title: 'Terracota', value: 'terracota' }], layout: 'radio' },
     }),
+    defineField({
+      name: 'estilo', title: 'Estilo de la web', type: 'string', initialValue: 'clasico',
+      description: 'Cambia el diseño completo (tipografía, formas y animaciones). Se combina con los colores.',
+      options: {
+        list: [
+          { title: 'Clásico: sobrio y sin animaciones', value: 'clasico' },
+          { title: 'Moderno: titulares grandes, sombras y animaciones suaves', value: 'moderno' },
+          { title: 'Editorial: elegante, mucho espacio y tipografía con serifa', value: 'editorial' },
+        ],
+        layout: 'radio',
+      },
+    }),
   ],
   preview: { prepare: () => ({ title: 'Datos del negocio' }) },
 });

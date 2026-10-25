@@ -1,0 +1,45 @@
+/* Estilo «Moderno»: titulares grandes, formas redondeadas, sombras suaves y animaciones sutiles.
+   Solo se aplica con <html data-estilo="moderno">. Las animaciones se desactivan con «reducir movimiento». */
+[data-estilo="moderno"] { --radio: 1.25rem; --sombra: 0 10px 30px rgba(0, 0, 0, .08); }
+[data-estilo="moderno"] body { background: #fff; }
+[data-estilo="moderno"] h1, [data-estilo="moderno"] h2, [data-estilo="moderno"] h3 { letter-spacing: -.02em; }
+[data-estilo="moderno"] h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; }
+[data-estilo="moderno"] section { padding: 4.5rem 0; }
+
+/* Cabecera fija con desenfoque */
+[data-estilo="moderno"] header { position: sticky; top: 0; z-index: 5; background: rgba(255, 255, 255, .8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0, 0, 0, .06); }
+[data-estilo="moderno"] header nav a { font-weight: 600; color: var(--oscuro); position: relative; }
+[data-estilo="moderno"] header nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.2rem; height: 2px; background: var(--principal); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
+[data-estilo="moderno"] header nav a:hover::after, [data-estilo="moderno"] header nav a:focus-visible::after { transform: scaleX(1); }
+
+/* Portada con degradado */
+[data-estilo="moderno"] .portada { position: relative; overflow: hidden; padding: 5rem 0; background: linear-gradient(135deg, var(--suave) 0%, #fff 70%); }
+[data-estilo="moderno"] .portada::before { content: ""; position: absolute; width: 34rem; height: 34rem; right: -10rem; top: -12rem; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--principal) 22%, transparent), transparent 70%); pointer-events: none; }
+[data-estilo="moderno"] .portada .contenedor { position: relative; }
+[data-estilo="moderno"] .portada h1 { font-size: clamp(2.2rem, 6.5vw, 3.9rem); font-weight: 800; line-height: 1.05; }
+[data-estilo="moderno"] .portada p { font-size: 1.2rem; }
+[data-estilo="moderno"] .portada img { border-radius: 2rem; box-shadow: 0 25px 60px rgba(0, 0, 0, .18); }
+
+/* Botones */
+[data-estilo="moderno"] .boton { border-radius: 999px; padding: .85rem 1.6rem; box-shadow: 0 6px 16px color-mix(in srgb, var(--principal) 35%, transparent); transition: transform .2s ease, box-shadow .2s ease; }
+[data-estilo="moderno"] .boton:hover { transform: translateY(-2px); box-shadow: 0 10px 22px color-mix(in srgb, var(--principal) 40%, transparent); }
+[data-estilo="moderno"] .boton.secundario { box-shadow: none; }
+
+/* Tarjetas */
+[data-estilo="moderno"] .tarjeta, [data-estilo="moderno"] .entrada { border: 0; border-radius: var(--radio); box-shadow: var(--sombra); background: #fff; transition: transform .25s ease, box-shadow .25s ease; }
+[data-estilo="moderno"] .tarjeta { padding: 1.75rem; }
+[data-estilo="moderno"] .tarjeta:hover, [data-estilo="moderno"] .entrada:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(0, 0, 0, .12); }
+[data-estilo="moderno"] .alt { background: linear-gradient(180deg, var(--suave), #fff); }
+[data-estilo="moderno"] input:not([type=checkbox]), [data-estilo="moderno"] textarea { border-radius: .75rem; border-color: #bbb; }
+[data-estilo="moderno"] details { border: 0; background: var(--suave); border-radius: 1rem; padding: 1rem 1.25rem; margin-bottom: .75rem; }
+[data-estilo="moderno"] footer { margin-top: 0; }
+
+/* Animaciones: la portada entra al cargar; el resto aparece al llegar con el scroll */
+@keyframes entra { from { opacity: 0; transform: translateY(1.25rem); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  [data-estilo="moderno"] .portada .contenedor > * { animation: entra .8s ease both; }
+  [data-estilo="moderno"] .portada .contenedor > *:nth-child(2) { animation-delay: .15s; }
+  .anim[data-estilo="moderno"] main section:not(.portada), .anim[data-estilo="moderno"] .tarjeta, .anim[data-estilo="moderno"] .entrada { opacity: 0; transform: translateY(1.5rem); transition: opacity .7s ease, transform .7s ease, box-shadow .25s ease; }
+  .anim[data-estilo="moderno"] main section.visto, .anim[data-estilo="moderno"] .tarjeta.visto, .anim[data-estilo="moderno"] .entrada.visto { opacity: 1; transform: none; }
+  .anim[data-estilo="moderno"] .tarjeta.visto:hover, .anim[data-estilo="moderno"] .entrada.visto:hover { transform: translateY(-5px); }
+}

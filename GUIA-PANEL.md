@@ -11,7 +11,7 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 
 **Bloques fijos** (uno por cada parte de la web):
 
-- Datos del negocio: nombre, datos de contacto y colores de la web.
+- Datos del negocio: nombre, datos de contacto, colores y **estilo de la web** (Clásico, Moderno o Editorial; cambia tipografía, formas y animaciones y se combina con los colores).
 - Portada
 - Quiénes somos
 - Contacto

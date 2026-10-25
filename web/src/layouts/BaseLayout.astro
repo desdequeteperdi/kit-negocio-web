@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
-import { getContenido, temas } from '../lib/contenido';
+import '../styles/moderno.css';
+import '../styles/editorial.css';
+import { getContenido, temas, estilos } from '../lib/contenido';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Consentimiento from '../components/Consentimiento.astro';
@@ -9,6 +11,7 @@ interface Props { titulo?: string; descripcion?: string; noindex?: boolean; imag
 const c = await getContenido();
 const { titulo = c.buscadores.titulo, descripcion = c.buscadores.descripcion, noindex = false, imagen, tipo = 'website' } = Astro.props;
 const t = temas[c.negocio.tema] ?? temas.verde;
+const estilo = estilos.includes(c.negocio.estilo) ? c.negocio.estilo : 'clasico';
 // Solo se aceptan códigos con el formato esperado; cualquier otra cosa se ignora
 const valido = (v: string | undefined, re: RegExp) => (v && re.test(v) ? v : '');
 const searchConsole = valido(c.buscadores.searchConsole, /^[\w-]{20,100}$/);
@@ -21,7 +24,7 @@ const ga4 = valido(c.buscadores.ga4, /^G-[A-Z0-9]{4,20}$/);
 const pixel = valido(c.buscadores.metaPixel, /^\d{8,20}$/);
 ---
 <!doctype html>
-<html lang="es" style={`--principal:${t.principal};--oscuro:${t.oscuro};--suave:${t.suave}`}>
+<html lang="es" data-estilo={estilo} style={`--principal:${t.principal};--oscuro:${t.oscuro};--suave:${t.suave}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,6 +49,16 @@ const pixel = valido(c.buscadores.metaPixel, /^\d{8,20}$/);
     <Header />
     <main><slot /></main>
     <Footer />
+    {estilo === 'moderno' && (
+      <script is:inline>
+        // Las secciones aparecen al llegar a ellas. Sin JavaScript o con "reducir movimiento" se ve todo desde el principio.
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+          document.documentElement.classList.add('anim');
+          const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visto'); io.unobserve(e.target); } }), { threshold: 0.12 });
+          document.querySelectorAll('main section:not(.portada), .tarjeta, .entrada').forEach((el) => io.observe(el));
+        }
+      </script>
+    )}
     {(ga4 || pixel) && <Consentimiento ga4={ga4} pixel={pixel} />}
   </body>
 </html>

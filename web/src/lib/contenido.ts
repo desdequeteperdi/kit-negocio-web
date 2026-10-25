@@ -26,11 +26,13 @@ export const temas: Record<string, { principal: string; oscuro: string; suave: s
   terracota: { principal: '#b5532f', oscuro: '#4a2214', suave: '#fbf0ea' },
 };
 
+export const estilos = ['clasico', 'moderno', 'editorial'];
+
 const projectId = import.meta.env.SANITY_PROJECT_ID;
 const dataset = import.meta.env.SANITY_DATASET ?? 'production';
 
 const consulta = `{
-  "negocio": *[_id == "negocio"][0]{nombre, descripcion, telefono, email, whatsapp, zona, tema},
+  "negocio": *[_id == "negocio"][0]{nombre, descripcion, telefono, email, whatsapp, zona, tema, estilo},
   "portada": *[_id == "portada"][0]{titular, presentacion, textoBoton, "imagen": imagen.asset->url, "alt": imagen.alt},
   "servicios": *[_type == "servicio"] | order(orden asc){orden, nombre, descripcion, precio},
   "sobre": *[_id == "sobre"][0]{mostrar, titulo, texto, puntos},
