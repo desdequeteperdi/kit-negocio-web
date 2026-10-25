@@ -18,11 +18,14 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 - Google y buscadores: título y descripción que aparecen en los resultados.
 - Datos legales
 - Blog: ajustes
+- Catálogo: ajustes
 
 **Listas** (puedes añadir y quitar elementos):
 
 - Servicios
 - Preguntas frecuentes
+- Categorías del catálogo
+- Productos
 - Secciones extra de la portada
 - Entradas del blog
 
@@ -66,6 +69,20 @@ Cada entrada tiene estos campos, además del título y el texto:
 - **Título y descripción en Google (opcionales):** si los dejas vacíos se usan el título y el resumen. Máximo 70 y 160 caracteres.
 
 La web añade sola los datos estructurados (artículo, migas de pan y preguntas frecuentes): no tienes que hacer nada más.
+
+## Catálogo de productos
+
+Sirve para enseñar lo que vendes, con o sin precio. No cobra: cada producto lleva un botón que abre el formulario de contacto con el nombre del producto ya escrito.
+
+1. Abre **Catálogo: ajustes**, activa **Mostrar el catálogo**, revisa el título, la introducción y el texto del botón, y pulsa **Publish**.
+2. Crea al menos una **Categoría del catálogo** (nombre, orden y, si quieres, descripción e imagen).
+3. Crea tus **Productos**: nombre, categoría, resumen, imagen y descripción completa.
+   - **Precio en euros:** solo el número (45 o 12.5). Si lo dejas vacío no se muestra precio.
+   - **Texto del precio:** sustituye al precio en pantalla («Desde 45 €»). Los datos para Google usan el precio numérico.
+   - **Disponible:** si lo desactivas, el producto sigue visible con el aviso «No disponible ahora».
+   - **Mostrar en la portada:** los marcados salen en la franja del catálogo de la portada. Si no marcas ninguno, salen los más recientes.
+
+El catálogo aparece en el menú y en el pie solo cuando está activado y hay al menos un producto con categoría. Cada producto tiene su propia página, con datos estructurados para Google.
 
 ## Secciones extra en la portada
 

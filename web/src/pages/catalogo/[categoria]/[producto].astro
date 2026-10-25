@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DatosProducto from '../../../components/DatosProducto.astro';
+import { getContenido, catalogoVisible, productosPublicos, precioProducto, urlConsulta } from '../../../lib/contenido';
+
+export async function getStaticPaths() {
+  const c = await getContenido();
+  if (!catalogoVisible(c)) return [];
+  return productosPublicos(c).map((p) => ({
+    params: { categoria: p.categoria, producto: p.slug },
+    props: { producto: p, categoria: c.catalogo.categorias.find((k) => k.slug === p.categoria)! },
+  }));
+}
+const { producto: p, categoria: k } = Astro.props;
+const c = await getContenido();
+const precio = precioProducto(p);
+---
+<BaseLayout titulo={`${p.nombre} | ${k.nombre} | ${c.negocio.nombre}`} descripcion={p.resumen || k.descripcion || c.catalogo.introduccion} imagen={p.imagen}>
+  <DatosProducto slot="head" producto={p} />
+  <article class="articulo producto-ficha">
+    <p class="meta"><a href="/catalogo">{c.catalogo.titulo}</a> · <a href={`/catalogo/${k.slug}`}>{k.nombre}</a></p>
+    <h1>{p.nombre}</h1>
+    {p.imagen && <img src={p.imagen} alt={p.alt ?? ""} width="800" height="600" />}
+    {precio && <p class="precio">{precio}</p>}
+    {!p.disponible && <p class="meta">No disponible ahora</p>}
+    {p.resumen && <p>{p.resumen}</p>}
+    <div class="texto-libre" set:html={p.descripcionHtml} />
+    <p><a class="boton" href={urlConsulta(p)}>{c.catalogo.textoBoton || 'Consultar'}</a></p>
+  </article>
+</BaseLayout>

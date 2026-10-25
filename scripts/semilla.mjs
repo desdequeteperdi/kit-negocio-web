@@ -15,10 +15,29 @@ unico('contacto', d.contacto);
 unico('newsletter', d.newsletter);
 unico('buscadores', d.buscadores);
 unico('legal', d.legal);
+unico('catalogoAjustes', { mostrar: d.catalogo.mostrar, titulo: d.catalogo.titulo, introduccion: d.catalogo.introduccion, textoBoton: d.catalogo.textoBoton });
 unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introduccion: d.blog.introduccion });
 
 d.servicios.forEach((s, i) => docs.push({ _id: `servicio-${i + 1}`, _type: 'servicio', ...s }));
 d.preguntas.forEach((p, i) => docs.push({ _id: `pregunta-${i + 1}`, _type: 'pregunta', orden: i + 1, ...p }));
+const parrafoSanity = (t) => ({
+  _type: 'block', _key: randomUUID().slice(0, 12), style: 'normal', markDefs: [],
+  children: [{ _type: 'span', _key: randomUUID().slice(0, 12), text: t, marks: [] }],
+});
+d.catalogo.categorias.forEach((c) => {
+  const { slug, imagen, alt, ...resto } = c; // las imágenes de ejemplo se suben desde el panel
+  docs.push({ _id: `categoria-${slug}`, _type: 'categoria', ...resto, slug: { _type: 'slug', current: slug } });
+});
+d.catalogo.productos.forEach((p) => {
+  const { slug, imagen, alt, categoria, creado, descripcion, precio, ...resto } = p;
+  docs.push({
+    _id: `producto-${slug}`, _type: 'producto', ...resto,
+    ...(precio != null && { precio }),
+    slug: { _type: 'slug', current: slug },
+    categoria: { _type: 'reference', _ref: `categoria-${categoria}` },
+    descripcion: descripcion.map(parrafoSanity),
+  });
+});
 d.blog.entradas.forEach((e) => {
   const { slug, imagen, cuerpo, faqs, ...resto } = e;
   docs.push({

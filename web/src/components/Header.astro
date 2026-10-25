@@ -1,5 +1,5 @@
 ---
-import { getContenido } from '../lib/contenido';
+import { getContenido, catalogoVisible } from '../lib/contenido';
 const c = await getContenido();
 ---
 <header>
@@ -7,6 +7,7 @@ const c = await getContenido();
     <a class="marca" href="/">{c.negocio.nombre}</a>
     <nav aria-label="Principal">
       <a href="/#servicios">Servicios</a>
+      {catalogoVisible(c) && <a href="/catalogo">{c.catalogo.titulo}</a>}
       {c.sobre.mostrar && <a href="/#sobre">Quiénes somos</a>}
       {c.blog.mostrar && <a href="/blog">Blog</a>}
       <a href="/#contacto">Contacto</a>

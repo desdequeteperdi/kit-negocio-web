@@ -1,5 +1,5 @@
 ---
-import { getContenido } from '../lib/contenido';
+import { getContenido, catalogoVisible } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
 const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
@@ -15,6 +15,7 @@ const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
       <ul>
         <li><a href="/">Inicio</a></li>
         {c.servicios.length > 0 && <li><a href="/#servicios">Servicios</a></li>}
+        {catalogoVisible(c) && <li><a href="/catalogo">{c.catalogo.titulo}</a></li>}
         {c.sobre.mostrar && <li><a href="/#sobre">Quiénes somos</a></li>}
         {c.blog.mostrar && <li><a href="/blog">{c.blog.titulo}</a></li>}
         {c.preguntas.length > 0 && <li><a href="/#preguntas">Preguntas frecuentes</a></li>}

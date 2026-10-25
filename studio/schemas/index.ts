@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter'];
+export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'catalogoAjustes'];
 
 const texto = (name: string, title: string, extra: Record<string, unknown> = {}) =>
   defineField({ name, title, type: 'string', ...extra });
@@ -200,6 +200,49 @@ const entrada = defineType({
   preview: { select: { title: 'titulo', subtitle: 'fecha' } },
 });
 
+const catalogoAjustes = defineType({
+  name: 'catalogoAjustes', title: 'Catálogo: ajustes', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Mostrar el catálogo', false),
+    texto('titulo', 'Título'),
+    parrafo('introduccion', 'Introducción'),
+    texto('textoBoton', 'Texto del botón de cada producto', { description: 'Lleva al formulario de contacto con el producto ya escrito. Por ejemplo: Consultar, Pedir presupuesto.' }),
+  ],
+  preview: { prepare: () => ({ title: 'Catálogo: ajustes' }) },
+});
+
+const categoria = defineType({
+  name: 'categoria', title: 'Categoría del catálogo', type: 'document',
+  fields: [
+    defineField({ name: 'orden', title: 'Orden (1 sale primero)', type: 'number', initialValue: 1 }),
+    texto('nombre', 'Nombre', { validation: (r) => r.required() }),
+    defineField({ name: 'slug', title: 'Dirección web', type: 'slug', options: { source: 'nombre', maxLength: 60 }, validation: (r) => r.required() }),
+    parrafo('descripcion', 'Descripción'),
+    defineField({ name: 'imagen', title: 'Imagen (opcional)', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
+  ],
+  orderings: [{ title: 'Orden', name: 'orden', by: [{ field: 'orden', direction: 'asc' }] }],
+  preview: { select: { title: 'nombre', media: 'imagen' } },
+});
+
+const producto = defineType({
+  name: 'producto', title: 'Producto', type: 'document',
+  fields: [
+    texto('nombre', 'Nombre', { validation: (r) => r.required() }),
+    defineField({ name: 'slug', title: 'Dirección web', type: 'slug', options: { source: 'nombre', maxLength: 80 }, validation: (r) => r.required() }),
+    defineField({ name: 'categoria', title: 'Categoría', type: 'reference', to: [{ type: 'categoria' }], validation: (r) => r.required() }),
+    parrafo('resumen', 'Resumen', { description: 'Una o dos frases. Sale en el listado y en Google.' }),
+    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
+    defineField({ name: 'precio', title: 'Precio en euros (opcional)', type: 'number', validation: (r) => r.min(0), description: 'Solo el número, por ejemplo 45 o 12.5. Si lo dejas vacío no se muestra precio.' }),
+    texto('precioTexto', 'Texto del precio (opcional)', { description: 'Sustituye al precio en pantalla. Por ejemplo: Desde 45 € o 12 € el metro.' }),
+    interruptor('disponible', 'Disponible'),
+    interruptor('destacado', 'Mostrar en la portada', false),
+    defineField({ name: 'orden', title: 'Orden dentro de su categoría (1 sale primero)', type: 'number', initialValue: 1 }),
+    textoLibre('descripcion', 'Descripción completa'),
+  ],
+  orderings: [{ title: 'Orden', name: 'orden', by: [{ field: 'orden', direction: 'asc' }] }],
+  preview: { select: { title: 'nombre', subtitle: 'resumen', media: 'imagen' } },
+});
+
 const seccion = defineType({
   name: 'seccion', title: 'Sección extra de la portada', type: 'document',
   fields: [
@@ -223,4 +266,4 @@ const seccion = defineType({
   preview: { select: { title: 'titulo', subtitle: 'lugar' }, prepare: ({ title, subtitle }) => ({ title: title || 'Sección sin título', subtitle }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, servicio, pregunta, entrada, seccion, bloqueImagen, bloqueHtml];
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, bloqueImagen, bloqueHtml];

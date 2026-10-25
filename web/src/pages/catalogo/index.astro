@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TarjetaProducto from '../../components/TarjetaProducto.astro';
+import { getContenido, catalogoVisible, productosPublicos } from '../../lib/contenido';
+const c = await getContenido();
+if (!catalogoVisible(c)) return Astro.redirect('/404');
+const productos = productosPublicos(c);
+const categorias = c.catalogo.categorias.filter((k) => productos.some((p) => p.categoria === k.slug));
+---
+<BaseLayout titulo={`${c.catalogo.titulo} | ${c.negocio.nombre}`} descripcion={c.catalogo.introduccion}>
+  <section>
+    <div class="contenedor">
+      <h1>{c.catalogo.titulo}</h1>
+      <p>{c.catalogo.introduccion}</p>
+      <p class="etiquetas">{categorias.map((k) => <a href={`/catalogo/${k.slug}`}>{k.nombre}</a>)}</p>
+      {categorias.map((k) => (
+        <div class="grupo-catalogo">
+          <h2><a href={`/catalogo/${k.slug}`}>{k.nombre}</a></h2>
+          <div class="entradas">{productos.filter((p) => p.categoria === k.slug).map((p) => <TarjetaProducto producto={p} />)}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

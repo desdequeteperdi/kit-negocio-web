@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TarjetaProducto from '../../../components/TarjetaProducto.astro';
+import { getContenido, catalogoVisible, productosPublicos } from '../../../lib/contenido';
+
+export async function getStaticPaths() {
+  const c = await getContenido();
+  if (!catalogoVisible(c)) return [];
+  const productos = productosPublicos(c);
+  return c.catalogo.categorias
+    .filter((k) => productos.some((p) => p.categoria === k.slug))
+    .map((k) => ({ params: { categoria: k.slug }, props: { categoria: k, productos: productos.filter((p) => p.categoria === k.slug) } }));
+}
+const { categoria: k, productos } = Astro.props;
+const c = await getContenido();
+---
+<BaseLayout titulo={`${k.nombre} | ${c.catalogo.titulo} | ${c.negocio.nombre}`} descripcion={k.descripcion || c.catalogo.introduccion} imagen={k.imagen}>
+  <section>
+    <div class="contenedor">
+      <p class="meta"><a href="/catalogo">← {c.catalogo.titulo}</a></p>
+      <h1>{k.nombre}</h1>
+      {k.descripcion && <p>{k.descripcion}</p>}
+      <div class="entradas">{productos.map((p) => <TarjetaProducto producto={p} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

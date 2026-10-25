@@ -1,0 +1,16 @@
+---
+import { getContenido, catalogoVisible, productosPortada } from '../lib/contenido';
+import TarjetaProducto from './TarjetaProducto.astro';
+const c = await getContenido();
+const productos = productosPortada(c);
+---
+{catalogoVisible(c) && (
+  <section id="catalogo">
+    <div class="contenedor">
+      <h2>{c.catalogo.titulo}</h2>
+      <p>{c.catalogo.introduccion}</p>
+      <div class="carrusel">{productos.map((p) => <TarjetaProducto producto={p} />)}</div>
+      <p><a href="/catalogo">Ver todo el catálogo</a></p>
+    </div>
+  </section>
+)}

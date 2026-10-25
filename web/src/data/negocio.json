@@ -143,5 +143,100 @@
         ]
       }
     ]
+  },
+  "catalogo": {
+    "mostrar": false,
+    "titulo": "Catálogo",
+    "introduccion": "Plantas, macetas y accesorios que usamos en nuestros proyectos.",
+    "textoBoton": "Consultar",
+    "categorias": [
+      {
+        "slug": "plantas",
+        "nombre": "Plantas",
+        "descripcion": "Plantas resistentes para terraza y jardín.",
+        "orden": 1,
+        "imagen": "",
+        "alt": ""
+      },
+      {
+        "slug": "macetas",
+        "nombre": "Macetas y jardineras",
+        "descripcion": "Recipientes grandes que retienen la humedad.",
+        "orden": 2,
+        "imagen": "",
+        "alt": ""
+      }
+    ],
+    "productos": [
+      {
+        "slug": "romero-en-maceta",
+        "nombre": "Romero en maceta",
+        "categoria": "plantas",
+        "resumen": "Aromática resistente al sol y al viento.",
+        "imagen": "/img-portada.svg",
+        "alt": "Imagen de ejemplo",
+        "precio": 12,
+        "precioTexto": "",
+        "disponible": true,
+        "destacado": true,
+        "orden": 1,
+        "creado": "2026-10-01T10:00:00Z",
+        "descripcion": [
+          "Maceta de 20 cm con romero listo para plantar.",
+          "Necesita sol directo y poco riego."
+        ]
+      },
+      {
+        "slug": "lavanda",
+        "nombre": "Lavanda",
+        "categoria": "plantas",
+        "resumen": "Flor morada que atrae polinizadores.",
+        "imagen": "",
+        "alt": "",
+        "precio": 9.5,
+        "precioTexto": "",
+        "disponible": true,
+        "destacado": true,
+        "orden": 2,
+        "creado": "2026-10-02T10:00:00Z",
+        "descripcion": [
+          "Ideal para borduras y macetas soleadas."
+        ]
+      },
+      {
+        "slug": "jardinera-de-barro",
+        "nombre": "Jardinera de barro",
+        "categoria": "macetas",
+        "resumen": "60 cm, con drenaje y platillo.",
+        "imagen": "",
+        "alt": "",
+        "precio": null,
+        "precioTexto": "Desde 35 €",
+        "disponible": true,
+        "destacado": false,
+        "orden": 1,
+        "creado": "2026-10-03T10:00:00Z",
+        "descripcion": [
+          "Barro cocido artesanal. Consulta medidas y colores."
+        ]
+      },
+      {
+        "slug": "maceta-grande",
+        "nombre": "Maceta grande de fibra",
+        "categoria": "macetas",
+        "resumen": "Ligera y resistente a las heladas.",
+        "imagen": "",
+        "alt": "",
+        "precio": 48,
+        "precioTexto": "",
+        "disponible": false,
+        "destacado": false,
+        "orden": 2,
+        "creado": "2026-10-04T10:00:00Z",
+        "descripcion": [
+          "Agotada de momento; pregúntanos por la próxima reposición."
+        ]
+      }
+    ]
   }
 }

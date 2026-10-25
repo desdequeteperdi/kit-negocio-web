@@ -17,6 +17,7 @@ const apartados: Record<string, string> = {
   legal: 'Datos legales',
   blogAjustes: 'Blog: ajustes',
   newsletter: 'Newsletter',
+  catalogoAjustes: 'Catálogo: ajustes',
 };
 
 export default defineConfig({
@@ -40,6 +41,8 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem('servicio').title('Servicios'),
             S.documentTypeListItem('pregunta').title('Preguntas frecuentes'),
+            S.documentTypeListItem('categoria').title('Categorías del catálogo'),
+            S.documentTypeListItem('producto').title('Productos'),
             S.documentTypeListItem('seccion').title('Secciones extra de la portada'),
             S.documentTypeListItem('entrada').title('Entradas del blog'),
           ]),

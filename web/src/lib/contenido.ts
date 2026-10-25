@@ -14,9 +14,16 @@ export type Entrada = {
   autor: string; actualizada: string; etiquetas: string[]; faqs: { pregunta: string; respuesta: string }[];
   seoTitulo: string; seoDescripcion: string; cuerpoHtml: string;
 };
+export type Categoria = { slug: string; nombre: string; descripcion: string; orden: number; imagen: string; alt: string };
+export type Producto = {
+  slug: string; nombre: string; categoria: string; resumen: string; imagen: string; alt: string;
+  precio: number | null; precioTexto: string; disponible: boolean; destacado: boolean; orden: number; creado: string;
+  descripcionHtml: string;
+};
 export type Seccion = { orden: number; lugar: string; titulo: string; html: string };
-export type Contenido = Omit<typeof datos, 'blog'> & {
+export type Contenido = Omit<typeof datos, 'blog' | 'catalogo'> & {
   blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
+  catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; categorias: Categoria[]; productos: Producto[] };
   secciones: Seccion[];
 };
 
@@ -41,6 +48,15 @@ const consulta = `{
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion},
+  "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton},
+  "categorias": *[_type == "categoria" && defined(slug.current)] | order(orden asc){
+    "slug": slug.current, nombre, descripcion, orden, "imagen": imagen.asset->url, "alt": imagen.alt
+  },
+  "productos": *[_type == "producto" && defined(slug.current) && defined(categoria->slug.current)] | order(orden asc){
+    "slug": slug.current, nombre, "categoria": categoria->slug.current, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
+    precio, precioTexto, disponible, destacado, orden, "creado": _createdAt,
+    descripcion[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
+  },
   "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
   "entradas": *[_type == "entrada" && defined(slug.current)] | order(fecha desc){
     "slug": slug.current, titulo, fecha, categoria, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
@@ -67,6 +83,17 @@ function normalizar(e: any, cuerpoHtml: string): Entrada {
   };
 }
 
+// Rellena lo que falte en un producto para que la web nunca se rompa
+function normalizarProducto(p: any, descripcionHtml: string): Producto {
+  return {
+    slug: p.slug, nombre: p.nombre, categoria: p.categoria, resumen: p.resumen ?? '',
+    imagen: optimizada(p.imagen, 'w=800&auto=format'), alt: p.alt ?? '',
+    precio: typeof p.precio === 'number' ? p.precio : null, precioTexto: p.precioTexto ?? '',
+    disponible: p.disponible !== false, destacado: p.destacado === true, orden: p.orden ?? 1, creado: p.creado ?? '',
+    descripcionHtml,
+  };
+}
+
 // «Terrazas y jardín» -> «terrazas-y-jardin»: dirección de la página de cada etiqueta
 export function slugEtiqueta(t: string): string {
   return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -88,6 +115,12 @@ async function desdeSanity(): Promise<Contenido> {
     newsletter: { ...datos.newsletter, ...r.newsletter },
     buscadores: { ...datos.buscadores, ...r.buscadores, imagenCompartir: optimizada(r.buscadores?.imagenCompartir, 'w=1200&h=630&fit=crop&fm=jpg&q=80') },
     legal: { ...datos.legal, ...r.legal },
+    catalogo: {
+      ...datos.catalogo,
+      ...r.catalogoAjustes,
+      categorias: (r.categorias ?? []).map((k: any) => ({ ...k, descripcion: k.descripcion ?? '', orden: k.orden ?? 1, imagen: optimizada(k.imagen, 'w=800&auto=format'), alt: k.alt ?? '' })),
+      productos: (r.productos ?? []).map(({ descripcion, ...p }: any) => normalizarProducto(p, aHtml(descripcion))),
+    },
     blog: {
       ...datos.blog,
       ...r.blogAjustes,
@@ -102,6 +135,7 @@ function desdeArchivo(): Contenido {
   return {
     ...datos,
     blog: { ...datos.blog, entradas: datos.blog.entradas.map(({ cuerpo, ...e }) => normalizar(e, parrafosAHtml(cuerpo))) },
+    catalogo: { ...datos.catalogo, productos: datos.catalogo.productos.map(({ descripcion, ...p }) => normalizarProducto(p, parrafosAHtml(descripcion))) },
     secciones: [],
   };
 }
@@ -114,3 +148,32 @@ export async function getContenido(): Promise<Contenido> {
 export function entradasOrdenadas(c: Contenido) {
   return [...c.blog.entradas].sort((a, b) => b.fecha.localeCompare(a.fecha));
 }
+
+// El catálogo solo existe en la web si está activado y tiene al menos un producto con categoría.
+export function catalogoVisible(c: Contenido) {
+  return c.catalogo.mostrar && productosPublicos(c).length > 0;
+}
+
+// Productos cuya categoría existe, ordenados por categoría y por orden.
+export function productosPublicos(c: Contenido) {
+  const orden = new Map(c.catalogo.categorias.map((k, i) => [k.slug, i]));
+  return c.catalogo.productos
+    .filter((p) => orden.has(p.categoria))
+    .sort((a, b) => orden.get(a.categoria)! - orden.get(b.categoria)! || a.orden - b.orden || b.creado.localeCompare(a.creado));
+}
+
+// Para la portada: los marcados como destacados o, si no hay ninguno, los 6 más recientes.
+export function productosPortada(c: Contenido) {
+  const todos = productosPublicos(c);
+  const marcados = todos.filter((p) => p.destacado);
+  const lista = marcados.length > 0 ? marcados : [...todos].sort((a, b) => b.creado.localeCompare(a.creado));
+  return lista.slice(0, 8);
+}
+
+export function precioProducto(p: Producto): string {
+  if (p.precioTexto) return p.precioTexto;
+  return p.precio === null ? '' : new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(p.precio);
+}
+
+export const urlProducto = (p: Producto) => `/catalogo/${p.categoria}/${p.slug}`;
+export const urlConsulta = (p: Producto) => `/?consulta=${encodeURIComponent(p.nombre)}#contacto`;

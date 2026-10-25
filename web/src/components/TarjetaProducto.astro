@@ -1,0 +1,15 @@
+---
+import { precioProducto, urlProducto, type Producto } from '../lib/contenido';
+interface Props { producto: Producto }
+const { producto: p } = Astro.props;
+const precio = precioProducto(p);
+---
+<article class="entrada producto">
+  {p.imagen && <img src={p.imagen} alt={p.alt ?? ""} width="800" height="600" loading="lazy" />}
+  <div class="cuerpo">
+    <h3><a href={urlProducto(p)}>{p.nombre}</a></h3>
+    {p.resumen && <p>{p.resumen}</p>}
+    {precio && <p class="precio">{precio}</p>}
+    {!p.disponible && <p class="meta">No disponible ahora</p>}
+  </div>
+</article>

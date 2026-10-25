@@ -24,6 +24,12 @@ const { contacto, negocio } = c;
           <span>He leído la <a href="/privacidad">política de privacidad</a>.</span></label>
         <button class="boton" type="submit">Enviar consulta</button>
       </form>
+      <script is:inline>
+        // Desde un producto (/?consulta=Nombre#contacto) el mensaje llega ya empezado
+        const q = new URLSearchParams(location.search).get('consulta');
+        const m = document.querySelector('textarea[name=mensaje]');
+        if (q && m && !m.value) m.value = 'Hola, me interesa: ' + q.slice(0, 120) + '. ';
+      </script>
     )}
   </div>
 </section>
