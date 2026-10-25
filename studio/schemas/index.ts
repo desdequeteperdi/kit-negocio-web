@@ -6,6 +6,8 @@ const texto = (name: string, title: string, extra: Record<string, unknown> = {})
   defineField({ name, title, type: 'string', ...extra });
 const parrafo = (name: string, title: string, extra: Record<string, unknown> = {}) =>
   defineField({ name, title, type: 'text', rows: 3, ...extra });
+const url = (name: string, title: string) =>
+  defineField({ name, title, type: 'url', description: 'Déjalo vacío para no mostrarla. Empieza por https://', validation: (r) => r.uri({ scheme: ['https'] }) });
 const interruptor = (name: string, title: string, initialValue = true) =>
   defineField({ name, title, type: 'boolean', initialValue });
 
@@ -43,6 +45,12 @@ const negocio = defineType({
     texto('email', 'Email'),
     texto('whatsapp', 'WhatsApp (solo números, con prefijo: 34600000000)'),
     texto('zona', 'Zona donde trabajas'),
+    url('instagram', 'Instagram (enlace a tu perfil)'),
+    url('youtube', 'YouTube (enlace a tu canal)'),
+    url('tiktok', 'TikTok (enlace a tu perfil)'),
+    url('facebook', 'Facebook (enlace a tu página)'),
+    texto('otraRedNombre', 'Otra red: nombre (LinkedIn, Pinterest…)'),
+    url('otraRed', 'Otra red: enlace'),
     defineField({
       name: 'tema', title: 'Colores de la web', type: 'string', initialValue: 'verde',
       options: { list: [{ title: 'Verde', value: 'verde' }, { title: 'Azul', value: 'azul' }, { title: 'Terracota', value: 'terracota' }], layout: 'radio' },

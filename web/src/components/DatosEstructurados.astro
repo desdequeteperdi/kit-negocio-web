@@ -1,7 +1,7 @@
 ---
 // Datos estructurados (JSON-LD) para que Google entienda qué es el negocio y dónde actúa.
 // No se publica la dirección fiscal: solo la zona de servicio y los datos de contacto del panel.
-import { getContenido } from '../lib/contenido';
+import { getContenido, redesSociales } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
 const datos = {
@@ -13,6 +13,7 @@ const datos = {
   ...(n.telefono && { telephone: n.telefono }),
   ...(n.email && { email: n.email }),
   ...(n.zona && { areaServed: n.zona }),
+  ...(redesSociales(n).length > 0 && { sameAs: redesSociales(n).map((r) => r.url) }),
 };
 // "<" escapado para que ningún texto del panel pueda cerrar la etiqueta script
 const json = JSON.stringify(datos).replace(/</g, '\\u003c');

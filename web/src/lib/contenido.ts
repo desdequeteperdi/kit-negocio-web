@@ -39,7 +39,7 @@ const projectId = import.meta.env.SANITY_PROJECT_ID;
 const dataset = import.meta.env.SANITY_DATASET ?? 'production';
 
 const consulta = `{
-  "negocio": *[_id == "negocio"][0]{nombre, descripcion, telefono, email, whatsapp, zona, tema, estilo},
+  "negocio": *[_id == "negocio"][0]{nombre, descripcion, telefono, email, whatsapp, zona, tema, estilo, instagram, youtube, tiktok, facebook, otraRedNombre, otraRed},
   "portada": *[_id == "portada"][0]{titular, presentacion, textoBoton, "imagen": imagen.asset->url, "alt": imagen.alt},
   "servicios": *[_type == "servicio"] | order(orden asc){orden, nombre, descripcion, precio},
   "sobre": *[_id == "sobre"][0]{mostrar, titulo, texto, puntos},
@@ -177,3 +177,12 @@ export function precioProducto(p: Producto): string {
 
 export const urlProducto = (p: Producto) => `/catalogo/${p.categoria}/${p.slug}`;
 export const urlConsulta = (p: Producto) => `/?consulta=${encodeURIComponent(p.nombre)}#contacto`;
+
+// Redes sociales rellenadas en el panel (solo enlaces https), listas para mostrar
+export function redesSociales(n: Contenido['negocio']): { nombre: string; url: string }[] {
+  const lista = [
+    ['Instagram', n.instagram], ['YouTube', n.youtube], ['TikTok', n.tiktok],
+    ['Facebook', n.facebook], [n.otraRedNombre || 'Otra red', n.otraRed],
+  ] as const;
+  return lista.flatMap(([nombre, url]) => (typeof url === 'string' && /^https:\/\//.test(url) ? [{ nombre, url }] : []));
+}

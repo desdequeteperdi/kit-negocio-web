@@ -1,7 +1,8 @@
 ---
-import { getContenido, catalogoVisible } from '../lib/contenido';
+import { getContenido, catalogoVisible, redesSociales } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
+const redes = redesSociales(n);
 const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
 ---
 <footer>
@@ -9,6 +10,11 @@ const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
     <div>
       <p class="pie-titulo">{n.nombre}</p>
       <p>{n.descripcion}</p>
+      {redes.length > 0 && (
+        <div class="redes">
+          {redes.map((r) => <a href={r.url} target="_blank" rel="noopener noreferrer me">{r.nombre}</a>)}
+        </div>
+      )}
     </div>
     <nav aria-label="Pie de página">
       <p class="pie-titulo">Navegación</p>
