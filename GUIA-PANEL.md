@@ -88,9 +88,11 @@ Sirve para enseñar lo que vendes, con o sin precio. Por defecto no cobra: cada 
 1. En <https://dashboard.stripe.com> crea una cuenta y, en **Catálogo de productos**, el producto con su precio.
 2. Pulsa **Crear enlace de pago**. Copia el enlace (empieza por `https://buy.stripe.com`).
 3. En el producto del panel, pégalo en **Enlace de pago** y pulsa **Publish**.
-4. En **Datos legales** rellena **plazo de entrega** y **devoluciones**. La web crea sola la página «Condiciones de venta» y añade el aviso de compras a la política de privacidad.
+4. En **Datos legales** elige **qué vendes** (físicos o digitales) y rellena el **plazo de entrega** (y las **devoluciones**, si son físicos). La web crea sola la página «Condiciones de venta» y añade el aviso de compras a la política de privacidad.
 
 El producto muestra un botón de compra que lleva a la página de pago de Stripe, y debajo sigue el botón de consultar. Sin enlace de pago, solo hay consulta. Si desactivas **Disponible**, el botón de compra desaparece.
+
+**Productos digitales:** en el enlace de pago de Stripe activa la casilla de **términos de servicio** con un texto como «Acepto la entrega inmediata del contenido digital y que pierdo el derecho de desistimiento» y, en **Después del pago**, pon una redirección a la página con la descarga o un mensaje con el enlace. Quien tenga ese enlace podrá usarlo: no lo compartas en otro sitio.
 
 Stripe cobra y emite el recibo; el IVA, los envíos y el stock los gestionas tú. No hay carrito: cada enlace cobra un solo producto. Prueba antes con el modo de pruebas de Stripe y revisa los textos legales (son un punto de partida).
 

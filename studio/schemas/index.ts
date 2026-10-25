@@ -143,8 +143,13 @@ const legal = defineType({
     texto('nif', 'NIF'),
     texto('domicilio', 'Domicilio'),
     texto('plazoConservacion', 'Plazo de conservación de los datos de contacto'),
-    texto('plazoEntrega', 'Condiciones de venta: plazo de entrega', { description: 'Solo se usa si algún producto tiene enlace de pago. Por ejemplo: 3 a 5 días laborables en la península.' }),
-    parrafo('devoluciones', 'Condiciones de venta: devoluciones', { description: 'Solo se usa si algún producto tiene enlace de pago. Por ejemplo: 14 días naturales desde la recepción, con el producto sin usar.' }),
+    defineField({
+      name: 'tipoVenta', title: 'Condiciones de venta: qué vendes', type: 'string', initialValue: 'fisica',
+      description: 'Solo se usa si activas la tienda. Cambia el texto de las condiciones de venta.',
+      options: { list: [{ title: 'Productos físicos (envío y devoluciones)', value: 'fisica' }, { title: 'Productos digitales (descarga o acceso online)', value: 'digital' }], layout: 'radio' },
+    }),
+    texto('plazoEntrega', 'Condiciones de venta: plazo de entrega', { description: 'Solo se usa si algún producto tiene enlace de pago. Productos físicos: 3 a 5 días laborables en la península. Digitales: cómo se entrega, por ejemplo «enlace de descarga en la página tras el pago y por email».' }),
+    parrafo('devoluciones', 'Condiciones de venta: devoluciones (solo productos físicos)', { description: 'Solo se usa si algún producto tiene enlace de pago. Por ejemplo: 14 días naturales desde la recepción, con el producto sin usar.' }),
   ],
   preview: { prepare: () => ({ title: 'Datos legales' }) },
 });

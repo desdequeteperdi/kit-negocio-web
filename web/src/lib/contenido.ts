@@ -47,7 +47,7 @@ const consulta = `{
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
-  "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, plazoEntrega, devoluciones},
+  "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, tipoVenta, plazoEntrega, devoluciones},
   "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, tienda, textoBotonPago},
   "categorias": *[_type == "categoria" && defined(slug.current)] | order(orden asc){
     "slug": slug.current, nombre, descripcion, orden, "imagen": imagen.asset->url, "alt": imagen.alt

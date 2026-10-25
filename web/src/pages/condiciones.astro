@@ -4,6 +4,7 @@ import { getContenido, hayVenta } from '../lib/contenido';
 const c = await getContenido();
 if (!hayVenta(c)) return Astro.redirect('/404');
 const { legal, negocio } = c;
+const digital = legal.tipoVenta === 'digital';
 ---
 <BaseLayout titulo={`Condiciones de venta | ${negocio.nombre}`}>
   <div class="texto-legal">
@@ -12,8 +13,18 @@ const { legal, negocio } = c;
     <p><strong>Vendedor:</strong> {legal.titular} · {legal.nif} · {legal.domicilio} · {negocio.email}</p>
     <p><strong>Precios:</strong> los precios mostrados incluyen impuestos, salvo que se indique lo contrario.</p>
     <p><strong>Pago:</strong> se realiza en la página segura de Stripe. No almacenamos los datos de tu tarjeta.</p>
-    <p><strong>Plazo de entrega:</strong> {legal.plazoEntrega}</p>
-    <p><strong>Devoluciones y desistimiento:</strong> {legal.devoluciones}</p>
+    {digital ? (
+      <>
+        <p><strong>Entrega:</strong> {legal.plazoEntrega}</p>
+        <p><strong>Desistimiento:</strong> al tratarse de contenido digital que se suministra de forma inmediata, el derecho de desistimiento de 14 días no se aplica una vez comienza la descarga o el acceso, siempre que hayas dado tu consentimiento expreso antes de la compra y reconocido que así pierdes ese derecho.</p>
+        <p><strong>Problemas con el producto:</strong> si el archivo o el acceso no funcionan, escríbenos y lo resolveremos.</p>
+      </>
+    ) : (
+      <>
+        <p><strong>Plazo de entrega:</strong> {legal.plazoEntrega}</p>
+        <p><strong>Devoluciones y desistimiento:</strong> {legal.devoluciones}</p>
+      </>
+    )}
     <p><strong>Atención al cliente:</strong> escribe a {negocio.email}.</p>
     <p><a href="/">Volver al inicio</a></p>
   </div>

@@ -88,6 +88,7 @@
     "nif": "00000000X (ejemplo)",
     "domicilio": "Calle Ejemplo 1, Madrid",
     "plazoConservacion": "durante el tiempo necesario para atender tu consulta",
+    "tipoVenta": "fisica",
     "plazoEntrega": "3 a 5 días laborables (ejemplo)",
     "devoluciones": "14 días naturales desde la recepción, con el producto sin usar (ejemplo)"
   },
