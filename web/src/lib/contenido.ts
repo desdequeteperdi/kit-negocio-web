@@ -8,11 +8,15 @@ import { aHtml, parrafosAHtml } from './texto';
 
 export { optimizada };
 
+export type FotoGaleria = { url: string; alt: string; pie: string };
+
 // El texto de cada entrada se guarda ya convertido a HTML (cuerpoHtml)
 export type Entrada = {
-  slug: string; titulo: string; fecha: string; categoria: string; resumen: string; imagen: string; alt: string;
-  autor: string; actualizada: string; etiquetas: string[]; faqs: { pregunta: string; respuesta: string }[];
-  seoTitulo: string; seoDescripcion: string; cuerpoHtml: string;
+  slug: string; titulo: string; fecha: string; categoria: string; resumen: string; respuestaDirecta: string;
+  imagen: string; alt: string; galeria: FotoGaleria[];
+  autor: string; autorRol: string; actualizada: string; etiquetas: string[]; faqs: { pregunta: string; respuesta: string }[];
+  comentarios: 'heredar' | 'activados' | 'desactivados';
+  seoTitulo: string; seoDescripcion: string; noindex: boolean; cuerpoHtml: string;
 };
 export type Categoria = { slug: string; nombre: string; descripcion: string; orden: number; imagen: string; alt: string };
 export type Producto = {
@@ -39,14 +43,14 @@ const projectId = import.meta.env.SANITY_PROJECT_ID;
 const dataset = import.meta.env.SANITY_DATASET ?? 'production';
 
 const consulta = `{
-  "negocio": *[_id == "negocio"][0]{nombre, descripcion, telefono, email, whatsapp, zona, tema, estilo, instagram, youtube, tiktok, facebook, otraRedNombre, otraRed},
+  "negocio": *[_id == "negocio"][0]{nombre, descripcion, tipoNegocio, telefono, email, whatsapp, zona, horario, tema, estilo, instagram, youtube, tiktok, facebook, otraRedNombre, otraRed},
   "portada": *[_id == "portada"][0]{titular, presentacion, textoBoton, "imagen": imagen.asset->url, "alt": imagen.alt},
   "servicios": *[_type == "servicio"] | order(orden asc){orden, nombre, descripcion, precio},
   "sobre": *[_id == "sobre"][0]{mostrar, titulo, texto, puntos},
   "preguntas": *[_type == "pregunta"] | order(orden asc){pregunta, respuesta},
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
-  "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
+  "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, publicarLlmsTxt, searchConsole, ga4, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, tipoVenta, plazoEntrega, devoluciones},
   "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, tienda, textoBotonPago},
   "categorias": *[_type == "categoria" && defined(slug.current)] | order(orden asc){
@@ -55,30 +59,37 @@ const consulta = `{
   "productos": *[_type == "producto" && defined(slug.current) && defined(categoria->slug.current)] | order(orden asc){
     "slug": slug.current, nombre, "categoria": categoria->slug.current, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
     precio, precioTexto, enlacePago, disponible, destacado, orden, "creado": _createdAt,
-    descripcion[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
+    descripcion[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}, _type == "bloqueGaleria" => {..., imagenes[]{..., "url": asset->url}}}
   },
-  "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion},
+  "blogAjustes": *[_id == "blogAjustes"][0]{mostrar, titulo, introduccion, comentarios, cusdisId},
   "entradas": *[_type == "entrada" && defined(slug.current)] | order(fecha desc){
-    "slug": slug.current, titulo, fecha, categoria, resumen, "imagen": imagen.asset->url, "alt": imagen.alt,
-    autor, actualizada, etiquetas, faqs[]{pregunta, respuesta}, seoTitulo, seoDescripcion,
-    cuerpo[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
+    "slug": slug.current, titulo, fecha, categoria, resumen, respuestaDirecta, "imagen": imagen.asset->url, "alt": imagen.alt,
+    galeria[]{alt, pie, "url": asset->url},
+    autor, autorRol, actualizada, etiquetas, faqs[]{pregunta, respuesta}, comentarios, seoTitulo, seoDescripcion, noindex,
+    cuerpo[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}, _type == "bloqueGaleria" => {..., imagenes[]{..., "url": asset->url}}}
   },
   "secciones": *[_type == "seccion" && mostrar != false] | order(orden asc){
     orden, lugar, titulo,
-    contenido[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}}
+    contenido[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}, _type == "bloqueGaleria" => {..., imagenes[]{..., "url": asset->url}}}
   }
 }`;
 
 // Rellena lo que falte en una entrada para que la web nunca se rompa
 function normalizar(e: any, cuerpoHtml: string): Entrada {
+  const modoComentarios = e.comentarios === 'activados' || e.comentarios === 'desactivados' ? e.comentarios : 'heredar';
   return {
     slug: e.slug, titulo: e.titulo, fecha: e.fecha,
-    categoria: e.categoria ?? '', resumen: e.resumen ?? '',
+    categoria: e.categoria ?? '', resumen: e.resumen ?? '', respuestaDirecta: e.respuestaDirecta ?? '',
     imagen: optimizada(e.imagen, 'w=800&auto=format'), alt: e.alt ?? '',
-    autor: e.autor ?? '', actualizada: e.actualizada ?? '',
+    galeria: (e.galeria ?? [])
+      .map((g: any) => ({ url: optimizada(g?.url, 'w=800&auto=format'), alt: g?.alt ?? '', pie: g?.pie ?? '' }))
+      .filter((g: FotoGaleria) => Boolean(g.url)),
+    autor: e.autor ?? '', autorRol: e.autorRol ?? '', actualizada: e.actualizada ?? '',
     etiquetas: (e.etiquetas ?? []).filter(Boolean),
     faqs: (e.faqs ?? []).filter((f: any) => f?.pregunta && f?.respuesta),
+    comentarios: modoComentarios,
     seoTitulo: e.seoTitulo ?? '', seoDescripcion: e.seoDescripcion ?? '',
+    noindex: e.noindex === true,
     cuerpoHtml,
   };
 }
@@ -148,6 +159,21 @@ export async function getContenido(): Promise<Contenido> {
 // Entradas del blog, de la más reciente a la más antigua.
 export function entradasOrdenadas(c: Contenido) {
   return [...c.blog.entradas].sort((a, b) => b.fecha.localeCompare(a.fecha));
+}
+
+// Categorías distintas usadas en el blog, con su slug y nombre original.
+export function categoriasBlog(c: Contenido): { slug: string; nombre: string }[] {
+  const mapa = new Map<string, string>();
+  for (const e of entradasOrdenadas(c)) {
+    const slug = slugEtiqueta(e.categoria);
+    if (slug && !mapa.has(slug)) mapa.set(slug, e.categoria);
+  }
+  return [...mapa.entries()].map(([slug, nombre]) => ({ slug, nombre }));
+}
+
+// Decide si una entrada muestra comentarios según el ajuste de la entrada y el general del blog.
+export function comentariosVisibles(c: Contenido, e: Entrada): boolean {
+  return e.comentarios === 'activados' || (e.comentarios !== 'desactivados' && Boolean(c.blog.comentarios));
 }
 
 // El catálogo solo existe en la web si está activado y tiene al menos un producto con categoría.

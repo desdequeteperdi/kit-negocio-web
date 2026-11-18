@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EntradaTarjeta from '../../components/EntradaTarjeta.astro';
-import { getContenido, entradasOrdenadas } from '../../lib/contenido';
+import { getContenido, entradasOrdenadas, categoriasBlog } from '../../lib/contenido';
 export async function getStaticPaths() {
   const c = await getContenido();
   // Solo se genera /xxx/ si la función está activada: así no queda una página de redirección en el sitemap
@@ -9,12 +9,18 @@ export async function getStaticPaths() {
 }
 const c = await getContenido();
 const entradas = entradasOrdenadas(c);
+const categorias = categoriasBlog(c);
 ---
 <BaseLayout titulo={`${c.blog.titulo} | ${c.negocio.nombre}`} descripcion={c.blog.introduccion}>
   <section>
     <div class="contenedor">
       <h1>{c.blog.titulo}</h1>
       <p>{c.blog.introduccion}</p>
+      {categorias.length > 0 && (
+        <nav class="etiquetas categorias-blog" aria-label="Categorías del blog">
+          {categorias.map((cat) => <a href={`/blog/categoria/${cat.slug}`}>{cat.nombre}</a>)}
+        </nav>
+      )}
       <div class="entradas">{entradas.map((e) => <EntradaTarjeta entrada={e} />)}</div>
     </div>
   </section>

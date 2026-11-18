@@ -1,0 +1,37 @@
+---
+// Sistema de comentarios embebido (Cusdis), controlado desde el panel:
+// - Ajuste general en «Blog: ajustes y comentarios» (comentarios + cusdisId)
+// - Ajuste individual en cada entrada (heredar | activados | desactivados)
+import { getContenido, comentariosVisibles, type Entrada } from '../lib/contenido';
+
+interface Props { entrada: Entrada }
+const { entrada: e } = Astro.props;
+const c = await getContenido();
+const mostrar = comentariosVisibles(c, e);
+const cusdisId = (c.blog.cusdisId ?? '').trim();
+const urlPagina = new URL(`/blog/${e.slug}`, Astro.site).href;
+---
+{mostrar && (
+  <section class="comentarios" id="comentarios" aria-labelledby="titulo-comentarios">
+    <h2 id="titulo-comentarios">Comentarios</h2>
+    {cusdisId ? (
+      <>
+        <p class="meta">Los comentarios se revisan antes de publicarse. Tu correo no se mostrará públicamente.</p>
+        <div
+          id="cusdis_thread"
+          data-host="https://cusdis.com"
+          data-app-id={cusdisId}
+          data-page-id={e.slug}
+          data-page-url={urlPagina}
+          data-page-title={e.titulo}
+        ></div>
+        <script is:inline defer src="https://cusdis.com/js/widget/lang/es.js"></script>
+        <script is:inline async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+      </>
+    ) : (
+      <p class="aviso-comentarios">
+        Los comentarios están activados para esta entrada. Para recibirlos y moderarlos, añade tu <strong>ID de Cusdis</strong> en el panel (<em>Blog: ajustes y comentarios</em>).
+      </p>
+    )}
+  </section>
+)}

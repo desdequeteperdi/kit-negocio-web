@@ -1,13 +1,17 @@
 ---
-import type { Entrada } from '../lib/contenido';
+import { slugEtiqueta, type Entrada } from '../lib/contenido';
 interface Props { entrada: Entrada }
 const { entrada: e } = Astro.props;
 const fecha = new Date(e.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+const catSlug = slugEtiqueta(e.categoria);
 ---
 <article class="entrada">
   {e.imagen && <img src={e.imagen} alt={e.alt ?? ""} width="800" height="450" />}
   <div class="cuerpo">
-    <p class="meta">{fecha}{e.categoria && ` · ${e.categoria}`}</p>
+    <p class="meta">
+      {fecha}
+      {e.categoria && catSlug && <> · <a href={`/blog/categoria/${catSlug}`}>{e.categoria}</a></>}
+    </p>
     <h3><a href={`/blog/${e.slug}`}>{e.titulo}</a></h3>
     <p>{e.resumen}</p>
   </div>

@@ -4,30 +4,25 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 
 ## Entrar
 
-1. Abre la dirección de tu panel: `https://<tu-nombre>.sanity.studio`.
+1. Abre la dirección de tu panel: `https://<tu-nombre>.sanity.studio` (no es la de tu web de Netlify).
 2. Inicia sesión con tu email personal.
 
 ## Qué hay en el menú
 
-**Bloques fijos** (uno por cada parte de la web):
+El menú de la izquierda está organizado en **cuatro grupos** para que encuentres cada apartado sin perderte:
 
-- Datos del negocio: nombre, datos de contacto, **redes sociales** (Instagram, YouTube, TikTok, Facebook y otra; las vacías no se muestran y las demás salen en el pie), colores y **estilo de la web** (Clásico, Moderno o Editorial; cambia tipografía, formas y animaciones y se combina con los colores).
-- Portada
-- Quiénes somos
-- Contacto
-- Google y buscadores: título y descripción que aparecen en los resultados.
-- Datos legales
-- Blog: ajustes
-- Catálogo: ajustes
-
-**Listas** (puedes añadir y quitar elementos):
-
-- Servicios
-- Preguntas frecuentes
-- Categorías del catálogo
-- Productos
-- Secciones extra de la portada
-- Entradas del blog
+1. **1. Mi negocio y portada**
+   - **Datos del negocio:** nombre, descripción, **tipo de actividad** (para Google), contacto, horario, **redes sociales** (Instagram, YouTube, TikTok, Facebook y otra; las vacías no se muestran y las demás salen en el pie), colores y **estilo de la web** (Clásico, Moderno o Editorial).
+   - **Portada:** titular, presentación, botón e imagen principal.
+   - **Quiénes somos:** presentación y puntos destacados.
+   - **Servicios** y **Secciones extra de la portada** (listas donde puedes añadir, ordenar o quitar elementos).
+2. **2. Blog**
+   - **Blog: ajustes y comentarios:** activar el blog, título, introducción y activar o desactivar los **comentarios** (con tu ID de Cusdis).
+   - **Entradas del blog:** artículos organizados en tres pestañas (*1. Artículo*, *2. Categoría, etiquetas y fotos* y *3. Google e IA*).
+3. **3. Catálogo y tienda**
+   - **Catálogo: ajustes**, **Categorías del catálogo** y **Productos**.
+4. **4. Contacto, buscadores y legal**
+   - **Contacto**, **Preguntas frecuentes de la portada**, **Newsletter**, **Google, IA y buscadores** (título, descripción, imagen al compartir, resumen `/llms.txt` para asistentes de IA, Search Console, Analytics y píxel) y **Datos legales**.
 
 ## Cambiar un texto
 
@@ -48,27 +43,50 @@ El panel es donde editas los textos, imágenes y listas de tu web. Solo necesita
 - **Ordenar:** en Servicios y Preguntas frecuentes, el campo **Orden** decide la posición. El 1 sale primero.
 - **Quitar:** abre el elemento, pulsa los tres puntos y elige **Delete**. Después de borrar, la web se actualiza igual que al publicar.
 
-## Imágenes, vídeos y código HTML dentro de un texto
+## Imágenes, galerías, vídeos y código HTML dentro de un texto
 
-El texto de una entrada del blog y el contenido de una sección extra admiten tres tipos de bloque. Pulsa el **+** que aparece entre bloques y elige:
+Puedes preparar o recortar tus fotos antes en **Canva** y descargarlas en **JPG, PNG o WebP** (el panel bloquea formatos no compatibles como SVG para no romper las vistas previas en redes sociales).
 
-- **Texto:** párrafos con negrita, cursiva, enlaces y listas.
-- **Imagen:** sube la foto, rellena la **Descripción de la imagen** y, si quieres, un **Pie de foto**. La web la reduce sola para que no pese.
-- **Código HTML:** pega el código que te da otro servicio (un vídeo de YouTube, un mapa de Google Maps, un botón de reserva…). Se publica tal cual.
+El texto de una entrada del blog, la descripción de un producto y el contenido de una sección extra admiten cuatro tipos de bloque. Pulsa el **+** que aparece entre bloques y elige:
 
-Usa solo código de fuentes de confianza. Un código mal pegado puede romper el aspecto de esa página, y un `<script>` se ejecuta en tu web. No pegues aquí Analytics ni el píxel de Meta: para eso están los campos de **Google y buscadores**, que piden consentimiento de cookies.
+- **Texto:** párrafos con negrita, cursiva, encabezados H2/H3, enlaces y listas.
+- **Imagen:** sube una foto, rellena la **Descripción de la imagen** (texto alternativo para accesibilidad y Google) y, si quieres, un **Pie de foto**. La web la reduce sola para que no pese.
+- **Galería de imágenes:** sube varias fotos de una vez y elige si quieres mostrarlas en **Cuadrícula de fotos** o en **Carrusel deslizable**. Además, en la pestaña *2. Categoría, etiquetas y fotos* de cada entrada tienes el campo **Galería de fotos de la entrada** por si prefieres añadir una o varias fotos directamente al final del artículo.
+- **Código HTML:** pega el código que te da otro servicio (un vídeo de YouTube, un reproductor de audio o podcast, una presentación, un mapa de Google Maps, un botón de reserva…). Se publica tal cual.
+
+Usa solo código de fuentes de confianza. Un código mal pegado puede romper el aspecto de esa página, y un `<script>` se ejecuta en tu web. No pegues aquí Analytics ni el píxel de Meta: para eso están los campos de **Google, IA y buscadores**, que piden consentimiento de cookies.
 
 ## Posicionar una entrada del blog (Google y asistentes de IA)
 
-Cada entrada tiene estos campos, además del título y el texto:
+Cada entrada está dividida en tres pestañas para trabajar con orden:
 
-- **Etiquetas:** palabras clave de la entrada. Cada etiqueta tiene su propia página en la web con todas las entradas que la usan.
-- **Autor o autora:** aparece en la entrada y en los datos para Google. Si lo dejas vacío se usa el nombre del negocio.
-- **Fecha de última actualización:** rellénala cuando revises o amplíes la entrada.
-- **Preguntas frecuentes de esta entrada:** pulsa **+** y escribe pregunta y respuesta, cortas y directas. Se muestran al final de la entrada y se envían a buscadores y asistentes de IA. Escribe solo preguntas que de verdad se respondan en la entrada.
-- **Título y descripción en Google (opcionales):** si los dejas vacíos se usan el título y el resumen. Máximo 70 y 160 caracteres.
+- **1. Artículo:**
+  - **Título, Dirección web y Fecha** (por defecto se rellena sola con la fecha de hoy).
+  - **Resumen:** una o dos frases para el listado del blog y descripción por defecto.
+  - **En resumen / Respuesta directa (opcional):** responde en 40–60 palabras a la duda principal del artículo. Aparece destacada al principio de la entrada y ayuda a que los buscadores y asistentes de IA citen tu contenido.
+  - **Imagen principal, Texto del artículo y Preguntas frecuentes de esta entrada:** escribe solo preguntas con respuestas cortas y directas que de verdad se respondan en la entrada.
+- **2. Categoría, etiquetas y fotos:**
+  - **Categoría:** clasificación principal del artículo (por ejemplo, *Terrazas* o *Mantenimiento*). Cada categoría genera sola su página en `/blog/categoria/…`.
+  - **Etiquetas:** palabras clave transversales. Cada etiqueta tiene su propia página en `/blog/etiqueta/…`.
+  - **Galería de fotos de la entrada:** para mostrar 1 o varias fotos adicionales en cuadrícula sin tener que insertarlas entre párrafos.
+  - **Autor o autora** y **Cargo o especialidad:** refuerzan la autoría y credibilidad ante lectores, Google y asistentes de IA.
+  - **Fecha de última actualización** y **Comentarios en esta entrada** (seguir el ajuste general del blog, activarlos solo en esta entrada o desactivarlos).
+- **3. Google e IA:**
+  - **Título y descripción en Google (opcionales):** máximo 70 y 160 caracteres.
+  - **Ocultar esta entrada de Google y asistentes de IA:** actívalo si es una entrada de prueba en clase que no quieres indexar ni incluir en `/llms.txt`.
 
-La web añade sola los datos estructurados (artículo, migas de pan y preguntas frecuentes): no tienes que hacer nada más.
+La web añade sola los datos estructurados (artículo, migas de pan con categoría y preguntas frecuentes) y actualiza `/llms.txt`: no tienes que hacer nada más.
+
+## Comentarios en el blog (con Cusdis)
+
+Puedes activar o desactivar los comentarios tanto en todo el blog (**2. Blog → Blog: ajustes y comentarios**) como en una entrada concreta (pestaña **2. Categoría, etiquetas y fotos → Comentarios en esta entrada**).
+
+Para recibir y moderar comentarios reales sin necesidad de programar:
+
+1. Crea una cuenta gratuita en <https://cusdis.com> y añade tu web.
+2. En el panel de Cusdis pulsa **Embed code** y copia solo el valor de `data-app-id` (un código con letras, números y guiones).
+3. Pégalo en **Blog: ajustes y comentarios → ID de Cusdis**, activa **Activar comentarios en las entradas** y pulsa **Publish**.
+4. Cuando alguien deje un comentario, quedará pendiente de moderación en Cusdis hasta que lo apruebes.
 
 ## Catálogo de productos
 
@@ -110,11 +128,12 @@ En **Secciones extra de la portada** pulsa **+** para añadir un bloque a la por
 
 ## Ver el cambio en la web
 
-Al publicar, la web se vuelve a generar. Tarda uno o dos minutos. Si no ves el cambio:
+Al publicar, la web se vuelve a generar sola (si hiciste el paso 6 de la guía de alta). Tarda uno o dos minutos. Si no ves el cambio:
 
 1. Espera un par de minutos y recarga la página (Ctrl+F5 o Cmd+Shift+R).
 2. Comprueba que pulsaste **Publish** y que no quedó en borrador.
 3. Entra en Netlify, pestaña **Deploys**: el último debe poner *Published*. Si pone *Failed*, abre el registro y enséñaselo a quien te da el curso.
+4. Si no hay ningún despliegue nuevo, el webhook no está bien: revisa el paso 6 de la guía de alta. Mientras tanto, **Trigger deploy → Deploy site** lo lanza a mano.
 
 ## Imagen al compartir la web
 

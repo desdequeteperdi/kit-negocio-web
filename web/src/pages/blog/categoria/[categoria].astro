@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EntradaTarjeta from '../../../components/EntradaTarjeta.astro';
+import { getContenido, entradasOrdenadas, categoriasBlog, slugEtiqueta } from '../../../lib/contenido';
+
+// Una página por cada categoría que se use en alguna entrada del blog
+export async function getStaticPaths() {
+  const c = await getContenido();
+  if (!c.blog.mostrar) return [];
+  return categoriasBlog(c).map(({ slug, nombre }) => ({
+    params: { categoria: slug },
+    props: {
+      nombre,
+      entradas: entradasOrdenadas(c).filter((e) => slugEtiqueta(e.categoria) === slug),
+      blog: c.blog.titulo,
+      negocio: c.negocio.nombre,
+    },
+  }));
+}
+const { nombre, entradas, blog, negocio } = Astro.props;
+---
+<BaseLayout titulo={`${nombre} | ${blog} | ${negocio}`} descripcion={`Artículos en la categoría ${nombre}.`}>
+  <section>
+    <div class="contenedor">
+      <p class="meta"><a href="/blog">← {blog}</a></p>
+      <h1>Categoría: {nombre}</h1>
+      <div class="entradas">{entradas.map((e) => <EntradaTarjeta entrada={e} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

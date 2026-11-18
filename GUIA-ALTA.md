@@ -77,6 +77,10 @@ Cierra y vuelve a abrir la terminal (Terminal en Mac; PowerShell en Windows) par
 
 Cuando termine, abre `https://nombre-de-tu-panel.sanity.studio` y comprueba que ves el menú con Portada, Servicios, etc. Para usarlo, sigue [GUIA-PANEL.md](GUIA-PANEL.md).
 
+> **Ojo: web y panel tienen direcciones distintas.** El panel **no** está en Netlify: su dirección es `https://nombre-de-tu-panel.sanity.studio`. La web pública es la que te dará Netlify en el paso 5 (`https://nombre.netlify.app`). Si abres el panel con una dirección de Netlify, el navegador dirá «La conexión no es privada».
+>
+> Si no recuerdas la dirección del panel, está en <https://www.sanity.io/manage>, dentro de tu proyecto, pestaña **Studios**.
+
 ## 5. Netlify: publica tu web
 
 1. Entra en <https://www.netlify.com> y regístrate con **GitHub**.
@@ -93,10 +97,34 @@ Cuando termine, abre `https://nombre-de-tu-panel.sanity.studio` y comprueba que 
 5. Pulsa **Deploy**. Cuando termine, Netlify te da una dirección del tipo `https://nombre.netlify.app`.
 6. Si `SITE_URL` no coincide con esa dirección, corrígela en **Site configuration → Environment variables** y lanza otro despliegue: **Deploys → Trigger deploy → Deploy site**. Las variables solo se aplican a los despliegues nuevos.
 
-## 6. Comprueba que todo funciona
+## 6. Que la web se actualice sola al publicar
+
+Sin este paso, la web no se entera de que has pulsado **Publish** en el panel y tendrías que relanzar el despliegue a mano. Se conectan Netlify y Sanity con un enlace:
+
+1. En Netlify, abre tu sitio y ve a **Site configuration → Build & deploy → Build hooks → Add build hook**. Ponle de nombre `Sanity` y elige la rama `main`. Copia la dirección que te da (empieza por `https://api.netlify.com/build_hooks/`).
+2. En <https://www.sanity.io/manage>, abre tu proyecto y ve a **API → Webhooks → Create webhook**. Rellena:
+
+   | Campo | Valor |
+   |---|---|
+   | Name | `Actualizar web` |
+   | URL | la dirección del build hook de Netlify |
+   | Dataset | `production` |
+   | Trigger on | marca **Create**, **Update** y **Delete** |
+   | Filter | vacío |
+   | HTTP method | `POST` |
+   | Drafts | desmarcado (no avisar por borradores) |
+   | Enable webhook | marcado |
+
+3. Pulsa **Save**.
+
+Prueba: cambia un texto en el panel, pulsa **Publish** y, en Netlify, pestaña **Deploys**, debe aparecer un despliegue nuevo en unos segundos. La web lo muestra al terminar (uno o dos minutos).
+
+La dirección del build hook es como una contraseña: quien la tenga puede lanzar despliegues. No la pegues en el código ni la compartas.
+
+## 7. Comprueba que todo funciona
 
 - [ ] La web carga y muestra el contenido de tu panel, no el de ejemplo.
-- [ ] Cambias un texto en el panel, pulsas **Publish** y, al relanzar el despliegue en Netlify, la web lo muestra.
+- [ ] Cambias un texto en el panel, pulsas **Publish** y la web lo muestra al terminar el despliegue automático.
 - [ ] Envías una consulta desde el formulario y aparece en Netlify, pestaña **Forms**.
 
 ## Newsletter con Brevo (opcional)
@@ -136,5 +164,7 @@ Puedes comprar un dominio donde quieras y conectarlo en Netlify: **Site configur
 | Falta `studio/.env` o el Project ID no es válido | Revisa el paso 4. El Project ID está en <https://www.sanity.io/manage>. |
 | `npm run semilla` dice que el proyecto ya tiene contenido | No pasa nada, no se ha cambiado nada. Para volver al contenido de ejemplo (borra tus cambios): `npm run semilla -- --reemplazar`. |
 | Pide iniciar sesión | `cd studio`, `npx sanity login`, elige GitHub. |
+| Abro el panel desde Netlify y sale «La conexión no es privada» | El panel está en `https://nombre-de-tu-panel.sanity.studio`, no en Netlify. |
+| Publico en el panel y la web no cambia | Mira en Netlify, **Deploys**: si no aparece despliegue nuevo, revisa el webhook del paso 6 (URL, dataset `production`, activado). Mientras tanto, **Trigger deploy → Deploy site** lo lanza a mano. |
 | La web sale con datos de ejemplo | Falta `SANITY_PROJECT_ID` en Netlify, o está mal escrito. Corrígelo y relanza el despliegue. |
 | Netlify marca el despliegue como *Failed* | Ábrelo, copia las últimas líneas del registro y enséñaselas a quien te da el curso. |

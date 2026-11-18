@@ -1,21 +1,74 @@
 ---
-// Datos estructurados (JSON-LD) para que Google entienda qué es el negocio y dónde actúa.
+// Datos estructurados (JSON-LD) en grafo (@graph) para buscadores y asistentes de IA:
+// WebSite, negocio (LocalBusiness o subtipo), catálogo de servicios y FAQPage de la portada.
 // No se publica la dirección fiscal: solo la zona de servicio y los datos de contacto del panel.
 import { getContenido, redesSociales } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
-const datos = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: n.nombre,
-  description: n.descripcion,
-  url: new URL('/', Astro.site).href,
-  ...(n.telefono && { telephone: n.telefono }),
-  ...(n.email && { email: n.email }),
-  ...(n.zona && { areaServed: n.zona }),
-  ...(redesSociales(n).length > 0 && { sameAs: redesSociales(n).map((r) => r.url) }),
-};
+const abs = (ruta: string) => new URL(ruta, Astro.site).href;
+const urlSitio = abs('/');
+const imgCandidata = [c.buscadores.imagenCompartir, c.portada.imagen]
+  .find((i) => Boolean(i) && !/\.svg(\?|$)/i.test(i));
+const imagenNegocio = imgCandidata ? abs(imgCandidata) : '';
+const tiposValidos = new Set([
+  'LocalBusiness', 'ProfessionalService', 'Store',
+  'HealthAndBeautyBusiness', 'HomeAndConstructionBusiness', 'FoodEstablishment',
+]);
+const tipoNegocio = tiposValidos.has(n.tipoNegocio) ? n.tipoNegocio : 'LocalBusiness';
+
+const grafo: Record<string, unknown>[] = [
+  {
+    '@type': 'WebSite',
+    '@id': `${urlSitio}#website`,
+    name: n.nombre,
+    url: urlSitio,
+    inLanguage: 'es',
+  },
+  {
+    '@type': tipoNegocio,
+    '@id': `${urlSitio}#negocio`,
+    name: n.nombre,
+    description: n.descripcion,
+    url: urlSitio,
+    ...(imagenNegocio && { image: imagenNegocio }),
+    ...(n.telefono && { telephone: n.telefono }),
+    ...(n.email && { email: n.email }),
+    ...(n.zona && { areaServed: n.zona }),
+    ...(n.horario && { openingHours: n.horario }),
+    ...(redesSociales(n).length > 0 && { sameAs: redesSociales(n).map((r) => r.url) }),
+  },
+];
+
+if (c.servicios.length > 0) {
+  grafo.push({
+    '@type': 'OfferCatalog',
+    name: `Servicios de ${n.nombre}`,
+    itemListElement: c.servicios.map((s, idx) => ({
+      '@type': 'Offer',
+      position: idx + 1,
+      itemOffered: {
+        '@type': 'Service',
+        name: s.nombre,
+        ...(s.descripcion && { description: s.descripcion }),
+        provider: { '@id': `${urlSitio}#negocio` },
+      },
+      ...(s.precio && { description: s.precio }),
+    })),
+  });
+}
+
+if (c.preguntas.length > 0) {
+  grafo.push({
+    '@type': 'FAQPage',
+    mainEntity: c.preguntas.map((p) => ({
+      '@type': 'Question',
+      name: p.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: p.respuesta },
+    })),
+  });
+}
+
 // "<" escapado para que ningún texto del panel pueda cerrar la etiqueta script
-const json = JSON.stringify(datos).replace(/</g, '\\u003c');
+const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': grafo }).replace(/</g, '\\u003c');
 ---
 <script type="application/ld+json" set:html={json}></script>

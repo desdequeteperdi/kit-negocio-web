@@ -2,24 +2,67 @@ import { defineField, defineType } from 'sanity';
 
 export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'catalogoAjustes'];
 
+const FORMATOS_IMAGEN = 'image/jpeg,image/png,image/webp';
+
 const texto = (name: string, title: string, extra: Record<string, unknown> = {}) =>
   defineField({ name, title, type: 'string', ...extra });
 const parrafo = (name: string, title: string, extra: Record<string, unknown> = {}) =>
   defineField({ name, title, type: 'text', rows: 3, ...extra });
 const url = (name: string, title: string, description = 'Déjalo vacío para no mostrarla. Empieza por https://') =>
   defineField({ name, title, type: 'url', description, validation: (r) => r.uri({ scheme: ['https'] }) });
-const interruptor = (name: string, title: string, initialValue = true) =>
-  defineField({ name, title, type: 'boolean', initialValue });
+const interruptor = (name: string, title: string, initialValue = true, extra: Record<string, unknown> = {}) =>
+  defineField({ name, title, type: 'boolean', initialValue, ...extra });
+const altImagen = (extra: Record<string, unknown> = {}) =>
+  texto('alt', 'Descripción de la imagen', {
+    description: 'Describe qué se ve en la foto para lectores de pantalla y para Google.',
+    validation: (r) => r.required().warning('Recomendado para accesibilidad y Google: añade una descripción breve de la imagen'),
+    ...extra,
+  });
 
 // Bloques que se pueden colocar dentro de un texto largo
 const bloqueImagen = defineType({
   name: 'bloqueImagen', title: 'Imagen', type: 'object',
   fields: [
-    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, validation: (r) => r.required() }),
-    texto('alt', 'Descripción de la imagen'),
+    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true, accept: FORMATOS_IMAGEN }, validation: (r) => r.required() }),
+    altImagen(),
     texto('pie', 'Pie de foto (opcional)'),
   ],
   preview: { select: { title: 'alt', subtitle: 'pie', media: 'imagen' }, prepare: ({ title, subtitle, media }) => ({ title: title || 'Imagen', subtitle, media }) },
+});
+
+const bloqueGaleria = defineType({
+  name: 'bloqueGaleria', title: 'Galería de imágenes', type: 'object',
+  fields: [
+    defineField({
+      name: 'imagenes', title: 'Imágenes', type: 'array',
+      description: 'Sube una o varias fotos en JPG, PNG o WebP (puedes editarlas antes en Canva).',
+      options: { layout: 'grid' },
+      validation: (r) => r.min(1),
+      of: [{
+        type: 'image',
+        options: { hotspot: true, accept: FORMATOS_IMAGEN },
+        fields: [altImagen(), texto('pie', 'Pie de foto (opcional)')],
+      }],
+    }),
+    defineField({
+      name: 'disposicion', title: 'Cómo se muestra', type: 'string', initialValue: 'cuadricula',
+      options: {
+        list: [
+          { title: 'Cuadrícula de fotos', value: 'cuadricula' },
+          { title: 'Carrusel deslizable', value: 'carrusel' },
+        ],
+        layout: 'radio',
+      },
+    }),
+  ],
+  preview: {
+    select: { imagenes: 'imagenes', disposicion: 'disposicion' },
+    prepare: ({ imagenes, disposicion }) => ({
+      title: `Galería (${imagenes?.length ?? 0} foto${imagenes?.length === 1 ? '' : 's'})`,
+      subtitle: disposicion === 'carrusel' ? 'Carrusel deslizable' : 'Cuadrícula',
+      media: imagenes?.[0],
+    }),
+  },
 });
 
 const bloqueHtml = defineType({
@@ -27,24 +70,39 @@ const bloqueHtml = defineType({
   fields: [
     defineField({
       name: 'codigo', title: 'Código HTML', type: 'text', rows: 8,
-      description: 'Pega aquí el código tal cual (un vídeo de YouTube, un mapa, un botón…). Se publica sin revisar: usa solo código de fuentes de confianza. No pegues scripts de seguimiento (Analytics, píxel de Meta): para eso están los campos de «Google y buscadores», que piden consentimiento de cookies.',
+      description: 'Pega aquí el código tal cual (un vídeo de YouTube, un reproductor de audio, un mapa, una presentación…). Se publica sin revisar: usa solo código de fuentes de confianza. No pegues scripts de seguimiento (Analytics, píxel de Meta): para eso están los campos de «Google, IA y buscadores», que piden consentimiento de cookies.',
     }),
   ],
   preview: { select: { codigo: 'codigo' }, prepare: ({ codigo }) => ({ title: 'Código HTML', subtitle: (codigo ?? '').slice(0, 60) }) },
 });
 
-const textoLibre = (name: string, title: string) =>
-  defineField({ name, title, type: 'array', of: [{ type: 'block' }, { type: 'bloqueImagen' }, { type: 'bloqueHtml' }] });
+const textoLibre = (name: string, title: string, extra: Record<string, unknown> = {}) =>
+  defineField({ name, title, type: 'array', of: [{ type: 'block' }, { type: 'bloqueImagen' }, { type: 'bloqueGaleria' }, { type: 'bloqueHtml' }], ...extra });
 
 const negocio = defineType({
   name: 'negocio', title: 'Datos del negocio', type: 'document',
   fields: [
     texto('nombre', 'Nombre del negocio', { validation: (r) => r.required() }),
     parrafo('descripcion', 'Descripción corta'),
+    defineField({
+      name: 'tipoNegocio', title: 'Tipo de actividad (para Google)', type: 'string', initialValue: 'LocalBusiness',
+      description: 'Ayuda a buscadores y asistentes de IA a clasificar tu actividad.',
+      options: {
+        list: [
+          { title: 'Negocio local o autónomo (general)', value: 'LocalBusiness' },
+          { title: 'Servicios profesionales o consultoría', value: 'ProfessionalService' },
+          { title: 'Comercio o tienda', value: 'Store' },
+          { title: 'Salud, bienestar o estética', value: 'HealthAndBeautyBusiness' },
+          { title: 'Hogar, reformas, instalaciones o jardinería', value: 'HomeAndConstructionBusiness' },
+          { title: 'Hostelería o alimentación', value: 'FoodEstablishment' },
+        ],
+      },
+    }),
     texto('telefono', 'Teléfono'),
     texto('email', 'Email'),
     texto('whatsapp', 'WhatsApp (solo números, con prefijo: 34600000000)'),
     texto('zona', 'Zona donde trabajas'),
+    texto('horario', 'Horario de atención (opcional)', { description: 'Por ejemplo: Lunes a viernes de 9:30 a 19:00.' }),
     url('instagram', 'Instagram (enlace a tu perfil)'),
     url('youtube', 'YouTube (enlace a tu canal)'),
     url('tiktok', 'TikTok (enlace a tu perfil)'),
@@ -77,7 +135,7 @@ const portada = defineType({
     texto('titular', 'Titular'),
     parrafo('presentacion', 'Presentación'),
     texto('textoBoton', 'Texto del botón'),
-    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
+    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true, accept: FORMATOS_IMAGEN }, fields: [altImagen()] }),
   ],
   preview: { prepare: () => ({ title: 'Portada' }) },
 });
@@ -112,13 +170,17 @@ const newsletter = defineType({
 });
 
 const buscadores = defineType({
-  name: 'buscadores', title: 'Google y buscadores', type: 'document',
+  name: 'buscadores', title: 'Google, IA y buscadores', type: 'document',
   fields: [
     texto('titulo', 'Título en Google', { validation: (r) => r.max(70) }),
     parrafo('descripcion', 'Descripción en Google', { validation: (r) => r.max(160) }),
     defineField({
       name: 'imagenCompartir', title: 'Imagen al compartir la web', type: 'image',
-      description: 'Se ve al compartir el enlace en WhatsApp, redes o LinkedIn. Mejor horizontal, de 1200 × 630 px. Si la dejas vacía se usa la de la portada.',
+      options: { accept: FORMATOS_IMAGEN },
+      description: 'Se ve al compartir el enlace en WhatsApp, redes o LinkedIn. Mejor horizontal, de 1200 × 630 px (JPG, PNG o WebP). Si la dejas vacía se usa la de la portada.',
+    }),
+    interruptor('publicarLlmsTxt', 'Publicar resumen para asistentes de IA (/llms.txt)', true, {
+      description: 'Genera automáticamente /llms.txt con la información de tu negocio, servicios, preguntas frecuentes y artículos para que asistentes de IA (ChatGPT, Claude, Perplexity…) entiendan mejor tu web.',
     }),
     texto('searchConsole', 'Código de Google Search Console', {
       description: 'Solo el código de verificación (el valor de "content" de la etiqueta meta). Déjalo vacío si no lo usas.',
@@ -133,7 +195,7 @@ const buscadores = defineType({
       validation: (r) => r.regex(/^\d{8,20}$/, { name: 'ID del píxel' }).warning('Debe ser un número, sin letras ni espacios'),
     }),
   ],
-  preview: { prepare: () => ({ title: 'Google y buscadores' }) },
+  preview: { prepare: () => ({ title: 'Google, IA y buscadores' }) },
 });
 
 const legal = defineType({
@@ -155,9 +217,19 @@ const legal = defineType({
 });
 
 const blogAjustes = defineType({
-  name: 'blogAjustes', title: 'Blog: ajustes', type: 'document',
-  fields: [interruptor('mostrar', 'Mostrar el blog', false), texto('titulo', 'Título'), parrafo('introduccion', 'Introducción')],
-  preview: { prepare: () => ({ title: 'Blog: ajustes' }) },
+  name: 'blogAjustes', title: 'Blog: ajustes y comentarios', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Mostrar el blog', false),
+    texto('titulo', 'Título'),
+    parrafo('introduccion', 'Introducción'),
+    interruptor('comentarios', 'Activar comentarios en las entradas', false, {
+      description: 'Activa o desactiva la caja de comentarios por defecto en todas las entradas. También puedes cambiarlo entrada por entrada.',
+    }),
+    texto('cusdisId', 'ID de Cusdis (para recibir y moderar comentarios)', {
+      description: 'Opcional. Crea una cuenta gratuita en cusdis.com, registra tu web y pega aquí el código App ID (data-app-id). Los comentarios quedan pendientes hasta que los apruebes.',
+    }),
+  ],
+  preview: { prepare: () => ({ title: 'Blog: ajustes y comentarios' }) },
 });
 
 const servicio = defineType({
@@ -185,21 +257,38 @@ const pregunta = defineType({
 
 const entrada = defineType({
   name: 'entrada', title: 'Entrada del blog', type: 'document',
+  groups: [
+    { name: 'contenido', title: '1. Artículo', default: true },
+    { name: 'organizacion', title: '2. Categoría, etiquetas y fotos' },
+    { name: 'seo', title: '3. Google e IA' },
+  ],
   fields: [
-    texto('titulo', 'Título', { validation: (r) => r.required() }),
-    defineField({ name: 'slug', title: 'Dirección web', type: 'slug', options: { source: 'titulo', maxLength: 80 }, validation: (r) => r.required() }),
-    defineField({ name: 'fecha', title: 'Fecha', type: 'date', validation: (r) => r.required() }),
-    texto('categoria', 'Categoría'),
+    texto('titulo', 'Título', { group: 'contenido', validation: (r) => r.required() }),
+    defineField({ name: 'slug', title: 'Dirección web', type: 'slug', group: 'contenido', options: { source: 'titulo', maxLength: 80 }, validation: (r) => r.required() }),
     defineField({
-      name: 'etiquetas', title: 'Etiquetas', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' },
-      description: 'Palabras clave de la entrada. Cada etiqueta tiene su propia página en la web (/blog/etiqueta/…).',
+      name: 'fecha', title: 'Fecha', type: 'date', group: 'contenido',
+      initialValue: () => new Date().toISOString().slice(0, 10),
+      validation: (r) => r.required(),
     }),
-    texto('autor', 'Autor o autora', { description: 'Aparece en la entrada y en los datos para Google. Si lo dejas vacío, se usa el nombre del negocio.' }),
-    parrafo('resumen', 'Resumen'),
-    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
-    textoLibre('cuerpo', 'Texto'),
+    parrafo('resumen', 'Resumen', {
+      group: 'contenido',
+      description: 'Una o dos frases que aparecen en el listado del blog y como descripción por defecto.',
+      validation: (r) => r.required().warning('Recomendado: escribe un resumen claro de 1 o 2 frases'),
+    }),
+    parrafo('respuestaDirecta', 'En resumen / Respuesta directa (opcional, para IA y lectura rápida)', {
+      group: 'contenido', rows: 2,
+      description: 'Responde en 40-60 palabras a la pregunta principal del artículo. Se destaca al principio de la entrada y facilita que buscadores y asistentes de IA citen tu artículo.',
+      validation: (r) => r.max(320),
+    }),
     defineField({
-      name: 'faqs', title: 'Preguntas frecuentes de esta entrada', type: 'array',
+      name: 'imagen', title: 'Imagen principal', type: 'image', group: 'contenido',
+      options: { hotspot: true, accept: FORMATOS_IMAGEN },
+      description: 'Foto de cabecera de la entrada (JPG, PNG o WebP). Puedes diseñarla o recortarla antes en Canva.',
+      fields: [altImagen()],
+    }),
+    textoLibre('cuerpo', 'Texto del artículo', { group: 'contenido' }),
+    defineField({
+      name: 'faqs', title: 'Preguntas frecuentes de esta entrada', type: 'array', group: 'contenido',
       description: 'Preguntas con respuestas cortas y directas. Se muestran al final de la entrada y se envían a Google y a los asistentes de IA como datos estructurados.',
       of: [{
         type: 'object', name: 'faq', title: 'Pregunta',
@@ -207,12 +296,65 @@ const entrada = defineType({
         preview: { select: { title: 'pregunta', subtitle: 'respuesta' } },
       }],
     }),
-    defineField({ name: 'actualizada', title: 'Fecha de última actualización', type: 'date', description: 'Rellénala cuando revises o amplíes la entrada.' }),
-    texto('seoTitulo', 'Título en Google (opcional)', { description: 'Si lo dejas vacío se usa el título de la entrada.', validation: (r) => r.max(70) }),
-    parrafo('seoDescripcion', 'Descripción en Google (opcional)', { description: 'Si la dejas vacía se usa el resumen.', validation: (r) => r.max(160) }),
+    texto('categoria', 'Categoría', {
+      group: 'organizacion',
+      description: 'Tema principal de la entrada (por ejemplo: Terrazas, Mantenimiento). Cada categoría genera automáticamente su propia página (/blog/categoria/…).',
+    }),
+    defineField({
+      name: 'etiquetas', title: 'Etiquetas', type: 'array', group: 'organizacion', of: [{ type: 'string' }], options: { layout: 'tags' },
+      description: 'Palabras clave de la entrada. Cada etiqueta tiene su propia página en la web (/blog/etiqueta/…).',
+    }),
+    defineField({
+      name: 'galeria', title: 'Galería de fotos de la entrada (opcional)', type: 'array', group: 'organizacion',
+      description: 'Sube aquí una o varias fotos adicionales para mostrar en la entrada (puedes editarlas antes en Canva). Si prefieres intercalarlas entre párrafos, usa el botón «+» dentro del Texto del artículo.',
+      options: { layout: 'grid' },
+      of: [{
+        type: 'image',
+        options: { hotspot: true, accept: FORMATOS_IMAGEN },
+        fields: [altImagen(), texto('pie', 'Pie de foto (opcional)')],
+      }],
+    }),
+    texto('autor', 'Autor o autora', {
+      group: 'organizacion',
+      description: 'Aparece en la entrada y en los datos para Google. Si lo dejas vacío, se usa el nombre del negocio.',
+    }),
+    texto('autorRol', 'Cargo o especialidad de quien firma (opcional)', {
+      group: 'organizacion',
+      description: 'Refuerza la credibilidad ante lectores, Google y asistentes de IA (por ejemplo: «Paisajista en Madrid · 10 años de experiencia»).',
+    }),
+    defineField({
+      name: 'actualizada', title: 'Fecha de última actualización', type: 'date', group: 'organizacion',
+      description: 'Rellénala cuando revises o amplíes la entrada.',
+    }),
+    defineField({
+      name: 'comentarios', title: 'Comentarios en esta entrada', type: 'string', group: 'organizacion',
+      initialValue: 'heredar',
+      options: {
+        list: [
+          { title: 'Seguir el ajuste general del blog', value: 'heredar' },
+          { title: 'Permitir comentarios en esta entrada', value: 'activados' },
+          { title: 'Desactivar comentarios en esta entrada', value: 'desactivados' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    texto('seoTitulo', 'Título en Google (opcional)', {
+      group: 'seo',
+      description: 'Si lo dejas vacío se usa el título de la entrada.',
+      validation: (r) => r.max(70),
+    }),
+    parrafo('seoDescripcion', 'Descripción en Google (opcional)', {
+      group: 'seo',
+      description: 'Si la dejas vacía se usa el resumen.',
+      validation: (r) => r.max(160),
+    }),
+    interruptor('noindex', 'Ocultar esta entrada de Google y asistentes de IA', false, {
+      group: 'seo',
+      description: 'Actívalo si es una prueba de clase y no quieres que aparezca en buscadores ni en /llms.txt.',
+    }),
   ],
   orderings: [{ title: 'Más recientes', name: 'fecha', by: [{ field: 'fecha', direction: 'desc' }] }],
-  preview: { select: { title: 'titulo', subtitle: 'fecha' } },
+  preview: { select: { title: 'titulo', subtitle: 'fecha', media: 'imagen' } },
 });
 
 const catalogoAjustes = defineType({
@@ -235,7 +377,7 @@ const categoria = defineType({
     texto('nombre', 'Nombre', { validation: (r) => r.required() }),
     defineField({ name: 'slug', title: 'Dirección web', type: 'slug', options: { source: 'nombre', maxLength: 60 }, validation: (r) => r.required() }),
     parrafo('descripcion', 'Descripción'),
-    defineField({ name: 'imagen', title: 'Imagen (opcional)', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
+    defineField({ name: 'imagen', title: 'Imagen (opcional)', type: 'image', options: { hotspot: true, accept: FORMATOS_IMAGEN }, fields: [altImagen()] }),
   ],
   orderings: [{ title: 'Orden', name: 'orden', by: [{ field: 'orden', direction: 'asc' }] }],
   preview: { select: { title: 'nombre', media: 'imagen' } },
@@ -248,7 +390,7 @@ const producto = defineType({
     defineField({ name: 'slug', title: 'Dirección web', type: 'slug', options: { source: 'nombre', maxLength: 80 }, validation: (r) => r.required() }),
     defineField({ name: 'categoria', title: 'Categoría', type: 'reference', to: [{ type: 'categoria' }], validation: (r) => r.required() }),
     parrafo('resumen', 'Resumen', { description: 'Una o dos frases. Sale en el listado y en Google.' }),
-    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true }, fields: [texto('alt', 'Descripción de la imagen')] }),
+    defineField({ name: 'imagen', title: 'Imagen', type: 'image', options: { hotspot: true, accept: FORMATOS_IMAGEN }, fields: [altImagen()] }),
     defineField({ name: 'precio', title: 'Precio en euros (opcional)', type: 'number', validation: (r) => r.min(0), description: 'Solo el número, por ejemplo 45 o 12.5. Si lo dejas vacío no se muestra precio.' }),
     texto('precioTexto', 'Texto del precio (opcional)', { description: 'Sustituye al precio en pantalla. Por ejemplo: Desde 45 € o 12 € el metro.' }),
     url('enlacePago', 'Enlace de pago (opcional)', 'Solo funciona si activas la tienda en «Catálogo: ajustes». Pega el enlace de pago de Stripe (Payment Link), que empieza por https://buy.stripe.com. Si lo rellenas, el producto muestra el botón de compra. Déjalo vacío para solo consultar.'),
@@ -284,4 +426,4 @@ const seccion = defineType({
   preview: { select: { title: 'titulo', subtitle: 'lugar' }, prepare: ({ title, subtitle }) => ({ title: title || 'Sección sin título', subtitle }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, bloqueImagen, bloqueHtml];
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, bloqueImagen, bloqueGaleria, bloqueHtml];

@@ -13,10 +13,11 @@ unico('portada', portada);
 unico('sobre', d.sobre);
 unico('contacto', d.contacto);
 unico('newsletter', d.newsletter);
-unico('buscadores', d.buscadores);
+const { imagenCompartir, ...buscadores } = d.buscadores;
+unico('buscadores', buscadores);
 unico('legal', d.legal);
 unico('catalogoAjustes', { mostrar: d.catalogo.mostrar, titulo: d.catalogo.titulo, introduccion: d.catalogo.introduccion, textoBoton: d.catalogo.textoBoton, tienda: d.catalogo.tienda, textoBotonPago: d.catalogo.textoBotonPago });
-unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introduccion: d.blog.introduccion });
+unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introduccion: d.blog.introduccion, comentarios: d.blog.comentarios, cusdisId: d.blog.cusdisId });
 
 d.servicios.forEach((s, i) => docs.push({ _id: `servicio-${i + 1}`, _type: 'servicio', ...s }));
 d.preguntas.forEach((p, i) => docs.push({ _id: `pregunta-${i + 1}`, _type: 'pregunta', orden: i + 1, ...p }));
@@ -39,7 +40,7 @@ d.catalogo.productos.forEach((p) => {
   });
 });
 d.blog.entradas.forEach((e) => {
-  const { slug, imagen, cuerpo, faqs, ...resto } = e;
+  const { slug, imagen, alt, galeria, cuerpo, faqs, ...resto } = e;
   docs.push({
     _id: `entrada-${slug}`,
     _type: 'entrada',

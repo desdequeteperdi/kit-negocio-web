@@ -1,4 +1,4 @@
-// Convierte los textos largos del panel (párrafos, imágenes y código HTML) en HTML.
+// Convierte los textos largos del panel (párrafos, imágenes, galerías y código HTML) en HTML.
 import { toHTML } from '@portabletext/to-html';
 import { optimizada } from './imagenes';
 
@@ -21,6 +21,19 @@ export function aHtml(bloques: any[] | null | undefined): string {
           if (!url) return '';
           const pie = value.pie ? `<figcaption>${escapa(value.pie)}</figcaption>` : '';
           return `<figure><img src="${escapa(url)}" alt="${escapa(value.alt ?? '')}" loading="lazy">${pie}</figure>`;
+        },
+        bloqueGaleria: ({ value }: any) => {
+          const imgs = (value.imagenes ?? [])
+            .map((img: any) => {
+              const url = optimizada(img?.url, 'w=800&auto=format');
+              if (!url) return '';
+              const pie = img.pie ? `<figcaption>${escapa(img.pie)}</figcaption>` : '';
+              return `<figure><img src="${escapa(url)}" alt="${escapa(img.alt ?? '')}" loading="lazy">${pie}</figure>`;
+            })
+            .filter(Boolean);
+          if (!imgs.length) return '';
+          const clase = value.disposicion === 'carrusel' ? 'galeria carrusel' : 'galeria galeria-cuadricula';
+          return `<div class="${clase}">${imgs.join('')}</div>`;
         },
         // Código HTML pegado por quien edita la web: se publica tal cual
         bloqueHtml: ({ value }: any) => value.codigo ?? '',

@@ -4,10 +4,12 @@
   "negocio": {
     "nombre": "Estudio Almendro",
     "descripcion": "Diseño y mantenimiento de jardines y terrazas pequeñas en Madrid.",
+    "tipoNegocio": "HomeAndConstructionBusiness",
     "telefono": "600 000 000",
     "email": "hola@ejemplo.invalid",
     "whatsapp": "34600000000",
     "zona": "Madrid capital y zona norte",
+    "horario": "Lunes a viernes de 9:30 a 19:00",
     "instagram": "",
     "youtube": "",
     "tiktok": "",
@@ -78,6 +80,7 @@
   "buscadores": {
     "titulo": "Jardinería y terrazas en Madrid | Estudio Almendro",
     "descripcion": "Diseño y mantenimiento de terrazas y jardines pequeños en Madrid. Pide presupuesto sin compromiso.",
+    "publicarLlmsTxt": true,
     "searchConsole": "",
     "ga4": "",
     "metaPixel": "",
@@ -96,6 +99,8 @@
     "mostrar": false,
     "titulo": "Blog",
     "introduccion": "Consejos prácticos para cuidar tu terraza o tu jardín.",
+    "comentarios": false,
+    "cusdisId": "",
     "entradas": [
       {
         "slug": "que-plantas-aguantan-el-sol-de-madrid",
@@ -103,9 +108,12 @@
         "fecha": "2026-09-15",
         "categoria": "Terrazas",
         "resumen": "Cinco plantas resistentes al calor y al viento, y cómo regarlas sin pasarte.",
+        "respuestaDirecta": "En una terraza al sur en Madrid funcionan mejor las plantas mediterráneas en macetas grandes de al menos 30 litros (romero, lavanda, adelfa o olivo enano), regando a primera o última hora solo cuando el sustrato esté seco a un dedo de profundidad.",
         "imagen": "/img-portada.svg",
         "alt": "Imagen de ejemplo",
+        "galeria": [],
         "autor": "Estudio Almendro",
+        "autorRol": "Especialistas en jardinería y terrazas en Madrid",
         "actualizada": "2026-10-01",
         "etiquetas": [
           "terrazas",
@@ -122,8 +130,10 @@
             "respuesta": "En verano, a primera o última hora y cuando la tierra esté seca a un dedo de profundidad."
           }
         ],
+        "comentarios": "heredar",
         "seoTitulo": "",
         "seoDescripcion": "",
+        "noindex": false,
         "cuerpo": [
           "En una terraza orientada al sur, el problema no es solo el sol: es el calor que acumula el suelo y el viento.",
           "Las plantas aromáticas, como el romero o la lavanda, aguantan bien. Elige macetas grandes: se secan más despacio.",
@@ -136,16 +146,21 @@
         "fecha": "2026-10-05",
         "categoria": "Mantenimiento",
         "resumen": "No todo se poda ahora: una guía corta para no cortar a destiempo.",
+        "respuestaDirecta": "En otoño solo conviene retirar ramas secas, enfermas o dañadas. La poda de formación y de arbustos que florecen en primavera debe esperar al final del invierno para no eliminar las yemas florales ni exponer los cortes a las heladas.",
         "imagen": "",
         "alt": "",
+        "galeria": [],
         "autor": "",
+        "autorRol": "",
         "actualizada": "",
         "etiquetas": [
           "poda"
         ],
         "faqs": [],
+        "comentarios": "heredar",
         "seoTitulo": "",
         "seoDescripcion": "",
+        "noindex": false,
         "cuerpo": [
           "Muchas plantas florecen sobre la madera del año anterior; si podas ahora, pierdes la flor de primavera.",
           "Retira solo lo seco o enfermo y deja la poda de formación para el final del invierno."

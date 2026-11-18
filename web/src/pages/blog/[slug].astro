@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import DatosArticulo from '../../components/DatosArticulo.astro';
+import Comentarios from '../../components/Comentarios.astro';
 import { getContenido, slugEtiqueta } from '../../lib/contenido';
 
 export async function getStaticPaths() {
@@ -13,20 +14,51 @@ const { entrada: e } = Astro.props;
 const formato = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 const fecha = new Date(e.fecha).toLocaleDateString('es-ES', formato);
 const actualizada = e.actualizada && e.actualizada !== e.fecha ? new Date(e.actualizada).toLocaleDateString('es-ES', formato) : '';
+const catSlug = slugEtiqueta(e.categoria);
 ---
-<BaseLayout titulo={e.seoTitulo || `${e.titulo} | Blog`} descripcion={e.seoDescripcion || e.resumen} tipo="article" imagen={e.imagen}>
+<BaseLayout
+  titulo={e.seoTitulo || `${e.titulo} | Blog`}
+  descripcion={e.seoDescripcion || e.resumen}
+  tipo="article"
+  imagen={e.imagen}
+  imagenAlt={e.alt}
+  noindex={e.noindex}
+  fechaPublicacion={e.fecha}
+  fechaModificacion={e.actualizada || e.fecha}
+>
   <DatosArticulo slot="head" entrada={e} />
   <article class="articulo">
-    <p class="meta"><a href="/blog">← Blog</a> · <time datetime={e.fecha}>{fecha}</time>{e.categoria && ` · ${e.categoria}`}</p>
+    <p class="meta">
+      <a href="/blog">← Blog</a> · <time datetime={e.fecha}>{fecha}</time>
+      {e.categoria && catSlug && <> · <a href={`/blog/categoria/${catSlug}`}>{e.categoria}</a></>}
+    </p>
     <h1>{e.titulo}</h1>
     {(e.autor || actualizada) && (
       <p class="meta">
-        {e.autor && <>Por {e.autor}</>}{e.autor && actualizada && ' · '}
+        {e.autor && <>Por <strong>{e.autor}</strong>{e.autorRol && ` (${e.autorRol})`}</>}
+        {e.autor && actualizada && ' · '}
         {actualizada && <>Actualizado el <time datetime={e.actualizada}>{actualizada}</time></>}
       </p>
     )}
+    {e.respuestaDirecta && (
+      <aside class="resumen-directo" aria-label="En resumen">
+        <strong>En resumen:</strong> {e.respuestaDirecta}
+      </aside>
+    )}
     {e.imagen && <img src={e.imagen} alt={e.alt ?? ""} width="800" height="450" />}
     <div class="texto-libre" set:html={e.cuerpoHtml} />
+    {e.galeria.length > 0 && (
+      <section class="galeria-entrada" aria-label="Galería de imágenes">
+        <div class="galeria galeria-cuadricula">
+          {e.galeria.map((foto) => (
+            <figure>
+              <img src={foto.url} alt={foto.alt ?? ""} loading="lazy" />
+              {foto.pie && <figcaption>{foto.pie}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
     {e.faqs.length > 0 && (
       <section class="faqs-entrada">
         <h2>Preguntas frecuentes</h2>
@@ -43,6 +75,7 @@ const actualizada = e.actualizada && e.actualizada !== e.fecha ? new Date(e.actu
         {e.etiquetas.map((t) => <a href={`/blog/etiqueta/${slugEtiqueta(t)}`}>#{t}</a>)}
       </p>
     )}
+    <Comentarios entrada={e} />
   </article>
   <Newsletter />
 </BaseLayout>
