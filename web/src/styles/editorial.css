@@ -21,6 +21,8 @@
 
 /* Botones rectos y en mayúsculas pequeñas */
 [data-estilo="editorial"] .boton { border-radius: 0; text-transform: uppercase; letter-spacing: .12em; font-size: .8rem; padding: .9rem 1.6rem; }
+[data-estilo="editorial"] .compartir { border-color: var(--oscuro); }
+[data-estilo="editorial"] .compartir-btn { border-radius: 0; border-color: var(--oscuro); color: var(--oscuro); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
 
 /* Líneas finas en lugar de tarjetas */
 [data-estilo="editorial"] .tarjetas { gap: 2.5rem; }

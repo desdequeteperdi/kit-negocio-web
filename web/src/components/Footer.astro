@@ -3,7 +3,7 @@ import { getContenido, catalogoVisible, hayVenta, redesSociales } from '../lib/c
 const c = await getContenido();
 const n = c.negocio;
 const redes = redesSociales(n);
-const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.metaPixel);
+const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.gtm || c.buscadores.metaPixel);
 ---
 <footer>
   <div class="contenedor pie">

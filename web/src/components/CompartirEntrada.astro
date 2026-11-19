@@ -1,0 +1,67 @@
+---
+// Botones ligeros para compartir la entrada en redes o copiar el enlace (sin librerías externas ni cookies).
+interface Props {
+  titulo: string;
+  url: string;
+}
+const { titulo, url } = Astro.props;
+const texto = encodeURIComponent(titulo);
+const enlace = encodeURIComponent(url);
+const enlaces = [
+  { nombre: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(`${titulo} ${url}`)}`, etiqueta: 'Compartir por WhatsApp' },
+  { nombre: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enlace}`, etiqueta: 'Compartir en LinkedIn' },
+  { nombre: 'X', href: `https://x.com/intent/tweet?text=${texto}&url=${enlace}`, etiqueta: 'Compartir en X' },
+];
+---
+<aside class="compartir" aria-label="Compartir este artículo">
+  <span class="compartir-titulo">Compartir:</span>
+  <div class="compartir-lista">
+    {enlaces.map((red) => (
+      <a class="compartir-btn" href={red.href} target="_blank" rel="noopener noreferrer" aria-label={red.etiqueta}>
+        {red.nombre}
+      </a>
+    ))}
+    <button type="button" class="compartir-btn" data-copiar-url={url}>
+      Copiar enlace
+    </button>
+  </div>
+</aside>
+<script is:inline>
+  (function () {
+    function copiarConFallback(texto, alTerminar) {
+      var campo = document.createElement('textarea');
+      campo.value = texto;
+      campo.setAttribute('readonly', '');
+      campo.style.position = 'absolute';
+      campo.style.left = '-9999px';
+      document.body.appendChild(campo);
+      campo.select();
+      try {
+        if (document.execCommand('copy')) alTerminar();
+      } catch (e) {}
+      document.body.removeChild(campo);
+    }
+
+    document.querySelectorAll('[data-copiar-url]').forEach(function (btn) {
+      var temporizador;
+      var textoOriginal = btn.textContent;
+      function confirmar() {
+        btn.textContent = '¡Enlace copiado!';
+        clearTimeout(temporizador);
+        temporizador = setTimeout(function () {
+          btn.textContent = textoOriginal;
+        }, 2000);
+      }
+      btn.addEventListener('click', function () {
+        var url = btn.getAttribute('data-copiar-url') || location.href;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(confirmar).catch(function () {
+            copiarConFallback(url, confirmar);
+          });
+        } else {
+          copiarConFallback(url, confirmar);
+        }
+      });
+    });
+  })();
+</script>

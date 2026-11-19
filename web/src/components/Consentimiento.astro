@@ -1,8 +1,8 @@
 ---
-// Aviso de cookies. Solo se pinta si hay Google Analytics o píxel de Meta configurados.
+// Aviso de cookies. Solo se pinta si hay Google Analytics, Google Tag Manager o píxel de Meta configurados.
 // Hasta que la persona pulsa «Aceptar» no se carga ningún script de seguimiento.
-interface Props { ga4: string; pixel: string }
-const { ga4, pixel } = Astro.props;
+interface Props { ga4: string; gtm: string; pixel: string }
+const { ga4, gtm, pixel } = Astro.props;
 ---
 <div id="cookies" class="cookies" role="dialog" aria-label="Cookies" hidden>
   <p>Usamos cookies de analítica y publicidad para medir las visitas y mejorar nuestros anuncios. Solo se activan si las aceptas. Más información en la <a href="/privacidad">política de privacidad</a>.</p>
@@ -11,7 +11,7 @@ const { ga4, pixel } = Astro.props;
     <button type="button" class="boton" data-cookies="no">Rechazar</button>
   </div>
 </div>
-<script is:inline define:vars={{ ga4, pixel }}>
+<script is:inline define:vars={{ ga4, gtm, pixel }}>
   (function () {
     var caja = document.getElementById('cookies');
     var cargado = false;
@@ -27,6 +27,14 @@ const { ga4, pixel } = Astro.props;
         window.gtag = function () { window.dataLayer.push(arguments); };
         window.gtag('js', new Date());
         window.gtag('config', ga4);
+      }
+      if (gtm) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var tg = document.createElement('script');
+        tg.async = true;
+        tg.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtm;
+        document.head.appendChild(tg);
       }
       if (pixel) {
         !function (f, b, e, v, n, t, s) {

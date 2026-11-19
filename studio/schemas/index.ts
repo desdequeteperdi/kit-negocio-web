@@ -190,6 +190,10 @@ const buscadores = defineType({
       description: 'Empieza por G- (por ejemplo G-ABC123XYZ9). Si lo rellenas, la web pedirá consentimiento de cookies.',
       validation: (r) => r.regex(/^G-[A-Z0-9]{4,20}$/, { name: 'ID de GA4' }).warning('Debe tener el formato G-XXXXXXXXXX'),
     }),
+    texto('gtm', 'ID de Google Tag Manager', {
+      description: 'Empieza por GTM- (por ejemplo GTM-ABC1234). Si lo rellenas, la web pedirá consentimiento de cookies antes de cargarlo.',
+      validation: (r) => r.regex(/^GTM-[A-Z0-9]{4,15}$/, { name: 'ID de GTM' }).warning('Debe tener el formato GTM-XXXXXXX'),
+    }),
     texto('metaPixel', 'ID del píxel de Meta', {
       description: 'Solo números (15 o 16 cifras). Si lo rellenas, la web pedirá consentimiento de cookies.',
       validation: (r) => r.regex(/^\d{8,20}$/, { name: 'ID del píxel' }).warning('Debe ser un número, sin letras ni espacios'),

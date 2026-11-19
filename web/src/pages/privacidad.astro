@@ -4,7 +4,15 @@ import { getContenido, hayVenta } from '../lib/contenido';
 const contenido = await getContenido();
 const { legal, negocio, buscadores, newsletter, blog } = contenido;
 const venta = hayVenta(contenido);
-const seguimiento = Boolean(buscadores.ga4 || buscadores.metaPixel);
+const seguimiento = Boolean(buscadores.ga4 || buscadores.gtm || buscadores.metaPixel);
+const herramientasCookies = [
+  buscadores.ga4 && 'Google Analytics (medición de visitas)',
+  buscadores.gtm && 'Google Tag Manager (gestión de etiquetas de medición)',
+  buscadores.metaPixel && 'el píxel de Meta (medición de anuncios)',
+].filter((x): x is string => Boolean(x));
+const textoCookies = herramientasCookies.length > 1
+  ? `${herramientasCookies.slice(0, -1).join(', ')} y ${herramientasCookies[herramientasCookies.length - 1]}`
+  : herramientasCookies[0] ?? '';
 const hayComentarios = Boolean(blog.mostrar && (blog.comentarios || blog.entradas.some((e) => e.comentarios === 'activados')) && blog.cusdisId);
 ---
 <BaseLayout titulo={`Política de privacidad | ${negocio.nombre}`}>
@@ -20,7 +28,7 @@ const hayComentarios = Boolean(blog.mostrar && (blog.comentarios || blog.entrada
     {hayComentarios && <p><strong>Comentarios del blog:</strong> si envías un comentario en una entrada, se recogen el nombre o alias, el texto del comentario y, opcionalmente, tu email para moderarlo y mostrarlo públicamente tras su revisión, mediante el servicio Cusdis.</p>}
     {venta && <p><strong>Compras:</strong> si compras, el pago lo gestiona Stripe en su propia página y nosotros no vemos los datos de tu tarjeta. Recibimos los datos necesarios para entregarte el pedido (nombre, email{legal.tipoVenta !== 'digital' && ', dirección de envío'}) y los conservamos el tiempo que exijan las obligaciones fiscales y contables. Stripe actúa como responsable o encargado según el caso y puede tratar datos fuera del Espacio Económico Europeo.</p>}
     <p><strong>Destinatarios:</strong> el servicio de alojamiento y formularios (Netlify) actúa como encargado del tratamiento.</p>
-    {seguimiento && <p><strong>Cookies:</strong> con tu consentimiento, usamos {buscadores.ga4 && 'Google Analytics (medición de visitas)'}{buscadores.ga4 && buscadores.metaPixel && ' y '}{buscadores.metaPixel && 'el píxel de Meta (medición de anuncios)'}. No se activan hasta que pulsas «Aceptar» y puedes cambiar tu decisión en el enlace «Cookies» del pie de página. Estos proveedores pueden tratar datos fuera del Espacio Económico Europeo.</p>}
+    {seguimiento && <p><strong>Cookies:</strong> con tu consentimiento, usamos {textoCookies}. No se activan hasta que pulsas «Aceptar» y puedes cambiar tu decisión en el enlace «Cookies» del pie de página. Estos proveedores pueden tratar datos fuera del Espacio Económico Europeo.</p>}
     <p><strong>Tus derechos:</strong> acceso, rectificación, supresión, oposición, limitación y portabilidad, escribiendo a {negocio.email}. Puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
     <p><a href="/">Volver al inicio</a></p>
   </div>

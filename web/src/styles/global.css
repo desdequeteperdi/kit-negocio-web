@@ -70,6 +70,11 @@ video, iframe, svg { max-width: 100%; }
 .galeria-cuadricula { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .comentarios { margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid #e0e0e0; }
 .aviso-comentarios { background: var(--suave); padding: .85rem 1rem; border-radius: .5rem; font-size: .95rem; }
+.compartir { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid #e0e0e0; }
+.compartir-titulo { font-size: .95rem; font-weight: 600; color: var(--oscuro); }
+.compartir-lista { display: flex; flex-wrap: wrap; gap: .5rem; }
+.compartir-btn { display: inline-flex; align-items: center; font: inherit; font-size: .9rem; font-weight: 600; color: var(--principal); background: #fff; border: 1px solid var(--principal); border-radius: .45rem; padding: .35rem .8rem; text-decoration: none; cursor: pointer; }
+.compartir-btn:hover { background: var(--suave); }
 
 .pie { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
 .pie p { margin: 0 0 .5rem; }

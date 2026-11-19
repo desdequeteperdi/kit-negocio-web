@@ -39,6 +39,7 @@ const ogImagen = [imagen, c.buscadores.imagenCompartir, c.portada.imagen]
   .filter((i): i is string => Boolean(i) && !/\.svg(\?|$)/i.test(i as string))
   .map((i) => new URL(i, Astro.site).href)[0];
 const ga4 = valido(c.buscadores.ga4, /^G-[A-Z0-9]{4,20}$/);
+const gtm = valido(c.buscadores.gtm, /^GTM-[A-Z0-9]{4,15}$/);
 const pixel = valido(c.buscadores.metaPixel, /^\d{8,20}$/);
 ---
 <!doctype html>
@@ -50,6 +51,7 @@ const pixel = valido(c.buscadores.metaPixel, /^\d{8,20}$/);
     <meta name="description" content={descripcion} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonica} />
+    {c.blog.mostrar && <link rel="alternate" type="application/rss+xml" title={`${c.negocio.nombre} — ${c.blog.titulo}`} href={new URL('/rss.xml', Astro.site).href} />}
     <meta property="og:type" content={tipo} />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content={c.negocio.nombre} />
@@ -80,6 +82,6 @@ const pixel = valido(c.buscadores.metaPixel, /^\d{8,20}$/);
         }
       </script>
     )}
-    {(ga4 || pixel) && <Consentimiento ga4={ga4} pixel={pixel} />}
+    {(ga4 || gtm || pixel) && <Consentimiento ga4={ga4} gtm={gtm} pixel={pixel} />}
   </body>
 </html>

@@ -56,6 +56,22 @@ El texto de una entrada del blog, la descripción de un producto y el contenido 
 
 Usa solo código de fuentes de confianza. Un código mal pegado puede romper el aspecto de esa página, y un `<script>` se ejecuta en tu web. No pegues aquí Analytics ni el píxel de Meta: para eso están los campos de **Google, IA y buscadores**, que piden consentimiento de cookies.
 
+### Ejemplos de `<iframe>` para el bloque Código HTML
+
+1. **Vídeo de YouTube:** debajo del vídeo pulsa *Compartir → Insertar* y copia el `<iframe>`:
+   ```html
+   <iframe width="100%" height="400" src="https://www.youtube.com/embed/ID_DEL_VIDEO" title="Título del vídeo" frameborder="0" allowfullscreen></iframe>
+   ```
+2. **Audio o podcast (Spotify / Ivoox):** pulsa *Compartir → Insertar episodio/programa* y pega el `<iframe>`:
+   ```html
+   <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/ID_EPISODIO" width="100%" height="152" frameborder="0" allowfullscreen></iframe>
+   ```
+   *(En Ivoox: *Compartir → Código de inserción* y pega el `<iframe>` que genera).*
+3. **Presentación o documento (Canva / SlideShare):** en Canva pulsa *Compartir → Más → Insertar* (código HTML) o en SlideShare *Compartir → Insertar* y pega el `<iframe>`:
+   ```html
+   <iframe loading="lazy" style="width:100%;height:420px;border:0;" src="https://www.canva.com/design/ID_DISENO/view?embed" allowfullscreen></iframe>
+   ```
+
 ## Posicionar una entrada del blog (Google y asistentes de IA)
 
 Cada entrada está dividida en tres pestañas para trabajar con orden:
@@ -75,7 +91,7 @@ Cada entrada está dividida en tres pestañas para trabajar con orden:
   - **Título y descripción en Google (opcionales):** máximo 70 y 160 caracteres.
   - **Ocultar esta entrada de Google y asistentes de IA:** actívalo si es una entrada de prueba en clase que no quieres indexar ni incluir en `/llms.txt`.
 
-La web añade sola los datos estructurados (artículo, migas de pan con categoría y preguntas frecuentes) y actualiza `/llms.txt`: no tienes que hacer nada más.
+La web añade sola los datos estructurados (artículo, migas de pan con categoría y preguntas frecuentes), los botones ligeros para compartir cada entrada (WhatsApp, LinkedIn, X y copiar enlace, sin cookies), el feed `/rss.xml` (para lectores como Feedly o automatizar envíos en Brevo) y actualiza `/llms.txt`: no tienes que hacer nada más.
 
 ## Comentarios en el blog (con Cusdis)
 
@@ -139,15 +155,16 @@ Al publicar, la web se vuelve a generar sola (si hiciste el paso 6 de la guía d
 
 En **Google y buscadores** puedes subir una **Imagen al compartir la web**: es la que se ve cuando alguien pega el enlace en WhatsApp, redes o LinkedIn. Mejor horizontal, de 1200 × 630 px, en JPG o PNG. Si la dejas vacía se usa la de la portada, siempre que no sea un SVG.
 
-## Google Analytics, píxel de Meta y Search Console
+## Google Analytics, Google Tag Manager, píxel de Meta y Search Console
 
-En **Google y buscadores** hay tres campos opcionales. Pega solo el código, no el script completo:
+En **Google, IA y buscadores** hay cuatro campos opcionales. Pega solo el código, no el script completo:
 
 - **Código de Google Search Console:** el valor de `content` de la etiqueta meta de verificación.
 - **ID de Google Analytics 4:** empieza por `G-`.
+- **ID de Google Tag Manager:** empieza por `GTM-` (opcional, si gestionas etiquetas de GA4 o eventos desde Google Tag Manager; si ya cargas GA4 dentro de GTM, deja vacío el campo de GA4 para no duplicar visitas).
 - **ID del píxel de Meta:** un número de 15 o 16 cifras.
 
-Si rellenas Analytics o el píxel, la web muestra un aviso de cookies. Los scripts solo se cargan si la persona pulsa **Aceptar**. Con el campo vacío no se carga nada. La política de privacidad añade un párrafo de cookies por sí sola. Como todos los textos legales del kit, es un punto de partida: revísalo antes de usarlo con datos reales.
+Si rellenas Analytics, Tag Manager o el píxel, la web muestra un aviso de cookies. Los scripts solo se cargan si la persona pulsa **Aceptar**. Con el campo vacío no se carga nada. La política de privacidad añade un párrafo de cookies por sí sola. Como todos los textos legales del kit, es un punto de partida: revísalo antes de usarlo con datos reales.
 
 ## Qué no se puede hacer desde el panel
 

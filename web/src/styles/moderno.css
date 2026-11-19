@@ -24,6 +24,8 @@
 [data-estilo="moderno"] .boton { border-radius: 999px; padding: .85rem 1.6rem; box-shadow: 0 6px 16px color-mix(in srgb, var(--principal) 35%, transparent); transition: transform .2s ease, box-shadow .2s ease; }
 [data-estilo="moderno"] .boton:hover { transform: translateY(-2px); box-shadow: 0 10px 22px color-mix(in srgb, var(--principal) 40%, transparent); }
 [data-estilo="moderno"] .boton.secundario { box-shadow: none; }
+[data-estilo="moderno"] .compartir-btn { border-radius: 999px; transition: background .2s ease, transform .2s ease; }
+[data-estilo="moderno"] .compartir-btn:hover { transform: translateY(-1px); }
 
 /* Tarjetas */
 [data-estilo="moderno"] .tarjeta, [data-estilo="moderno"] .entrada { border: 0; border-radius: var(--radio); box-shadow: var(--sombra); background: #fff; transition: transform .25s ease, box-shadow .25s ease; }

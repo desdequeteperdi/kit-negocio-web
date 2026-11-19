@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import DatosArticulo from '../../components/DatosArticulo.astro';
+import CompartirEntrada from '../../components/CompartirEntrada.astro';
 import Comentarios from '../../components/Comentarios.astro';
 import { getContenido, slugEtiqueta } from '../../lib/contenido';
 
@@ -15,6 +16,7 @@ const formato = { day: 'numeric', month: 'long', year: 'numeric' } as const;
 const fecha = new Date(e.fecha).toLocaleDateString('es-ES', formato);
 const actualizada = e.actualizada && e.actualizada !== e.fecha ? new Date(e.actualizada).toLocaleDateString('es-ES', formato) : '';
 const catSlug = slugEtiqueta(e.categoria);
+const urlPagina = new URL(`/blog/${e.slug}`, Astro.site).href;
 ---
 <BaseLayout
   titulo={e.seoTitulo || `${e.titulo} | Blog`}
@@ -75,6 +77,7 @@ const catSlug = slugEtiqueta(e.categoria);
         {e.etiquetas.map((t) => <a href={`/blog/etiqueta/${slugEtiqueta(t)}`}>#{t}</a>)}
       </p>
     )}
+    <CompartirEntrada titulo={e.titulo} url={urlPagina} />
     <Comentarios entrada={e} />
   </article>
   <Newsletter />

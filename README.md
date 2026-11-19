@@ -13,13 +13,13 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
 - **Estilo y colores:** tres estilos (Clásico, Moderno, Editorial) y tres colores (verde, azul, terracota), que se combinan. Se eligen en el panel.
 - **Redes sociales:** Instagram, YouTube, TikTok, Facebook y una más, en el pie.
 - **Opcionales, apagados por defecto:**
-  - **Blog:** listado, entradas, **categorías** (`/blog/categoria/…`) y **etiquetas** (`/blog/etiqueta/…`), galería de fotos (en el cuerpo o al final de la entrada), bloque «En resumen» para lectura rápida e IA, preguntas frecuentes por entrada, **comentarios moderados** opcionales (con Cusdis) y feed `/rss.xml`.
+  - **Blog:** listado, entradas, **categorías** (`/blog/categoria/…`) y **etiquetas** (`/blog/etiqueta/…`), galería de fotos (en el cuerpo o al final de la entrada), bloque «En resumen» para lectura rápida e IA, preguntas frecuentes por entrada, **botones para compartir** (WhatsApp, LinkedIn, X y copiar enlace, sin librerías externas ni cookies), **comentarios moderados** opcionales (con Cusdis) y feed `/rss.xml`.
   - **Newsletter:** formulario con Brevo mediante una función de Netlify.
   - **Catálogo:** categorías y productos, con ficha propia, carrusel en portada y botón «Consultar» que rellena el formulario.
   - **Tienda:** enlaces de pago de Stripe en los productos y página de condiciones de venta (física o digital). Sin carrito.
   - **Secciones extra** de portada con texto, imágenes, galerías y HTML.
 - **SEO y AEO (buscadores y asistentes de IA):** sitemap, `robots.txt`, `/llms.txt` dinámico para asistentes de IA, canónicas, Open Graph y datos estructurados en grafo (`WebSite`, `LocalBusiness` o subtipo de actividad, `OfferCatalog` de servicios, artículos con autor/cargo y resumen directo, productos, migas de pan y `FAQPage` en portada y artículos).
-- **Cookies:** banner de consentimiento que aparece solo si hay Google Analytics o píxel de Meta.
+- **Cookies:** banner de consentimiento que aparece solo si hay Google Analytics, Google Tag Manager o píxel de Meta.
 - **Legal:** aviso legal, privacidad, y condiciones de venta si hay tienda. Son borradores de partida: identifican necesidades, no certifican cumplimiento.
 
 ## Estructura
