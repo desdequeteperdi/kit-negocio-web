@@ -1,4 +1,4 @@
-import { defineConfig } from 'sanity';
+import { defineConfig, type Template } from 'sanity';
 import { structureTool, type StructureBuilder } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { esESLocale } from '@sanity/locale-es-es';
@@ -25,6 +25,85 @@ const itemUnico = (S: StructureBuilder, id: string) =>
     .title(apartados[id] ?? id)
     .id(id)
     .child(S.document().schemaType(id).documentId(id));
+
+const clave = () => globalThis.crypto?.randomUUID?.().slice(0, 12) ?? Math.random().toString(36).slice(2, 14);
+const bloque = (text: string, style: 'normal' | 'h2' = 'normal') => ({
+  _type: 'block',
+  _key: clave(),
+  style,
+  markDefs: [],
+  children: [{ _type: 'span', _key: clave(), text, marks: [] }],
+});
+const faq = (pregunta: string, respuesta: string) => ({
+  _type: 'faq',
+  _key: clave(),
+  pregunta,
+  respuesta,
+});
+
+// Plantillas listas al pulsar «+» en Entradas del blog (Initial Value Templates)
+const plantillasEntrada: Template[] = [
+  {
+    id: 'entrada-guia',
+    title: 'Guía práctica / Tutorial',
+    schemaType: 'entrada',
+    value: () => ({
+      categoria: 'Guías',
+      respuestaDirecta: 'En 40–60 palabras: qué problema resuelve esta guía, para quién es y cuál es el primer paso recomendado.',
+      cuerpo: [
+        bloque('1. Qué necesitas antes de empezar', 'h2'),
+        bloque('Explica brevemente los requisitos previos o materiales necesarios.'),
+        bloque('2. Pasos para hacerlo bien', 'h2'),
+        bloque('Describe el proceso paso a paso con ejemplos claros de tu negocio.'),
+        bloque('3. Errores habituales que conviene evitar', 'h2'),
+        bloque('Enumera dos o tres fallos frecuentes y cómo prevenirlos.'),
+      ],
+      faqs: [
+        faq('¿Cuánto tiempo lleva aplicarlo?', 'Escribe aquí una respuesta corta y realista.'),
+        faq('¿Qué hago si me surge una duda en el proceso?', 'Indica el canal de contacto o siguiente paso.'),
+      ],
+    }),
+  },
+  {
+    id: 'entrada-caso',
+    title: 'Caso práctico / Antes y después',
+    schemaType: 'entrada',
+    value: () => ({
+      categoria: 'Casos',
+      respuestaDirecta: 'En 40–60 palabras: situación inicial del encargo, solución aplicada y aprendizaje o resultado comprobable.',
+      cuerpo: [
+        bloque('Situación inicial (el problema)', 'h2'),
+        bloque('Describe el punto de partida sin inventar datos ni resultados no verificables.'),
+        bloque('Qué solución aplicamos', 'h2'),
+        bloque('Explica el criterio seguido, materiales o decisiones tomadas.'),
+        bloque('Resultado y aprendizaje', 'h2'),
+        bloque('Resume qué cambió tras la intervención y para qué tipo de cliente encaja.'),
+      ],
+      faqs: [
+        faq('¿Se puede aplicar en un caso parecido?', 'Explica brevemente en qué condiciones funciona.'),
+      ],
+    }),
+  },
+  {
+    id: 'entrada-comparativa',
+    title: 'Comparativa / Preguntas frecuentes',
+    schemaType: 'entrada',
+    value: () => ({
+      categoria: 'Consejos',
+      respuestaDirecta: 'En 40–60 palabras: qué opción conviene elegir según el caso, uso o presupuesto del cliente.',
+      cuerpo: [
+        bloque('Cuándo elegir cada opción', 'h2'),
+        bloque('Compara de forma clara ventajas, límites y casos de uso reales.'),
+        bloque('Criterios clave para decidir', 'h2'),
+        bloque('Resume los 3 puntos que conviene revisar antes de contratar o comprar.'),
+      ],
+      faqs: [
+        faq('¿Cuál es la opción más recomendable para empezar?', 'Responde de forma directa en 2 o 3 líneas.'),
+        faq('¿Qué diferencia hay en coste o mantenimiento?', 'Aclara qué incluye cada alternativa.'),
+      ],
+    }),
+  },
+];
 
 export default defineConfig({
   name: 'default',
@@ -97,8 +176,11 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
-    // Los apartados únicos no se pueden crear ni duplicar
-    templates: (plantillas) => plantillas.filter(({ schemaType }) => !singletons.includes(schemaType)),
+    // Los apartados únicos no se pueden crear ni duplicar; además se añaden plantillas de entrada para el blog
+    templates: (plantillas) => [
+      ...plantillas.filter(({ schemaType }) => !singletons.includes(schemaType)),
+      ...plantillasEntrada,
+    ],
   },
   document: {
     actions: (acciones, { schemaType }) =>

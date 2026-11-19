@@ -16,6 +16,7 @@ const categorias = categoriasBlog(c);
     <div class="contenedor">
       <h1>{c.blog.titulo}</h1>
       <p>{c.blog.introduccion}</p>
+      <p class="meta"><a href="/rss.xml">Feed RSS (/rss.xml)</a></p>
       {categorias.length > 0 && (
         <nav class="etiquetas categorias-blog" aria-label="Categorías del blog">
           {categorias.map((cat) => <a href={`/blog/categoria/${cat.slug}`}>{cat.nombre}</a>)}

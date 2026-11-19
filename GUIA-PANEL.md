@@ -39,7 +39,7 @@ El menú de la izquierda está organizado en **cuatro grupos** para que encuentr
 
 ## Añadir, ordenar y quitar elementos de una lista
 
-- **Añadir:** abre la lista (Servicios, Preguntas frecuentes o Entradas del blog) y pulsa el botón **+** (Create). Rellena los campos y pulsa **Publish**.
+- **Añadir:** abre la lista (Servicios, Preguntas frecuentes o Entradas del blog) y pulsa el botón **+** (Create). En *Entradas del blog* puedes elegir entre una entrada en blanco o una de las plantillas listas (*Guía práctica / Tutorial*, *Caso práctico / Antes y después* o *Comparativa / Preguntas frecuentes*). Rellena los campos y pulsa **Publish**.
 - **Ordenar:** en Servicios y Preguntas frecuentes, el campo **Orden** decide la posición. El 1 sale primero.
 - **Quitar:** abre el elemento, pulsa los tres puntos y elige **Delete**. Después de borrar, la web se actualiza igual que al publicar.
 
