@@ -7,6 +7,7 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
 - [GUIA-ALTA.md](GUIA-ALTA.md): crear las cuentas (GitHub, Sanity, Netlify), conectar el panel, publicar la web y hacer que se actualice sola.
 - [GUIA-PANEL.md](GUIA-PANEL.md): usar el panel día a día.
 - [CALENDARIO-EDITORIAL.md](CALENDARIO-EDITORIAL.md): plantilla de calendario semanal y flujo práctico «1 artículo del blog → 3 piezas para redes».
+- [AGENTS.md](AGENTS.md) *(y [CLAUDE.md](CLAUDE.md))*: mapa técnico y reglas para modificar Astro y Sanity con un agente de código.
 
 ## Qué incluye
 
@@ -34,7 +35,7 @@ kit-negocio/
 │   └── netlify/functions/      # Suscripción a la newsletter
 ├── studio/                  # Panel de Sanity (esquemas y menú)
 ├── scripts/                 # empezar, semilla y publicar el panel
-├── GUIA-ALTA.md, GUIA-PANEL.md, CALENDARIO-EDITORIAL.md
+├── GUIA-ALTA.md, GUIA-PANEL.md, CALENDARIO-EDITORIAL.md, AGENTS.md
 └── netlify.toml
 ```
 
