@@ -18,6 +18,7 @@ const apartados: Record<string, string> = {
   blogAjustes: 'Blog: ajustes y comentarios',
   newsletter: 'Newsletter',
   catalogoAjustes: 'Catálogo: ajustes',
+  enlaces: 'Página /enlaces (Link in bio)',
 };
 
 const itemUnico = (S: StructureBuilder, id: string) =>
@@ -105,6 +106,49 @@ const plantillasEntrada: Template[] = [
   },
 ];
 
+// Plantillas listas al pulsar «+» en Páginas y landings de campaña
+const plantillasPagina: Template[] = [
+  {
+    id: 'pagina-corporativa',
+    title: 'Subpágina corporativa (Quiénes somos / Equipo)',
+    schemaType: 'pagina',
+    value: () => ({
+      tipo: 'pagina',
+      mostrar: true,
+      mostrarEnMenu: true,
+      orden: 1,
+      mostrarContacto: true,
+      cuerpo: [
+        bloque('Nuestra forma de trabajar', 'h2'),
+        bloque('Explica quién está detrás del proyecto, tu experiencia real y en qué zona trabajas.'),
+        bloque('Por qué elegirnos', 'h2'),
+        bloque('Resume 2 o 3 compromisos comprobables sin exagerar ni inventar cifras.'),
+      ],
+    }),
+  },
+  {
+    id: 'pagina-landing',
+    title: 'Landing de campaña (anuncios o redes)',
+    schemaType: 'pagina',
+    value: () => ({
+      tipo: 'landing',
+      mostrar: true,
+      mostrarEnMenu: false,
+      mostrarContacto: true,
+      textoBotonContacto: 'Solicitar información',
+      cuerpo: [
+        bloque('Qué incluye esta propuesta', 'h2'),
+        bloque('Detalla el servicio o promoción concreta de la campaña, para quién es y qué incluye.'),
+        bloque('Cómo funciona paso a paso', 'h2'),
+        bloque('Explica qué ocurre cuando la persona rellena el formulario o escribe por WhatsApp.'),
+      ],
+      faqs: [
+        faq('¿Tiene algún compromiso pedir información?', 'Aclara cómo respondes y en qué plazo.'),
+      ],
+    }),
+  },
+];
+
 export default defineConfig({
   name: 'default',
   title: 'Panel de mi web',
@@ -130,6 +174,9 @@ export default defineConfig({
                     S.divider(),
                     S.documentTypeListItem('servicio').title('Servicios'),
                     S.documentTypeListItem('seccion').title('Secciones extra de la portada'),
+                    S.divider(),
+                    S.documentTypeListItem('pagina').title('Páginas y landings de campaña'),
+                    itemUnico(S, 'enlaces'),
                   ]),
               ),
             S.listItem()
@@ -176,10 +223,11 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
-    // Los apartados únicos no se pueden crear ni duplicar; además se añaden plantillas de entrada para el blog
+    // Los apartados únicos no se pueden crear ni duplicar; además se añaden plantillas para blog y páginas
     templates: (plantillas) => [
       ...plantillas.filter(({ schemaType }) => !singletons.includes(schemaType)),
       ...plantillasEntrada,
+      ...plantillasPagina,
     ],
   },
   document: {

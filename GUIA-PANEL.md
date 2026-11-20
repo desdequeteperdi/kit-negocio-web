@@ -16,6 +16,8 @@ El menú de la izquierda está organizado en **cuatro grupos** para que encuentr
    - **Portada:** titular, presentación, botón e imagen principal.
    - **Quiénes somos:** presentación y puntos destacados.
    - **Servicios** y **Secciones extra de la portada** (listas donde puedes añadir, ordenar o quitar elementos).
+   - **Páginas y landings de campaña:** subpáginas independientes (`/{direccion-web}`) para separar apartados (como *Quiénes somos*) o crear landings específicas para anuncios y redes, eligiendo si salen o no en el menú superior.
+   - **Página /enlaces (Link in bio):** página móvil con tus botones clave, WhatsApp, últimos artículos del blog y redes para poner en tu biografía de Instagram, TikTok o LinkedIn.
 2. **2. Blog**
    - **Blog: ajustes y comentarios:** activar el blog, título, introducción y activar o desactivar los **comentarios** (con tu ID de Cusdis).
    - **Entradas del blog:** artículos organizados en tres pestañas (*1. Artículo*, *2. Categoría, etiquetas y fotos* y *3. Google e IA*).
@@ -142,6 +144,16 @@ En **Secciones extra de la portada** pulsa **+** para añadir un bloque a la por
 - **Contenido:** texto, imágenes y código HTML, como en el blog.
 - **Mostrar esta sección:** desmárcalo para ocultarla sin borrarla.
 
+## Subpáginas, landings de campaña y `/enlaces`
+
+1. **Crear una subpágina o landing (`1. Mi negocio y portada → Páginas y landings de campaña → +`):**
+   - Elige una plantilla (**Subpágina corporativa** o **Landing de campaña**) o una página en blanco.
+   - **Subpágina de la web** *(ej. `/quienes-somos`)*: activa **Mostrar enlace en el menú superior** (y si sustituye a la sección de portada, puedes apagar *Mostrar esta sección* en *Quiénes somos*).
+   - **Landing de campaña** *(ej. `/campana-terrazas`)*: deja **Mostrar enlace en el menú superior** desactivado para que no aparezca en la cabecera, añade un botón de llamada a la acción y activa **Mostrar formulario de contacto al final**. Puedes marcar **Ocultar de Google y asistentes de IA** si es una prueba o campaña temporal.
+2. **Activar tu página `/enlaces` (`1. Mi negocio y portada → Página /enlaces`):**
+   - Activa **Activar página /enlaces**, escribe tu presentación breve y añade botones hacia tus landings, servicios o enlaces externos (empezando por `/` o `https://`).
+   - Copia tu URL `https://<tu-web>.netlify.app/enlaces` (con UTM si quieres) y pégala en la biografía de Instagram, TikTok o LinkedIn.
+
 ## Ver el cambio en la web
 
 Al publicar, la web se vuelve a generar sola (si hiciste el paso 6 de la guía de alta). Tarda uno o dos minutos. Si no ves el cambio:
@@ -162,7 +174,8 @@ En **Google, IA y buscadores** hay cuatro campos opcionales. Pega solo el códig
 - **Código de Google Search Console:** el valor de `content` de la etiqueta meta de verificación.
 - **ID de Google Analytics 4:** empieza por `G-`.
 - **ID de Google Tag Manager:** empieza por `GTM-` (opcional, si gestionas etiquetas de GA4 o eventos desde Google Tag Manager; si ya cargas GA4 dentro de GTM, deja vacío el campo de GA4 para no duplicar visitas).
-- **ID del píxel de Meta:** un número de 15 o 16 cifras.
+- **ID del píxel / Conjunto de datos de Meta:** número único de 15 o 16 cifras (en Meta actual, *Conjunto de datos / Dataset ID* une Píxel y API de conversiones). Además de `PageView` en toda la web (incluidas landings y `/enlaces`), la página `/gracias` dispara automáticamente el evento **`Lead`** cuando se aceptan las cookies.
+- **Meta Conversions API / CAPI *(opcional, en Netlify)*:** como usa el mismo ID de Conjunto de datos que ya pusiste en Sanity, solo tienes que añadir en **Netlify → Environment variables** tu token secreto **`META_CAPI_TOKEN`** (y, para probar en *Probar eventos* de Meta, `META_TEST_EVENT_CODE`). Ambos envíos comparten el mismo `event_id` para que Meta los deduplice automáticamente. Si no pones `META_CAPI_TOKEN`, solo funciona el píxel del navegador.
 
 Si rellenas Analytics, Tag Manager o el píxel, la web muestra un aviso de cookies. Los scripts solo se cargan si la persona pulsa **Aceptar**. Con el campo vacío no se carga nada. La política de privacidad añade un párrafo de cookies por sí sola. Como todos los textos legales del kit, es un punto de partida: revísalo antes de usarlo con datos reales.
 

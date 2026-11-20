@@ -88,3 +88,20 @@ video, iframe, svg { max-width: 100%; }
 .producto img { aspect-ratio: 4 / 3; }
 .grupo-catalogo { margin-top: 2.5rem; }
 .producto-ficha img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; max-width: 32rem; }
+
+@media (min-width: 48rem) { .portada.portada-simple .contenedor { grid-template-columns: minmax(0, 1fr); max-width: 44rem; } }
+.pagina-subtitulo { font-size: 1.15rem; color: #444; margin-top: -.25rem; }
+
+.enlaces-bio { max-width: 34rem; }
+.enlaces-cabecera { text-align: center; margin-bottom: 1.75rem; }
+.enlaces-avatar { width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; }
+.enlaces-cabecera h1 { margin: 0 0 .5rem; }
+.enlaces-desc { margin: 0; color: #444; }
+.enlaces-lista { display: grid; gap: .75rem; }
+.enlaces-lista .boton { width: 100%; text-align: center; }
+.enlaces-bloque { margin-top: 2.25rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0; }
+.enlaces-bloque h2 { font-size: 1.25rem; margin: 0 0 .75rem; }
+.enlaces-articulos { list-style: none; padding: 0; margin: 0 0 .75rem; display: grid; gap: .6rem; }
+.enlaces-articulos a { font-weight: 600; text-decoration: none; }
+.enlaces-articulos a:hover { text-decoration: underline; }
+.enlaces-redes { margin-top: 0; }

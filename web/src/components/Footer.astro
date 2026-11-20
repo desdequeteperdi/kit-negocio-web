@@ -1,8 +1,9 @@
 ---
-import { getContenido, catalogoVisible, hayVenta, redesSociales } from '../lib/contenido';
+import { getContenido, catalogoVisible, hayVenta, redesSociales, paginasMenu } from '../lib/contenido';
 const c = await getContenido();
 const n = c.negocio;
 const redes = redesSociales(n);
+const menuPaginas = paginasMenu(c);
 const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.gtm || c.buscadores.metaPixel);
 ---
 <footer>
@@ -23,7 +24,9 @@ const seguimiento = Boolean(c.buscadores.ga4 || c.buscadores.gtm || c.buscadores
         {c.servicios.length > 0 && <li><a href="/#servicios">Servicios</a></li>}
         {catalogoVisible(c) && <li><a href="/catalogo">{c.catalogo.titulo}</a></li>}
         {c.sobre.mostrar && <li><a href="/#sobre">Quiénes somos</a></li>}
+        {menuPaginas.map((p) => <li><a href={`/${p.slug}`}>{p.textoMenu || p.titulo}</a></li>)}
         {c.blog.mostrar && <li><a href="/blog">{c.blog.titulo}</a></li>}
+        {c.enlaces.mostrar && <li><a href="/enlaces">Enlaces</a></li>}
         {c.preguntas.length > 0 && <li><a href="/#preguntas">Preguntas frecuentes</a></li>}
         {c.newsletter.mostrar && <li><a href="/#newsletter">Newsletter</a></li>}
         <li><a href="/#contacto">Contacto</a></li>

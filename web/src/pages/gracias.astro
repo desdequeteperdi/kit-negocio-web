@@ -7,4 +7,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <p>Te responderemos lo antes posible.</p>
     <p><a class="boton" href="/">Volver al inicio</a></p>
   </div>
+  <script is:inline>
+    if (typeof window.__metaTrack === 'function') window.__metaTrack('Lead');
+    else (window.__metaCola = window.__metaCola || []).push(['Lead']);
+  </script>
 </BaseLayout>

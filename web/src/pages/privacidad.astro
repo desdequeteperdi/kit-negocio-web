@@ -8,7 +8,7 @@ const seguimiento = Boolean(buscadores.ga4 || buscadores.gtm || buscadores.metaP
 const herramientasCookies = [
   buscadores.ga4 && 'Google Analytics (medición de visitas)',
   buscadores.gtm && 'Google Tag Manager (gestión de etiquetas de medición)',
-  buscadores.metaPixel && 'el píxel de Meta (medición de anuncios)',
+  buscadores.metaPixel && 'el píxel y la medición de conversiones de Meta (medición de anuncios)',
 ].filter((x): x is string => Boolean(x));
 const textoCookies = herramientasCookies.length > 1
   ? `${herramientasCookies.slice(0, -1).join(', ')} y ${herramientasCookies[herramientasCookies.length - 1]}`

@@ -1,6 +1,8 @@
 import { defineField, defineType } from 'sanity';
 
-export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'catalogoAjustes'];
+export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'catalogoAjustes', 'enlaces'];
+
+const RUTAS_RESERVADAS = new Set(['blog', 'catalogo', 'condiciones', 'aviso-legal', 'privacidad', 'gracias', 'newsletter-gracias', 'newsletter-error', 'enlaces', '404']);
 
 const FORMATOS_IMAGEN = 'image/jpeg,image/png,image/webp';
 
@@ -194,8 +196,8 @@ const buscadores = defineType({
       description: 'Empieza por GTM- (por ejemplo GTM-ABC1234). Si lo rellenas, la web pedirá consentimiento de cookies antes de cargarlo.',
       validation: (r) => r.regex(/^GTM-[A-Z0-9]{4,15}$/, { name: 'ID de GTM' }).warning('Debe tener el formato GTM-XXXXXXX'),
     }),
-    texto('metaPixel', 'ID del píxel de Meta', {
-      description: 'Solo números (15 o 16 cifras). Si lo rellenas, la web pedirá consentimiento de cookies.',
+    texto('metaPixel', 'ID del píxel / Conjunto de datos de Meta', {
+      description: 'Número único de 15 o 16 cifras del Administrador de eventos de Meta (Dataset ID). Si lo rellenas, la web pedirá consentimiento de cookies y medirá PageView y Lead en /gracias.',
       validation: (r) => r.regex(/^\d{8,20}$/, { name: 'ID del píxel' }).warning('Debe ser un número, sin letras ni espacios'),
     }),
   ],
@@ -430,4 +432,144 @@ const seccion = defineType({
   preview: { select: { title: 'titulo', subtitle: 'lugar' }, prepare: ({ title, subtitle }) => ({ title: title || 'Sección sin título', subtitle }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, bloqueImagen, bloqueGaleria, bloqueHtml];
+const pagina = defineType({
+  name: 'pagina', title: 'Página o landing de campaña', type: 'document',
+  groups: [
+    { name: 'contenido', title: '1. Contenido', default: true },
+    { name: 'navegacion', title: '2. Menú y captación' },
+    { name: 'seo', title: '3. Google e IA' },
+  ],
+  fields: [
+    texto('titulo', 'Título de la página', { group: 'contenido', validation: (r) => r.required() }),
+    defineField({
+      name: 'slug', title: 'Dirección web', type: 'slug', group: 'contenido',
+      options: { source: 'titulo', maxLength: 80 },
+      description: 'Será la URL de la página (por ejemplo: quienes-somos o campana-verano).',
+      validation: (r) => r.required().custom((val) => {
+        const s = val?.current?.trim().toLowerCase() ?? '';
+        return RUTAS_RESERVADAS.has(s) ? `La dirección «${s}» está reservada por el sistema; elige otra.` : true;
+      }),
+    }),
+    defineField({
+      name: 'tipo', title: 'Tipo de página', type: 'string', group: 'contenido', initialValue: 'pagina',
+      options: {
+        list: [
+          { title: 'Subpágina de la web (Quiénes somos, servicios, información…)', value: 'pagina' },
+          { title: 'Landing de campaña (para redes sociales, anuncios o email)', value: 'landing' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    parrafo('subtitulo', 'Subtítulo o promesa breve (opcional)', {
+      group: 'contenido', rows: 2,
+      description: 'Se muestra debajo del titular y sirve como descripción por defecto en Google.',
+    }),
+    defineField({
+      name: 'imagen', title: 'Imagen principal (opcional)', type: 'image', group: 'contenido',
+      options: { hotspot: true, accept: FORMATOS_IMAGEN },
+      description: 'En landings de campaña aparece junto al titular (JPG, PNG o WebP).',
+      fields: [altImagen()],
+    }),
+    textoLibre('cuerpo', 'Contenido de la página', { group: 'contenido' }),
+    defineField({
+      name: 'faqs', title: 'Preguntas frecuentes (opcional)', type: 'array', group: 'contenido',
+      of: [{
+        type: 'object', name: 'faqPagina', title: 'Pregunta',
+        fields: [texto('pregunta', 'Pregunta', { validation: (r) => r.required() }), parrafo('respuesta', 'Respuesta', { validation: (r) => r.required() })],
+        preview: { select: { title: 'pregunta', subtitle: 'respuesta' } },
+      }],
+    }),
+    interruptor('mostrar', 'Publicar esta página', true, {
+      group: 'navegacion',
+      description: 'Desactívalo para guardarla en borrador sin publicarla en la web.',
+    }),
+    interruptor('mostrarEnMenu', 'Mostrar enlace en el menú superior', false, {
+      group: 'navegacion',
+      description: 'Actívalo para subpáginas como «Quiénes somos». Déjalo apagado en landings de campaña.',
+    }),
+    defineField({ name: 'orden', title: 'Orden en el menú (1 sale primero)', type: 'number', group: 'navegacion', initialValue: 1 }),
+    texto('textoMenu', 'Texto corto en el menú (opcional)', {
+      group: 'navegacion',
+      description: 'Si lo dejas vacío se usa el título de la página.',
+    }),
+    interruptor('mostrarContacto', 'Mostrar formulario de contacto al final', true, { group: 'navegacion' }),
+    texto('textoBotonContacto', 'Texto del botón en cabecera de landing (opcional)', {
+      group: 'navegacion',
+      description: 'Por ejemplo: «Pedir presupuesto» o «Reservar plaza». Lleva al formulario de la página.',
+    }),
+    interruptor('mostrarNewsletter', 'Mostrar bloque de newsletter al final', false, {
+      group: 'navegacion',
+      description: 'Solo se muestra si además tienes activada la Newsletter en el apartado 4.',
+    }),
+    texto('seoTitulo', 'Título en Google (opcional)', {
+      group: 'seo',
+      description: 'Si lo dejas vacío se usa el título de la página.',
+      validation: (r) => r.max(70),
+    }),
+    parrafo('seoDescripcion', 'Descripción en Google (opcional)', {
+      group: 'seo',
+      description: 'Si la dejas vacía se usa el subtítulo.',
+      validation: (r) => r.max(160),
+    }),
+    interruptor('noindex', 'Ocultar de Google y asistentes de IA', false, {
+      group: 'seo',
+      description: 'Útil para pruebas de clase o landings temporales de anuncios.',
+    }),
+  ],
+  orderings: [{ title: 'Orden', name: 'orden', by: [{ field: 'orden', direction: 'asc' }] }],
+  preview: {
+    select: { title: 'titulo', slug: 'slug.current', tipo: 'tipo', mostrar: 'mostrar', media: 'imagen' },
+    prepare: ({ title, slug, tipo, mostrar, media }) => ({
+      title,
+      subtitle: `${mostrar === false ? 'Oculta · ' : ''}${tipo === 'landing' ? 'Landing' : 'Subpágina'} · /${slug ?? ''}`,
+      media,
+    }),
+  },
+});
+
+const enlaces = defineType({
+  name: 'enlaces', title: 'Página /enlaces (Link in bio)', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Activar página /enlaces', false, {
+      description: 'Genera la ruta /enlaces para ponerla en tu biografía de Instagram, TikTok o LinkedIn.',
+    }),
+    texto('titulo', 'Título o nombre público (opcional)', {
+      description: 'Si lo dejas vacío se usa el nombre del negocio.',
+    }),
+    parrafo('bio', 'Presentación breve', {
+      rows: 2,
+      description: 'Una o dos frases explicando qué haces y a quién ayudas.',
+    }),
+    defineField({
+      name: 'imagen', title: 'Foto o logotipo (opcional)', type: 'image',
+      options: { hotspot: true, accept: FORMATOS_IMAGEN },
+      fields: [altImagen()],
+    }),
+    defineField({
+      name: 'botones', title: 'Botones de enlace', type: 'array',
+      description: 'Añade enlaces a tus landings de campaña, servicios, newsletter o recursos externos.',
+      of: [{
+        type: 'object', name: 'botonEnlace', title: 'Enlace',
+        fields: [
+          texto('etiqueta', 'Texto del botón', { validation: (r) => r.required() }),
+          texto('url', 'Destino (empieza por / o https://)', {
+            description: 'Ejemplo interno: /campana-terrazas o /#contacto. Ejemplo externo: https://...',
+            validation: (r) => r.required().custom((v) => {
+              const s = (v ?? '').trim();
+              return /^(\/|https:\/\/)/.test(s) ? true : 'Debe empezar por / (página de tu web) o https://';
+            }),
+          }),
+          interruptor('destacado', 'Destacar como botón principal', false),
+        ],
+        preview: { select: { title: 'etiqueta', subtitle: 'url' } },
+      }],
+    }),
+    interruptor('mostrarWhatsapp', 'Mostrar botón directo de WhatsApp (si hay teléfono)', true),
+    interruptor('mostrarUltimasEntradas', 'Mostrar últimos artículos del blog (si el blog está activo)', true),
+    interruptor('mostrarRedes', 'Mostrar enlaces a tus redes sociales', true),
+    interruptor('noindex', 'Ocultar /enlaces de Google', false),
+  ],
+  preview: { prepare: () => ({ title: 'Página /enlaces (Link in bio)' }) },
+});
+
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];

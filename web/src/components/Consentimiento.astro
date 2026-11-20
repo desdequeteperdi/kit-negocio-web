@@ -15,6 +15,40 @@ const { ga4, gtm, pixel } = Astro.props;
   (function () {
     var caja = document.getElementById('cookies');
     var cargado = false;
+    function leerCookie(nombre) {
+      var m = document.cookie.match(new RegExp('(?:^|; )' + nombre + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : '';
+    }
+    function nuevoId() {
+      return (window.crypto && window.crypto.randomUUID)
+        ? window.crypto.randomUUID()
+        : 'ev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+    }
+    function enviarMeta(evento, datos) {
+      if (!pixel || !cargado) return;
+      var eventId = nuevoId();
+      if (typeof window.fbq === 'function') window.fbq('track', evento, datos || {}, { eventID: eventId });
+      try {
+        var cuerpo = JSON.stringify({
+          pixel_id: pixel,
+          event_name: evento,
+          event_id: eventId,
+          event_source_url: location.href,
+          fbp: leerCookie('_fbp'),
+          fbc: leerCookie('_fbc'),
+        });
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/.netlify/functions/meta-capi', new Blob([cuerpo], { type: 'application/json' }));
+        } else {
+          fetch('/.netlify/functions/meta-capi', { method: 'POST', headers: { 'content-type': 'application/json' }, body: cuerpo, keepalive: true }).catch(function () {});
+        }
+      } catch (e) {}
+    }
+    window.__metaTrack = function (evento, datos) {
+      if (!pixel) return;
+      if (cargado) enviarMeta(evento, datos);
+      else (window.__metaCola = window.__metaCola || []).push([evento, datos]);
+    };
     function cargar() {
       if (cargado) return;
       cargado = true;
@@ -46,7 +80,11 @@ const { ga4, gtm, pixel } = Astro.props;
           s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
         }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
         window.fbq('init', pixel);
-        window.fbq('track', 'PageView');
+        enviarMeta('PageView');
+        if (Array.isArray(window.__metaCola)) {
+          window.__metaCola.forEach(function (item) { enviarMeta(item[0], item[1]); });
+          window.__metaCola = [];
+        }
       }
     }
     function guardada() { try { return localStorage.getItem('cookies'); } catch (e) { return null; } }

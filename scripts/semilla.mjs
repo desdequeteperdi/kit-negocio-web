@@ -18,6 +18,13 @@ unico('buscadores', buscadores);
 unico('legal', d.legal);
 unico('catalogoAjustes', { mostrar: d.catalogo.mostrar, titulo: d.catalogo.titulo, introduccion: d.catalogo.introduccion, textoBoton: d.catalogo.textoBoton, tienda: d.catalogo.tienda, textoBotonPago: d.catalogo.textoBotonPago });
 unico('blogAjustes', { mostrar: d.blog.mostrar, titulo: d.blog.titulo, introduccion: d.blog.introduccion, comentarios: d.blog.comentarios, cusdisId: d.blog.cusdisId });
+if (d.enlaces) {
+  const { imagen, alt, botones = [], ...restoEnlaces } = d.enlaces;
+  unico('enlaces', {
+    ...restoEnlaces,
+    botones: botones.map((b) => ({ _type: 'botonEnlace', _key: randomUUID().slice(0, 12), ...b })),
+  });
+}
 
 d.servicios.forEach((s, i) => docs.push({ _id: `servicio-${i + 1}`, _type: 'servicio', ...s }));
 d.preguntas.forEach((p, i) => docs.push({ _id: `pregunta-${i + 1}`, _type: 'pregunta', orden: i + 1, ...p }));
@@ -51,6 +58,17 @@ d.blog.entradas.forEach((e) => {
       _type: 'block', _key: randomUUID().slice(0, 12), style: 'normal', markDefs: [],
       children: [{ _type: 'span', _key: randomUUID().slice(0, 12), text: t, marks: [] }],
     })),
+  });
+});
+(d.paginas ?? []).forEach((p) => {
+  const { slug, imagen, alt, cuerpo, faqs = [], ...resto } = p;
+  docs.push({
+    _id: `pagina-${slug}`,
+    _type: 'pagina',
+    ...resto,
+    slug: { _type: 'slug', current: slug },
+    faqs: faqs.map((f) => ({ _type: 'faqPagina', _key: randomUUID().slice(0, 12), ...f })),
+    cuerpo: cuerpo.map(parrafoSanity),
   });
 });
 

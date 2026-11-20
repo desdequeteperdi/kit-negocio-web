@@ -265,5 +265,81 @@
         ]
       }
     ]
-  }
+  },
+  "enlaces": {
+    "mostrar": false,
+    "titulo": "Estudio Almendro",
+    "bio": "Diseño y mantenimiento de terrazas y jardines pequeños en Madrid.",
+    "imagen": "",
+    "alt": "",
+    "botones": [
+      {
+        "etiqueta": "Pide presupuesto para tu terraza",
+        "url": "/#contacto",
+        "destacado": true
+      },
+      {
+        "etiqueta": "Consejos en el blog",
+        "url": "/blog",
+        "destacado": false
+      }
+    ],
+    "mostrarWhatsapp": true,
+    "mostrarUltimasEntradas": true,
+    "mostrarRedes": true,
+    "noindex": false
+  },
+  "paginas": [
+    {
+      "slug": "quienes-somos",
+      "titulo": "Quiénes somos",
+      "tipo": "pagina",
+      "subtitulo": "Un estudio pequeño de jardinería en Madrid que trabaja en persona y con presupuesto cerrado.",
+      "imagen": "",
+      "alt": "",
+      "mostrar": false,
+      "mostrarEnMenu": true,
+      "orden": 1,
+      "textoMenu": "Quiénes somos",
+      "mostrarContacto": true,
+      "textoBotonContacto": "",
+      "mostrarNewsletter": false,
+      "seoTitulo": "",
+      "seoDescripcion": "",
+      "noindex": false,
+      "faqs": [],
+      "cuerpo": [
+        "Trabajamos directamente contigo desde la visita inicial hasta el mantenimiento mensual, proponiendo plantas adaptadas a la orientación real de tu terraza.",
+        "Antes de empezar entregamos siempre una lista clara de tareas, plantas y presupuesto por escrito."
+      ]
+    },
+    {
+      "slug": "campana-terrazas",
+      "titulo": "Puesta a punto de terrazas en Madrid",
+      "tipo": "landing",
+      "subtitulo": "Visita de valoración, propuesta de plantas resistentes y presupuesto por escrito en 48 horas.",
+      "imagen": "/img-portada.svg",
+      "alt": "Imagen de ejemplo",
+      "mostrar": false,
+      "mostrarEnMenu": false,
+      "orden": 2,
+      "textoMenu": "",
+      "mostrarContacto": true,
+      "textoBotonContacto": "Solicitar visita de valoración",
+      "mostrarNewsletter": false,
+      "seoTitulo": "",
+      "seoDescripcion": "",
+      "noindex": false,
+      "faqs": [
+        {
+          "pregunta": "¿Cuánto dura la visita inicial?",
+          "respuesta": "Alrededor de 30 minutos para medir orientación, sol y tomas de agua."
+        }
+      ],
+      "cuerpo": [
+        "Si tu terraza se seca cada verano o no sabes qué macetas elegir, preparamos un plan sencillo adaptado al sol y al viento de tu vivienda.",
+        "Trabajamos en Madrid capital y zona norte, sin compromiso hasta aprobar el presupuesto."
+      ]
+    }
+  ]
 }

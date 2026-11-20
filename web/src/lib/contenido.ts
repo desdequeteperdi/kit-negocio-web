@@ -25,11 +25,27 @@ export type Producto = {
   descripcionHtml: string;
 };
 export type Seccion = { orden: number; lugar: string; titulo: string; html: string };
-export type Contenido = Omit<typeof datos, 'blog' | 'catalogo'> & {
+export type Pagina = {
+  slug: string; titulo: string; tipo: 'pagina' | 'landing'; subtitulo: string; imagen: string; alt: string;
+  mostrar: boolean; mostrarEnMenu: boolean; orden: number; textoMenu: string;
+  mostrarContacto: boolean; textoBotonContacto: string; mostrarNewsletter: boolean;
+  seoTitulo: string; seoDescripcion: string; noindex: boolean;
+  faqs: { pregunta: string; respuesta: string }[]; cuerpoHtml: string;
+};
+export type BotonEnlace = { etiqueta: string; url: string; destacado: boolean };
+export type EnlacesConfig = {
+  mostrar: boolean; titulo: string; bio: string; imagen: string; alt: string;
+  botones: BotonEnlace[]; mostrarWhatsapp: boolean; mostrarUltimasEntradas: boolean; mostrarRedes: boolean; noindex: boolean;
+};
+export type Contenido = Omit<typeof datos, 'blog' | 'catalogo' | 'paginas' | 'enlaces'> & {
   blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
   catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; tienda: boolean; textoBotonPago: string; categorias: Categoria[]; productos: Producto[] };
   secciones: Seccion[];
+  paginas: Pagina[];
+  enlaces: EnlacesConfig;
 };
+
+const RUTAS_RESERVADAS = new Set(['blog', 'catalogo', 'condiciones', 'aviso-legal', 'privacidad', 'gracias', 'newsletter-gracias', 'newsletter-error', 'enlaces', '404']);
 
 export const temas: Record<string, { principal: string; oscuro: string; suave: string }> = {
   verde: { principal: '#2f842b', oscuro: '#1b3a1a', suave: '#f0f7ec' },
@@ -71,6 +87,17 @@ const consulta = `{
   "secciones": *[_type == "seccion" && mostrar != false] | order(orden asc){
     orden, lugar, titulo,
     contenido[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}, _type == "bloqueGaleria" => {..., imagenes[]{..., "url": asset->url}}}
+  },
+  "paginas": *[_type == "pagina" && mostrar != false && defined(slug.current)] | order(orden asc, _createdAt desc){
+    "slug": slug.current, titulo, tipo, subtitulo, "imagen": imagen.asset->url, "alt": imagen.alt,
+    mostrar, mostrarEnMenu, orden, textoMenu, mostrarContacto, textoBotonContacto, mostrarNewsletter,
+    seoTitulo, seoDescripcion, noindex, faqs[]{pregunta, respuesta},
+    cuerpo[]{..., _type == "bloqueImagen" => {"url": imagen.asset->url}, _type == "bloqueGaleria" => {..., imagenes[]{..., "url": asset->url}}}
+  },
+  "enlaces": *[_id == "enlaces"][0]{
+    mostrar, titulo, bio, "imagen": imagen.asset->url, "alt": imagen.alt,
+    botones[]{etiqueta, url, destacado},
+    mostrarWhatsapp, mostrarUltimasEntradas, mostrarRedes, noindex
   }
 }`;
 
@@ -103,6 +130,53 @@ function normalizarProducto(p: any, descripcionHtml: string): Producto {
     enlacePago: /^https:\/\//.test(p.enlacePago ?? '') ? p.enlacePago : '',
     disponible: p.disponible !== false, destacado: p.destacado === true, orden: p.orden ?? 1, creado: p.creado ?? '',
     descripcionHtml,
+  };
+}
+
+// Rellena lo que falte en una página o landing de campaña para que la web nunca se rompa
+function normalizarPagina(p: any, cuerpoHtml: string): Pagina {
+  const slug = String(p.slug ?? '').trim().toLowerCase();
+  return {
+    slug,
+    titulo: p.titulo ?? '',
+    tipo: p.tipo === 'landing' ? 'landing' : 'pagina',
+    subtitulo: p.subtitulo ?? '',
+    imagen: optimizada(p.imagen, 'w=1000&auto=format'),
+    alt: p.alt ?? '',
+    mostrar: p.mostrar !== false,
+    mostrarEnMenu: p.mostrarEnMenu === true,
+    orden: typeof p.orden === 'number' ? p.orden : 1,
+    textoMenu: p.textoMenu ?? '',
+    mostrarContacto: p.mostrarContacto !== false,
+    textoBotonContacto: p.textoBotonContacto ?? '',
+    mostrarNewsletter: p.mostrarNewsletter === true,
+    seoTitulo: p.seoTitulo ?? '',
+    seoDescripcion: p.seoDescripcion ?? '',
+    noindex: p.noindex === true,
+    faqs: (p.faqs ?? []).filter((f: any) => f?.pregunta && f?.respuesta),
+    cuerpoHtml,
+  };
+}
+
+export const urlEnlaceValida = (u: unknown): u is string =>
+  typeof u === 'string' && /^(\/|https:\/\/)/.test(u.trim());
+
+function normalizarEnlaces(e: any): EnlacesConfig {
+  const base = datos.enlaces;
+  const src = { ...base, ...(e ?? {}) };
+  return {
+    mostrar: src.mostrar === true,
+    titulo: src.titulo ?? '',
+    bio: src.bio ?? '',
+    imagen: src.imagen ? optimizada(src.imagen, 'w=400&h=400&fit=crop&auto=format') : '',
+    alt: src.alt ?? '',
+    botones: (src.botones ?? [])
+      .filter((b: any) => b?.etiqueta && urlEnlaceValida(b?.url))
+      .map((b: any) => ({ etiqueta: String(b.etiqueta), url: String(b.url).trim(), destacado: b.destacado === true })),
+    mostrarWhatsapp: src.mostrarWhatsapp !== false,
+    mostrarUltimasEntradas: src.mostrarUltimasEntradas !== false,
+    mostrarRedes: src.mostrarRedes !== false,
+    noindex: src.noindex === true,
   };
 }
 
@@ -139,6 +213,8 @@ async function desdeSanity(): Promise<Contenido> {
       entradas: r.entradas.map(({ cuerpo, ...e }: any) => normalizar(e, aHtml(cuerpo))),
     },
     secciones: (r.secciones ?? []).map((x: any) => ({ orden: x.orden ?? 1, lugar: x.lugar ?? 'antes-contacto', titulo: x.titulo ?? '', html: aHtml(x.contenido) })),
+    paginas: (r.paginas ?? []).map(({ cuerpo, ...p }: any) => normalizarPagina(p, aHtml(cuerpo))),
+    enlaces: normalizarEnlaces(r.enlaces),
   } as Contenido;
 }
 
@@ -149,6 +225,8 @@ function desdeArchivo(): Contenido {
     blog: { ...datos.blog, entradas: datos.blog.entradas.map(({ cuerpo, ...e }) => normalizar(e, parrafosAHtml(cuerpo))) },
     catalogo: { ...datos.catalogo, productos: datos.catalogo.productos.map(({ descripcion, ...p }) => normalizarProducto(p, parrafosAHtml(descripcion))) },
     secciones: [],
+    paginas: (datos.paginas ?? []).map(({ cuerpo, ...p }) => normalizarPagina(p, parrafosAHtml(cuerpo))),
+    enlaces: normalizarEnlaces(datos.enlaces),
   };
 }
 
@@ -215,4 +293,16 @@ export function redesSociales(n: Contenido['negocio']): { nombre: string; url: s
     ['Facebook', n.facebook], [n.otraRedNombre || 'Otra red', n.otraRed],
   ] as const;
   return lista.flatMap(([nombre, url]) => (typeof url === 'string' && /^https:\/\//.test(url) ? [{ nombre, url }] : []));
+}
+
+// Subpáginas y landings publicadas con slug válido (sin colisión con rutas fijas del kit)
+export function paginasPublicas(c: Contenido): Pagina[] {
+  return c.paginas.filter((p) => p.mostrar && p.slug && !RUTAS_RESERVADAS.has(p.slug));
+}
+
+// Subpáginas que deben aparecer en la navegación principal
+export function paginasMenu(c: Contenido): Pagina[] {
+  return paginasPublicas(c)
+    .filter((p) => p.mostrarEnMenu)
+    .sort((a, b) => a.orden - b.orden || a.titulo.localeCompare(b.titulo, 'es'));
 }

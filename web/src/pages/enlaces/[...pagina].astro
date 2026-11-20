@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getContenido, entradasOrdenadas, redesSociales } from '../../lib/contenido';
+
+export async function getStaticPaths() {
+  const c = await getContenido();
+  // Solo se genera /enlaces/ si la función está activada: así no entra vacía en el sitemap
+  return c.enlaces.mostrar ? [{ params: { pagina: undefined } }] : [];
+}
+
+const c = await getContenido();
+const e = c.enlaces;
+const titulo = e.titulo || c.negocio.nombre;
+const redes = e.mostrarRedes ? redesSociales(c.negocio) : [];
+const entradas = c.blog.mostrar && e.mostrarUltimasEntradas ? entradasOrdenadas(c).slice(0, 3) : [];
+const wa = e.mostrarWhatsapp && c.negocio.whatsapp
+  ? `https://wa.me/${c.negocio.whatsapp}?text=${encodeURIComponent('Hola, vengo desde tus redes sociales')}`
+  : null;
+---
+<BaseLayout
+  titulo={`${titulo} · Enlaces | ${c.negocio.nombre}`}
+  descripcion={e.bio || c.negocio.descripcion}
+  imagen={e.imagen}
+  imagenAlt={e.alt || titulo}
+  noindex={e.noindex}
+>
+  <section>
+    <div class="contenedor enlaces-bio">
+      <div class="enlaces-cabecera">
+        {e.imagen && <img class="enlaces-avatar" src={e.imagen} alt={e.alt || titulo} width="120" height="120" />}
+        <h1>{titulo}</h1>
+        {e.bio && <p class="enlaces-desc">{e.bio}</p>}
+      </div>
+
+      {(e.botones.length > 0 || wa) && (
+        <div class="enlaces-lista">
+          {e.botones.map((b) => {
+            const externo = /^https:\/\//.test(b.url);
+            return (
+              <a
+                class={b.destacado ? 'boton' : 'boton secundario'}
+                href={b.url}
+                target={externo ? '_blank' : undefined}
+                rel={externo ? 'noopener noreferrer' : undefined}
+              >
+                {b.etiqueta}
+              </a>
+            );
+          })}
+          {wa && (
+            <a class="boton secundario" href={wa} target="_blank" rel="noopener noreferrer">
+              Escríbenos por WhatsApp
+            </a>
+          )}
+        </div>
+      )}
+
+      {entradas.length > 0 && (
+        <div class="enlaces-bloque">
+          <h2>Últimos artículos</h2>
+          <ul class="enlaces-articulos">
+            {entradas.map((art) => (
+              <li>
+                <a href={`/blog/${art.slug}`}>{art.titulo}</a>
+              </li>
+            ))}
+          </ul>
+          <p class="meta"><a href="/blog">Ver todo el blog →</a></p>
+        </div>
+      )}
+
+      {redes.length > 0 && (
+        <div class="enlaces-bloque">
+          <h2>Redes sociales</h2>
+          <p class="etiquetas enlaces-redes">
+            {redes.map((r) => (
+              <a href={r.url} target="_blank" rel="noopener noreferrer me">{r.nombre}</a>
+            ))}
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

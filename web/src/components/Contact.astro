@@ -1,5 +1,7 @@
 ---
 import { getContenido } from '../lib/contenido';
+interface Props { asunto?: string; }
+const { asunto } = Astro.props;
 const c = await getContenido();
 const { contacto, negocio } = c;
 ---
@@ -15,6 +17,7 @@ const { contacto, negocio } = c;
     {contacto.mostrarFormulario && (
       <form name="contacto" method="POST" action="/gracias" data-netlify="true" netlify-honeypot="campo-trampa">
         <input type="hidden" name="form-name" value="contacto" />
+        {asunto && <input type="hidden" name="origen" value={asunto} />}
         <p class="oculto"><label>No rellenar: <input name="campo-trampa" /></label></p>
         <label>Nombre <input name="nombre" required autocomplete="name" /></label>
         <label>Email <input type="email" name="email" required autocomplete="email" /></label>

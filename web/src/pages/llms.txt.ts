@@ -8,6 +8,7 @@ import {
   productosPublicos,
   precioProducto,
   urlProducto,
+  paginasPublicas,
 } from '../lib/contenido';
 
 export const GET: APIRoute = async ({ site }) => {
@@ -54,6 +55,20 @@ export const GET: APIRoute = async ({ site }) => {
       lineas.push(`- **${p.pregunta}** ${p.respuesta}`);
     }
     lineas.push('');
+  }
+
+  const paginas = paginasPublicas(c).filter((p) => !p.noindex);
+  if (paginas.length > 0) {
+    lineas.push('## Páginas');
+    for (const p of paginas) {
+      const desc = p.subtitulo ? `: ${p.subtitulo}` : '';
+      lineas.push(`- [${p.titulo}](${base}/${p.slug})${desc}`);
+    }
+    lineas.push('');
+  }
+
+  if (c.enlaces.mostrar && !c.enlaces.noindex) {
+    lineas.push(`## Enlaces\n- [Página de enlaces](${base}/enlaces): accesos rápidos y redes de ${n.nombre}.\n`);
   }
 
   const entradas = c.blog.mostrar ? entradasOrdenadas(c).filter((e) => !e.noindex) : [];

@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from '../components/Newsletter.astro';
+import Contact from '../components/Contact.astro';
+import { getContenido, paginasPublicas } from '../lib/contenido';
+
+export async function getStaticPaths() {
+  const c = await getContenido();
+  return paginasPublicas(c).map((pagina) => ({ params: { slug: pagina.slug }, props: { pagina } }));
+}
+
+const c = await getContenido();
+const { pagina: p } = Astro.props;
+const esLanding = p.tipo === 'landing';
+const wa = c.negocio.whatsapp
+  ? `https://wa.me/${c.negocio.whatsapp}?text=${encodeURIComponent(`Hola, escribo desde ${p.titulo}`)}`
+  : null;
+const faqJson = p.faqs.length > 0
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: p.faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.pregunta,
+        acceptedAnswer: { '@type': 'Answer', text: f.respuesta },
+      })),
+    }).replace(/</g, '\\u003c')
+  : '';
+---
+<BaseLayout
+  titulo={p.seoTitulo || `${p.titulo} | ${c.negocio.nombre}`}
+  descripcion={p.seoDescripcion || p.subtitulo || c.buscadores.descripcion}
+  imagen={p.imagen}
+  imagenAlt={p.alt}
+  noindex={p.noindex}
+>
+  {faqJson && <script slot="head" type="application/ld+json" set:html={faqJson}></script>}
+
+  {esLanding ? (
+    <>
+      <section class={`portada${p.imagen ? '' : ' portada-simple'}`}>
+        <div class="contenedor">
+          <div>
+            <h1>{p.titulo}</h1>
+            {p.subtitulo && <p>{p.subtitulo}</p>}
+            {(p.mostrarContacto || wa) && (
+              <div class="acciones">
+                {p.mostrarContacto && <a class="boton" href="#contacto">{p.textoBotonContacto || 'Solicitar información'}</a>}
+                {wa && <a class="boton secundario" href={wa}>Escríbenos por WhatsApp</a>}
+              </div>
+            )}
+          </div>
+          {p.imagen && <img src={p.imagen} alt={p.alt ?? ''} width="800" height="600" />}
+        </div>
+      </section>
+      {(p.cuerpoHtml || p.faqs.length > 0) && (
+        <article class="articulo">
+          {p.cuerpoHtml && <div class="texto-libre" set:html={p.cuerpoHtml} />}
+          {p.faqs.length > 0 && (
+            <section class="faqs-entrada">
+              <h2>Preguntas frecuentes</h2>
+              {p.faqs.map((f) => (
+                <details>
+                  <summary>{f.pregunta}</summary>
+                  <p>{f.respuesta}</p>
+                </details>
+              ))}
+            </section>
+          )}
+        </article>
+      )}
+    </>
+  ) : (
+    <article class="articulo">
+      <h1>{p.titulo}</h1>
+      {p.subtitulo && <p class="pagina-subtitulo">{p.subtitulo}</p>}
+      {p.imagen && <img src={p.imagen} alt={p.alt ?? ''} width="800" height="450" />}
+      {p.cuerpoHtml && <div class="texto-libre" set:html={p.cuerpoHtml} />}
+      {p.faqs.length > 0 && (
+        <section class="faqs-entrada">
+          <h2>Preguntas frecuentes</h2>
+          {p.faqs.map((f) => (
+            <details>
+              <summary>{f.pregunta}</summary>
+              <p>{f.respuesta}</p>
+            </details>
+          ))}
+        </section>
+      )}
+    </article>
+  )}
+
+  {p.mostrarNewsletter && <Newsletter />}
+  {p.mostrarContacto && <Contact asunto={p.titulo} />}
+</BaseLayout>

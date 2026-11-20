@@ -1,6 +1,7 @@
 ---
-import { getContenido, catalogoVisible } from '../lib/contenido';
+import { getContenido, catalogoVisible, paginasMenu } from '../lib/contenido';
 const c = await getContenido();
+const menuPaginas = paginasMenu(c);
 ---
 <header>
   <div class="contenedor">
@@ -9,6 +10,7 @@ const c = await getContenido();
       <a href="/#servicios">Servicios</a>
       {catalogoVisible(c) && <a href="/catalogo">{c.catalogo.titulo}</a>}
       {c.sobre.mostrar && <a href="/#sobre">Quiénes somos</a>}
+      {menuPaginas.map((p) => <a href={`/${p.slug}`}>{p.textoMenu || p.titulo}</a>)}
       {c.blog.mostrar && <a href="/blog">Blog</a>}
       <a href="/#contacto">Contacto</a>
     </nav>
