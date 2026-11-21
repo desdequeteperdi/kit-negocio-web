@@ -216,7 +216,7 @@ Si sale un error que no entiendes, puedes pedir ayuda a un asistente de IA (Chat
 2. **Pégalo en el asistente y cuéntale tres cosas:** qué paso de esta guía estabas haciendo, qué comando escribiste y si usas Windows o Mac. Por ejemplo: «Estoy en el paso 2 de una guía para montar una web con Astro y Sanity. Uso Windows. Escribí `npm run instalar` y me sale este error: …».
 3. **Haz lo que te indique, un paso cada vez,** y vuelve a contarle qué ha pasado.
 
-**Antes de pegar nada, comprueba que no incluye datos secretos:** el contenido de los archivos `.env`, claves de API (como la de Brevo) ni la dirección del build hook de Netlify. Si aparecen, bórralos del texto o sustitúyelos por `XXXX`. El Project ID de Sanity no es secreto y puedes compartirlo.
+**Antes de pegar nada, comprueba que no incluye datos secretos:** el contenido de los archivos `.env`, claves de API (como la de Brevo, `META_CAPI_TOKEN`, `APPS_SCRIPT_TOKEN` o `RESERVAS_SCRIPT_TOKEN`), las direcciones `/exec` de Apps Script ni la dirección del build hook de Netlify. Si aparecen, bórralos del texto o sustitúyelos por `XXXX`. El Project ID de Sanity no es secreto y puedes compartirlo.
 
 Si la IA no lo resuelve, enséñale el error a quien te da el curso.
 

@@ -14,7 +14,8 @@ Este repositorio es la plantilla base del curso (`COMM0006` / `IFCT029PO`): una 
 - `web/netlify/functions/reservas.mjs` y `modulos/reservas/apps-script.gs`: módulo opcional de reservas con Google Calendar y cálculo de precio según duración (`Reservas.astro`; guía en `GUIA-MODULOS.md`). `reservas.mjs` lee la configuración del singleton `reservas` de Sanity en cada petición y calcula el precio en servidor (el navegador no manda el precio); el script de Apps Script calcula los huecos (paso de 30 min, `PASO_MINUTOS`) y crea el evento bajo `LockService`. Si cambias los campos del singleton `reservas`, sincroniza también `POR_DEFECTO` en `reservas.mjs`.
 - `studio/schemas/index.ts`: definición de todos los tipos y campos editables de Sanity (`singletons` y colecciones).
 - `studio/sanity.config.ts`: menú del panel, idioma español, bloqueo de borrado en `singletons` y plantillas de creación (`templates`).
-- `scripts/`: `empezar.mjs`, `configurar.mjs` (escribe `studio/.env` y `web/.env` a partir del Project ID), `panel.mjs` (`semilla` y `publicar`) y `semilla.mjs` (genera `studio/semilla.ndjson` a partir de `web/src/data/negocio.json`).
+- `scripts/`: `empezar.mjs`, `configurar.mjs` (escribe `studio/.env` y `web/.env` a partir del Project ID y ofrece iniciar sesión en Sanity, cargar la semilla y publicar el panel), `panel.mjs` (`semilla` y `publicar`) y `semilla.mjs` (genera `studio/semilla.ndjson` a partir de `web/src/data/negocio.json`).
+- `CAMBIOS.md`: historial de cambios del kit y pasos extra obligatorios al actualizar un fork (`npm run publicar-panel`, `npm run instalar`, pegar `.gs` en Apps Script o variables en Netlify).
 
 ## 2. Reglas al modificar Astro y Sanity
 

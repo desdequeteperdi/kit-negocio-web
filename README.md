@@ -8,6 +8,7 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
 - [GUIA-MODULOS.md](GUIA-MODULOS.md): funciones opcionales (consulta por WhatsApp + hoja de Google y reservas con Google Calendar).
 - [GUIA-PANEL.md](GUIA-PANEL.md): usar el panel día a día.
 - [CALENDARIO-EDITORIAL.md](CALENDARIO-EDITORIAL.md): plantilla de calendario semanal y flujo práctico «1 artículo del blog → 3 piezas para redes».
+- [CAMBIOS.md](CAMBIOS.md): historial de mejoras del kit y qué pasos extra hay que hacer al actualizar tu fork (`Sync fork` + `git pull`).
 - [AGENTS.md](AGENTS.md) *(y [CLAUDE.md](CLAUDE.md))*: mapa técnico y reglas para modificar Astro y Sanity con un agente de código.
 
 ## Qué incluye
@@ -35,10 +36,11 @@ kit-negocio/
 │   ├── src/data/negocio.json   # Contenido de ejemplo (se usa si no hay Sanity)
 │   ├── src/lib/contenido.ts    # Única puerta de entrada al contenido
 │   ├── src/components/, layouts/, pages/, styles/
-│   └── netlify/functions/      # Suscripción a la newsletter
+│   └── netlify/functions/      # Funciones serverless (newsletter, WhatsApp, reservas, Meta CAPI)
 ├── studio/                  # Panel de Sanity (esquemas y menú)
-├── scripts/                 # empezar, semilla y publicar el panel
-├── GUIA-ALTA.md, GUIA-PANEL.md, CALENDARIO-EDITORIAL.md, AGENTS.md
+├── modulos/                 # Scripts de Google Apps Script (consulta-whatsapp y reservas)
+├── scripts/                 # empezar, configurar, semilla y publicar el panel
+├── GUIA-ALTA.md, GUIA-PANEL.md, GUIA-MODULOS.md, CALENDARIO-EDITORIAL.md, CAMBIOS.md, AGENTS.md
 └── netlify.toml
 ```
 
@@ -52,7 +54,7 @@ Desde la carpeta del kit:
 |---|---|
 | `npm run empezar` | Instala lo necesario y arranca la web en <http://localhost:4321> (también con doble clic en `empezar.command` o `empezar.bat`). |
 | `npm run instalar` | Solo instala las dependencias. |
-| `npm run configurar` | Te pregunta el Project ID de Sanity y el nombre de tu panel y escribe `studio/.env` y `web/.env` por ti. |
+| `npm run configurar` | Te pregunta el Project ID de Sanity y el nombre de tu panel, escribe `studio/.env` y `web/.env` por ti y ofrece iniciar sesión en Sanity, cargar la semilla y publicar el panel de una vez. |
 | `npm run semilla` | Carga el contenido de ejemplo en tu proyecto de Sanity (`-- --reemplazar` sobrescribe lo editado). |
 | `npm run publicar-panel` | Publica el panel en `https://<nombre>.sanity.studio`. Hay que repetirlo cuando cambian los campos del panel. |
 | `npm run build` | Compila la web en `web/dist`. |
@@ -61,7 +63,7 @@ Requiere Node 22.12 o superior.
 
 ## Variables de entorno
 
-Las lista y explica `web/.env.example` (web) y `studio/.env.example` (panel). En Netlify: `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SITE_URL` y, para la newsletter, `BREVO_API_KEY`, `BREVO_LIST_ID` y `BREVO_DOI_TEMPLATE_ID`. Las claves van solo en Netlify, nunca en el código ni en el panel. Tras cambiar una variable hay que volver a desplegar.
+Las lista y explica `web/.env.example` (web) y `studio/.env.example` (panel). En Netlify: `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SITE_URL` y, según los módulos opcionales que actives, `BREVO_API_KEY` / `BREVO_LIST_ID` / `BREVO_DOI_TEMPLATE_ID` (newsletter), `APPS_SCRIPT_URL` / `APPS_SCRIPT_TOKEN` (consulta por WhatsApp + hoja), `RESERVAS_SCRIPT_URL` / `RESERVAS_SCRIPT_TOKEN` (reservas con Google Calendar), `META_CAPI_TOKEN` (Meta CAPI) e `INDEXNOW_KEY` (IndexNow). Las claves van solo en Netlify, nunca en el código ni en el panel. Tras cambiar una variable hay que volver a desplegar.
 
 ## Pendiente de comprobar
 

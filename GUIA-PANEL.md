@@ -156,12 +156,12 @@ En **Secciones extra de la portada** pulsa **+** para añadir un bloque a la por
 
 ## Ver el cambio en la web
 
-Al publicar, la web se vuelve a generar sola (si hiciste el paso 6 de la guía de alta). Tarda uno o dos minutos. Si no ves el cambio:
+Al publicar, la web se vuelve a generar sola (si hiciste el paso 7 de la guía de alta). Tarda uno o dos minutos. Si no ves el cambio:
 
 1. Espera un par de minutos y recarga la página (Ctrl+F5 o Cmd+Shift+R).
 2. Comprueba que pulsaste **Publish** y que no quedó en borrador.
 3. Entra en Netlify, pestaña **Deploys**: el último debe poner *Published*. Si pone *Failed*, abre el registro y enséñaselo a quien te da el curso.
-4. Si no hay ningún despliegue nuevo, el webhook no está bien: revisa el paso 6 de la guía de alta. Mientras tanto, **Trigger deploy → Deploy site** lo lanza a mano.
+4. Si no hay ningún despliegue nuevo, el webhook no está bien: revisa el paso 7 de la guía de alta. Mientras tanto, **Trigger deploy → Deploy site** lo lanza a mano.
 
 ## Imagen al compartir la web
 
