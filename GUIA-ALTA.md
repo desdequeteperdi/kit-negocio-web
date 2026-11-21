@@ -122,7 +122,7 @@ Antes de publicarla, comprueba que funciona en tu ordenador. El comando del paso
    También puedes hacer doble clic en `empezar.bat` (Windows) o `empezar.command` (Mac) dentro de la carpeta del proyecto. En Mac, la primera vez puede pedirte permiso: clic derecho sobre el archivo → **Abrir**.
 
 2. Cuando veas `Listo. Abre http://localhost:4321`, abre esa dirección en el navegador. Es tu web, que solo se ve en tu ordenador.
-3. **Para parar la web:** en la terminal pulsa `Ctrl + C`. Para volver a arrancarla, repite el paso 1.
+3. **Para parar la web:** en la terminal pulsa `Ctrl + C` *(si Windows pregunta `¿Desea terminar el trabajo por lotes (S/N)?`, escribe `S` y pulsa Intro)*. Para volver a arrancarla, repite el paso 1.
 
 En tu ordenador, los cambios que publiques en el panel se ven al **recargar la página** (`F5` en Windows, `Cmd + R` en Mac). Si no aparecen, para la web con `Ctrl + C` y arráncala otra vez.
 
