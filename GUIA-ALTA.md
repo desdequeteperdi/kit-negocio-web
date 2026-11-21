@@ -74,14 +74,18 @@ Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve
    npm run configurar
    ```
 
-   Te hará dos preguntas. Responde y pulsa Intro después de cada una:
+   Te hará tres preguntas. Responde y pulsa Intro después de cada una:
 
    - **Pega tu Project ID:** pega el que copiaste en el paso 3 (en la terminal de Visual Studio Code, `Ctrl + V`; en Mac, `Cmd + V`; también vale clic derecho → Pegar). Debe tener solo letras minúsculas y números.
    - **Nombre de tu panel:** lo eliges tú. Será la dirección de tu panel: `https://nombre-de-tu-panel.sanity.studio`. Usa solo minúsculas, números y guiones, sin espacios ni tildes (por ejemplo, `mi-negocio`).
 
-   Si escribes algo no válido, te lo dice y te lo vuelve a preguntar. Si todo va bien, termina con dos líneas `✔ Escrito: studio/.env` y `✔ Escrito: web/.env`. No tienes que abrir ni editar ningún archivo. Puedes repetir el comando cuando quieras para cambiar el ID o el nombre del panel; si ya existen los archivos, te pide confirmación antes de actualizarlos.
+   - **¿Quieres ahora iniciar sesión en Sanity, cargar el contenido de ejemplo y publicar el panel? (s/n):** escribe `s` y pulsa Intro. Se abrirá el navegador: elige **GitHub** y acepta. Después vuelve a la terminal y espera: cargará el contenido de ejemplo y publicará tu panel él solo. Si prefieres hacerlo paso a paso, escribe `n` y sigue los pasos 2 a 4 de más abajo.
 
-2. Inicia sesión en Sanity desde la terminal. Escribe estos tres comandos, uno por línea, con Intro después de cada uno. Se abrirá el navegador: elige **GitHub** y acepta. Si la terminal pregunta algo, elige la opción de GitHub con las flechas y pulsa Intro.
+   Si escribes algo no válido, te lo dice y te lo vuelve a preguntar. Los dos primeros pasos terminan con `✔ Escrito: studio/.env` y `✔ Escrito: web/.env`. No tienes que abrir ni editar ningún archivo. Puedes repetir el comando cuando quieras para cambiar el ID o el nombre del panel; si ya existen los archivos, te pide confirmación antes de actualizarlos.
+
+   **Si respondiste `s` y termina con «Todo listo», sáltate los pasos 2, 3 y 4 y ve a la comprobación de abajo.** Si se para con un error, copia el mensaje y pregúntaselo a una IA (sin pegar claves); puedes repetir solo los pasos que falten con los comandos de abajo.
+
+2. *(Solo si respondiste `n`, o si el paso anterior se paró.)* Inicia sesión en Sanity desde la terminal. Escribe estos tres comandos, uno por línea, con Intro después de cada uno. Se abrirá el navegador: elige **GitHub** y acepta. Si la terminal pregunta algo, elige la opción de GitHub con las flechas y pulsa Intro.
 
    ```bash
    cd studio
@@ -91,13 +95,13 @@ Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve
 
    El último comando (`cd ..`) te devuelve a la carpeta principal del proyecto: es importante, porque los siguientes comandos hay que ejecutarlos desde ahí.
 
-3. Carga el contenido de ejemplo en tu proyecto:
+3. *(Solo si hace falta.)* Carga el contenido de ejemplo en tu proyecto:
 
    ```bash
    npm run semilla
    ```
 
-4. Publica tu panel:
+4. *(Solo si hace falta.)* Publica tu panel:
 
    ```bash
    npm run publicar-panel

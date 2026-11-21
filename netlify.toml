@@ -7,3 +7,10 @@
 # Las dependencias del kit piden Node 22.12 o superior
 [build.environment]
   NODE_VERSION = "22"
+
+# Botón «Deploy to Netlify»: etiquetas de los campos que Netlify pide al desplegar.
+# Solo texto de ayuda, sin valores. Enlace con SANITY_DATASET ya relleno:
+# https://app.netlify.com/start/deploy?repository=https://github.com/desdequeteperdi/kit-negocio-web#SANITY_DATASET=production
+[template.environment]
+  SANITY_PROJECT_ID = "Tu Project ID de Sanity (lo ves en sanity.io/manage, dentro de tu proyecto)"
+  SANITY_DATASET = "Escribe production"

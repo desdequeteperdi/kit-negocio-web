@@ -1,11 +1,13 @@
 // Conecta tu copia del kit con tu proyecto de Sanity: pregunta el Project ID y el nombre del panel
 // y escribe studio/.env y web/.env. Sustituye a copiar y editar esos archivos a mano.
 // Uso: node scripts/configurar.mjs [--id=<project-id>] [--panel=<nombre>] [--dataset=<dataset>] [--si]
-//      (con --id y --panel no pregunta nada; --si acepta actualizar un .env que ya existe)
+//      (con --id y --panel no pregunta nada; --si acepta actualizar un .env que ya existe;
+//       --todo inicia sesión en Sanity, carga el contenido de ejemplo y publica el panel sin preguntar)
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline';
+import { spawnSync } from 'node:child_process';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -84,7 +86,6 @@ const panel = await preguntar(
   'Usa solo letras minúsculas, números y guiones, sin espacios ni tildes.',
   opcion('panel'),
 );
-rl.close();
 
 const dataset = opcion('dataset') || 'production';
 const rutaStudio = escribirEnv('studio', {
@@ -96,4 +97,37 @@ const rutaWeb = escribirEnv('web', { SANITY_PROJECT_ID: id, SANITY_DATASET: data
 
 console.log(`\n✔ Escrito: ${rutaStudio.replace(raiz, '').replace(/^[\\/]/, '')}`);
 console.log(`✔ Escrito: ${rutaWeb.replace(raiz, '').replace(/^[\\/]/, '')}`);
-console.log('\nSiguiente paso: iniciar sesión en Sanity (cd studio, npx sanity login, cd ..).\n');
+// Con --id y --panel (uso sin preguntas) solo se ofrece lo siguiente si se pasa --todo.
+const sinPreguntas = opcion('id') !== undefined && opcion('panel') !== undefined;
+let seguir = args.includes('--todo');
+if (!seguir && !sinPreguntas) {
+  const r = (await leer('\n¿Quieres ahora iniciar sesión en Sanity, cargar el contenido de ejemplo y publicar el panel? (s/n) ')).toLowerCase();
+  seguir = ['s', 'si', 'sí', 'y', 'yes'].includes(r);
+}
+rl.close();
+
+if (!seguir) {
+  console.log('\nSiguientes pasos, uno por uno:');
+  console.log('  1. cd studio, npx sanity login, cd ..');
+  console.log('  2. npm run semilla');
+  console.log('  3. npm run publicar-panel\n');
+  process.exit(0);
+}
+
+if (!existsSync(join(raiz, 'studio', 'node_modules'))) {
+  salir('Faltan las dependencias del panel. Ejecuta primero: npm run instalar y vuelve a lanzar npm run configurar.');
+}
+
+const win = process.platform === 'win32';
+function paso(titulo, orden, argumentos, cwd) {
+  console.log(`\n▶ ${titulo}`);
+  const r = spawnSync(orden, argumentos, { cwd, stdio: 'inherit', shell: win });
+  if (r.status !== 0) {
+    salir(`Se ha parado en: ${titulo}\nPuedes repetir solo este paso y los siguientes (npm run semilla, npm run publicar-panel). Si pide iniciar sesión: cd studio, npx sanity login.`);
+  }
+}
+
+paso('Iniciar sesión en Sanity (se abre el navegador)', win ? 'npx.cmd' : 'npx', ['sanity', 'login'], join(raiz, 'studio'));
+paso('Cargar el contenido de ejemplo', process.execPath, [join(raiz, 'scripts', 'panel.mjs'), 'semilla'], raiz);
+paso('Publicar el panel', process.execPath, [join(raiz, 'scripts', 'panel.mjs'), 'publicar'], raiz);
+console.log('\n✔ Todo listo: tu panel está publicado y tiene el contenido de ejemplo.\n');
