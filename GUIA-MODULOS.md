@@ -10,13 +10,27 @@ Necesitas: una cuenta de Google y el teléfono de WhatsApp puesto en «Datos del
 
 ### 1. Crear la hoja y el script
 
-1. En Google Sheets crea una hoja de cálculo nueva (por ejemplo, «Consultas web»).
-2. Menú **Extensiones → Apps Script**. Borra el código que aparece y pega el contenido de [`modulos/consulta-whatsapp/apps-script.gs`](modulos/consulta-whatsapp/apps-script.gs).
-3. Cambia `cambia-esta-contrasena` por una contraseña inventada por ti (larga, sin espacios). Guárdala: la necesitarás en el paso 2.
-4. Pulsa **Implementar → Nueva implementación**. En el engranaje elige **Aplicación web**. Configura: *Ejecutar como*: **Yo**; *Quién tiene acceso*: **Cualquier persona**. Pulsa **Implementar** y acepta los permisos (Google avisará de que la app no está verificada: **Avanzado → Ir a… (no seguro)** es normal porque el script es tuyo).
-5. Copia la **URL de la aplicación web** (termina en `/exec`).
+Antes de empezar, mira arriba a la derecha de Google que estás en **la cuenta que quieres usar para el negocio**. Si tienes varias abiertas, el script se crearía en otra.
 
-> Si cambias el código del script más adelante, hay que volver a **Implementar → Gestionar implementaciones → editar → Nueva versión**; si no, sigue funcionando el código antiguo.
+1. Entra en [Google Sheets](https://sheets.google.com) y crea una hoja de cálculo en blanco. Llámala «Consultas web».
+2. En el menú de la hoja, pulsa **Extensiones → Apps Script**. Se abre otra pestaña con un editor y un código de ejemplo.
+3. Borra todo el código del editor (selecciónalo con Ctrl + A, o Cmd + A en Mac, y pulsa Suprimir) y pega el contenido de [`modulos/consulta-whatsapp/apps-script.gs`](modulos/consulta-whatsapp/apps-script.gs).
+4. **Inventa una contraseña** (larga, sin espacios, por ejemplo `cafe-luna-4821-verde`) y sustituye `cambia-esta-contrasena` por ella, dejando las comillas. Guárdala en tu gestor de contraseñas: la necesitarás en el paso 2. **No la subas a GitHub ni la pegues en una IA.**
+5. Pulsa el icono del disquete (**Guardar proyecto**). Si te pide un nombre, pon «Consultas web».
+6. Arriba a la derecha, pulsa **Implementar → Nueva implementación**.
+7. Junto a «Seleccionar tipo» pulsa el engranaje y elige **Aplicación web**. Rellena:
+   - **Ejecutar como:** Yo (tu cuenta).
+   - **Quién tiene acceso:** Cualquier persona.
+
+   «Cualquier persona» **no hace pública tu hoja**: solo permite que la web envíe datos a este script. La hoja sigue siendo privada y el script rechaza cualquier envío que no lleve tu contraseña.
+8. Pulsa **Implementar**. Google pedirá permiso:
+   1. Pulsa **Autorizar acceso** y elige tu cuenta.
+   2. Saldrá «Google no ha verificado esta aplicación». Es normal, porque el script lo has escrito tú. Pulsa **Avanzado** y luego **Ir a Consultas web (no seguro)**.
+   3. Pulsa **Permitir**.
+9. Copia la **URL de la aplicación web** (termina en `/exec`) y guárdala junto a la contraseña.
+10. **Comprueba que funciona:** pega esa URL en una pestaña nueva del navegador. Debe aparecer el texto «El script funciona». Si ves otro mensaje, mira «Si algo falla» más abajo.
+
+> Si más adelante cambias el código del script, hay que volver a **Implementar → Gestionar implementaciones**, pulsar el lápiz, elegir **Versión: Nueva versión** y **Implementar**. Si no, sigue funcionando el código antiguo.
 
 ### 2. Conectarlo a Netlify
 
@@ -35,7 +49,16 @@ En el panel: **4. Contacto, buscadores y legal → Consulta por WhatsApp** → a
 
 ### 4. Probarlo
 
-Rellena el formulario en tu web publicada: debe abrirse WhatsApp con el mensaje y aparecer una fila nueva en la pestaña `Consultas` de tu hoja. Si WhatsApp se abre pero la fila no llega, revisa las dos variables de Netlify y que hayas vuelto a desplegar. Si sigue fallando, copia el error y pregúntaselo a una IA (sin pegar contraseñas).
+Rellena el formulario en tu web publicada: debe abrirse WhatsApp con el mensaje y aparecer una fila nueva en la pestaña `Consultas` de tu hoja. ### Si algo falla
+
+| Qué ves | Qué hacer |
+|---|---|
+| Al abrir la URL `/exec` sale «No se encontró la función de secuencia de comandos: doGet» | Falta el trozo `doGet` del script: vuelve a pegar el código completo y publica una **Nueva versión**. |
+| Al abrir la URL `/exec` te pide iniciar sesión o dice «Necesitas acceso» | En el paso 7, «Quién tiene acceso» debe ser **Cualquier persona**. Corrígelo en **Gestionar implementaciones** y publica una nueva versión. |
+| WhatsApp se abre pero no aparece la fila | Revisa en Netlify que `APPS_SCRIPT_URL` y `APPS_SCRIPT_TOKEN` están bien escritas (la contraseña igual que en el script) y vuelve a desplegar. |
+| La fila no llega y las variables están bien | En Apps Script, menú de la izquierda, **Ejecuciones**: ahí aparece el error de cada envío. |
+
+Si sigue fallando, copia el error y pregúntaselo a una IA (sin pegar contraseñas ni la URL del script).
 
 ### Privacidad
 
