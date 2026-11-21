@@ -62,5 +62,5 @@ Las lista y explica `web/.env.example` (web) y `studio/.env.example` (panel). En
 ## Pendiente de comprobar
 
 - Límites y precios vigentes de Netlify y Sanity.
-- Webhook de Sanity a Netlify (paso 6 de GUIA-ALTA): documentado, pendiente de probar en un alta real.
+- Webhook de Sanity a Netlify (paso 7 de GUIA-ALTA): documentado, pendiente de probar en un alta real.
 - Los datos de consultas o clientes nunca van en el contenido público de Sanity.
