@@ -77,6 +77,13 @@
     "textoBoton": "Suscribirme",
     "consentimiento": "Acepto recibir la newsletter por email. Puedo darme de baja cuando quiera."
   },
+  "consultaWhatsapp": {
+    "mostrar": false,
+    "titulo": "Escríbenos por WhatsApp",
+    "texto": "Déjanos tu nombre y tu consulta y se abrirá WhatsApp con el mensaje ya escrito.",
+    "textoBoton": "Enviar por WhatsApp",
+    "consentimiento": "Acepto que guardéis mis datos para atender mi consulta."
+  },
   "buscadores": {
     "titulo": "Jardinería y terrazas en Madrid | Estudio Almendro",
     "descripcion": "Diseño y mantenimiento de terrazas y jardines pequeños en Madrid. Pide presupuesto sin compromiso.",

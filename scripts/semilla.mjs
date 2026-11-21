@@ -13,6 +13,7 @@ unico('portada', portada);
 unico('sobre', d.sobre);
 unico('contacto', d.contacto);
 unico('newsletter', d.newsletter);
+unico('consultaWhatsapp', d.consultaWhatsapp);
 const { imagenCompartir, ...buscadores } = d.buscadores;
 unico('buscadores', buscadores);
 unico('legal', d.legal);

@@ -1,0 +1,50 @@
+---
+// Formulario que abre WhatsApp con el mensaje ya escrito y, a la vez, guarda la consulta en una hoja de Google
+// mediante la función de Netlify netlify/functions/consulta-whatsapp.mjs. Solo se muestra si está activado en el panel
+// y hay un WhatsApp en «Datos del negocio».
+import { getContenido } from '../lib/contenido';
+const { consultaWhatsapp: c, negocio } = await getContenido();
+const numero = (negocio.whatsapp ?? '').replace(/\D/g, '');
+---
+{c.mostrar && numero && (
+  <section id="consulta-whatsapp" data-consulta-whatsapp data-numero={numero}>
+    <div class="contenedor">
+      <h2>{c.titulo}</h2>
+      <p>{c.texto}</p>
+      <form>
+        <p class="oculto"><label>No rellenar: <input name="campo-trampa" tabindex="-1" autocomplete="off" /></label></p>
+        <label>Nombre <input name="nombre" required autocomplete="name" /></label>
+        <label>Teléfono <input type="tel" name="telefono" required autocomplete="tel" /></label>
+        <label>¿En qué podemos ayudarte? <textarea name="mensaje" rows="4" required></textarea></label>
+        <label class="check"><input type="checkbox" name="privacidad" required />
+          <span>{c.consentimiento} Más información en la <a href="/privacidad">política de privacidad</a>.</span></label>
+        <p class="error" role="alert" hidden data-error></p>
+        <button class="boton" type="submit">{c.textoBoton}</button>
+      </form>
+    </div>
+  </section>
+)}
+<script>
+  const caja = document.querySelector<HTMLElement>('[data-consulta-whatsapp]');
+  const form = caja?.querySelector('form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const datos = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    const error = caja!.querySelector<HTMLElement>('[data-error]')!;
+    if ((datos.telefono ?? '').replace(/\D/g, '').length < 9) {
+      error.textContent = 'Escribe un teléfono válido, con al menos 9 números.';
+      error.hidden = false;
+      return;
+    }
+    error.hidden = true;
+    const texto = `Hola, soy ${datos.nombre.trim()} (${datos.telefono.trim()}). ${datos.mensaje.trim()}`;
+    // Se guarda la consulta sin esperar la respuesta; si falla, WhatsApp se abre igualmente
+    fetch('/.netlify/functions/consulta-whatsapp', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({ ...datos, url: location.href }),
+    }).catch(() => {});
+    window.open(`https://wa.me/${caja!.dataset.numero}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  });
+</script>

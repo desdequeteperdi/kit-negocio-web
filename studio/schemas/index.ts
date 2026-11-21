@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'catalogoAjustes', 'enlaces'];
+export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'consultaWhatsapp', 'catalogoAjustes', 'enlaces'];
 
 const RUTAS_RESERVADAS = new Set(['blog', 'catalogo', 'condiciones', 'aviso-legal', 'privacidad', 'gracias', 'newsletter-gracias', 'newsletter-error', 'enlaces', '404']);
 
@@ -169,6 +169,20 @@ const newsletter = defineType({
     parrafo('consentimiento', 'Texto de consentimiento', { description: 'Qué recibirá la persona y que puede darse de baja cuando quiera.' }),
   ],
   preview: { prepare: () => ({ title: 'Newsletter' }) },
+});
+
+const consultaWhatsapp = defineType({
+  name: 'consultaWhatsapp', title: 'Consulta por WhatsApp', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Mostrar el formulario de consulta por WhatsApp', false, {
+      description: 'Necesita el teléfono de WhatsApp en «Datos del negocio». Los datos se guardan en tu hoja de Google (ver GUIA-MODULOS).',
+    }),
+    texto('titulo', 'Título'),
+    parrafo('texto', 'Texto de invitación'),
+    texto('textoBoton', 'Texto del botón'),
+    parrafo('consentimiento', 'Texto de consentimiento', { description: 'Avisa de que sus datos se guardan para atender la consulta.' }),
+  ],
+  preview: { prepare: () => ({ title: 'Consulta por WhatsApp' }) },
 });
 
 const buscadores = defineType({
@@ -572,4 +586,4 @@ const enlaces = defineType({
   preview: { prepare: () => ({ title: 'Página /enlaces (Link in bio)' }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, consultaWhatsapp, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];

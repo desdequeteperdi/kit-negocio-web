@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getContenido, hayVenta } from '../lib/contenido';
 const contenido = await getContenido();
-const { legal, negocio, buscadores, newsletter, blog } = contenido;
+const { legal, negocio, buscadores, newsletter, consultaWhatsapp, blog } = contenido;
 const venta = hayVenta(contenido);
 const seguimiento = Boolean(buscadores.ga4 || buscadores.gtm || buscadores.metaPixel);
 const herramientasCookies = [
@@ -25,6 +25,7 @@ const hayComentarios = Boolean(blog.mostrar && (blog.comentarios || blog.entrada
     <p><strong>Base jurídica:</strong> tu consentimiento al enviar el formulario.</p>
     <p><strong>Conservación:</strong> {legal.plazoConservacion}.</p>
     {newsletter.mostrar && <p><strong>Newsletter:</strong> si te suscribes, guardamos tu email para enviarte comunicaciones por correo, con tu consentimiento. Puedes darte de baja en cualquier momento desde el enlace de cada correo. Los datos se almacenan en Brevo, que actúa como encargado del tratamiento.</p>}
+    {consultaWhatsapp.mostrar && negocio.whatsapp && <p><strong>Consulta por WhatsApp:</strong> si usas el formulario de WhatsApp, guardamos tu nombre, teléfono y mensaje en una hoja de cálculo de Google para atender tu consulta, y se abre WhatsApp con el mensaje preparado. Google actúa como encargado del tratamiento y WhatsApp tiene su propia política de privacidad.</p>}
     {hayComentarios && <p><strong>Comentarios del blog:</strong> si envías un comentario en una entrada, se recogen el nombre o alias, el texto del comentario y, opcionalmente, tu email para moderarlo y mostrarlo públicamente tras su revisión, mediante el servicio Cusdis.</p>}
     {venta && <p><strong>Compras:</strong> si compras, el pago lo gestiona Stripe en su propia página y nosotros no vemos los datos de tu tarjeta. Recibimos los datos necesarios para entregarte el pedido (nombre, email{legal.tipoVenta !== 'digital' && ', dirección de envío'}) y los conservamos el tiempo que exijan las obligaciones fiscales y contables. Stripe actúa como responsable o encargado según el caso y puede tratar datos fuera del Espacio Económico Europeo.</p>}
     <p><strong>Destinatarios:</strong> el servicio de alojamiento y formularios (Netlify) actúa como encargado del tratamiento.</p>

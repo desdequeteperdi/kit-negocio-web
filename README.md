@@ -5,6 +5,7 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
 ## Guías
 
 - [GUIA-ALTA.md](GUIA-ALTA.md): crear las cuentas (GitHub, Sanity, Netlify), conectar el panel, publicar la web y hacer que se actualice sola.
+- [GUIA-MODULOS.md](GUIA-MODULOS.md): funciones opcionales (consulta por WhatsApp + hoja de Google).
 - [GUIA-PANEL.md](GUIA-PANEL.md): usar el panel día a día.
 - [CALENDARIO-EDITORIAL.md](CALENDARIO-EDITORIAL.md): plantilla de calendario semanal y flujo práctico «1 artículo del blog → 3 piezas para redes».
 - [AGENTS.md](AGENTS.md) *(y [CLAUDE.md](CLAUDE.md))*: mapa técnico y reglas para modificar Astro y Sanity con un agente de código.
@@ -19,6 +20,7 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
   - **Newsletter:** formulario con Brevo mediante una función de Netlify.
   - **Catálogo:** categorías y productos, con ficha propia, carrusel en portada y botón «Consultar» que rellena el formulario.
   - **Tienda:** enlaces de pago de Stripe en los productos y página de condiciones de venta (física o digital). Sin carrito.
+  - **Consulta por WhatsApp:** formulario que abre WhatsApp con el mensaje escrito y guarda la consulta en una hoja de Google (función de Netlify + Apps Script).
   - **Secciones extra** de portada con texto, imágenes, galerías y HTML.
 - **SEO y AEO (buscadores y asistentes de IA):** sitemap, `robots.txt`, `/llms.txt` dinámico para asistentes de IA, canónicas, Open Graph y datos estructurados en grafo (`WebSite`, `LocalBusiness` o subtipo de actividad, `OfferCatalog` de servicios, artículos con autor/cargo y resumen directo, productos, migas de pan y `FAQPage` en portada y artículos).
 - **Cookies:** banner de consentimiento que aparece solo si hay Google Analytics, Google Tag Manager o píxel de Meta.

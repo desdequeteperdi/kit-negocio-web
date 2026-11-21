@@ -17,6 +17,7 @@ const apartados: Record<string, string> = {
   legal: 'Datos legales',
   blogAjustes: 'Blog: ajustes y comentarios',
   newsletter: 'Newsletter',
+  consultaWhatsapp: 'Consulta por WhatsApp',
   catalogoAjustes: 'Catálogo: ajustes',
   enlaces: 'Página /enlaces (Link in bio)',
 };
@@ -212,6 +213,7 @@ export default defineConfig({
                     itemUnico(S, 'contacto'),
                     S.documentTypeListItem('pregunta').title('Preguntas frecuentes de la portada'),
                     itemUnico(S, 'newsletter'),
+                    itemUnico(S, 'consultaWhatsapp'),
                     S.divider(),
                     itemUnico(S, 'buscadores'),
                     itemUnico(S, 'legal'),

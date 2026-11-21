@@ -66,6 +66,7 @@ const consulta = `{
   "preguntas": *[_type == "pregunta"] | order(orden asc){pregunta, respuesta},
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
+  "consultaWhatsapp": *[_id == "consultaWhatsapp"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, publicarLlmsTxt, searchConsole, ga4, gtm, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, tipoVenta, plazoEntrega, devoluciones},
   "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, tienda, textoBotonPago},
@@ -199,6 +200,7 @@ async function desdeSanity(): Promise<Contenido> {
     preguntas: r.preguntas,
     contacto: { ...datos.contacto, ...r.contacto },
     newsletter: { ...datos.newsletter, ...r.newsletter },
+    consultaWhatsapp: { ...datos.consultaWhatsapp, ...r.consultaWhatsapp },
     buscadores: { ...datos.buscadores, ...r.buscadores, imagenCompartir: optimizada(r.buscadores?.imagenCompartir, 'w=1200&h=630&fit=crop&fm=jpg&q=80') },
     legal: { ...datos.legal, ...r.legal },
     catalogo: {
