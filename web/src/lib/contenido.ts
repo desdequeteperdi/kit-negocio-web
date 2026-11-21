@@ -67,6 +67,7 @@ const consulta = `{
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
   "consultaWhatsapp": *[_id == "consultaWhatsapp"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
+  "reservas": *[_id == "reservas"][0]{mostrar, titulo, texto, textoBoton, consentimiento, duraciones, precioPorHora, horaInicio, horaFin, dias, antelacionHoras, diasMaximos},
   "buscadores": *[_id == "buscadores"][0]{titulo, descripcion, publicarLlmsTxt, searchConsole, ga4, gtm, metaPixel, "imagenCompartir": imagenCompartir.asset->url},
   "legal": *[_id == "legal"][0]{titular, nif, domicilio, plazoConservacion, tipoVenta, plazoEntrega, devoluciones},
   "catalogoAjustes": *[_id == "catalogoAjustes"][0]{mostrar, titulo, introduccion, textoBoton, tienda, textoBotonPago},
@@ -201,6 +202,7 @@ async function desdeSanity(): Promise<Contenido> {
     contacto: { ...datos.contacto, ...r.contacto },
     newsletter: { ...datos.newsletter, ...r.newsletter },
     consultaWhatsapp: { ...datos.consultaWhatsapp, ...r.consultaWhatsapp },
+    reservas: { ...datos.reservas, ...Object.fromEntries(Object.entries(r.reservas ?? {}).filter(([, v]) => v !== null)) },
     buscadores: { ...datos.buscadores, ...r.buscadores, imagenCompartir: optimizada(r.buscadores?.imagenCompartir, 'w=1200&h=630&fit=crop&fm=jpg&q=80') },
     legal: { ...datos.legal, ...r.legal },
     catalogo: {

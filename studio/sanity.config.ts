@@ -18,6 +18,7 @@ const apartados: Record<string, string> = {
   blogAjustes: 'Blog: ajustes y comentarios',
   newsletter: 'Newsletter',
   consultaWhatsapp: 'Consulta por WhatsApp',
+  reservas: 'Reservas con Google Calendar',
   catalogoAjustes: 'Catálogo: ajustes',
   enlaces: 'Página /enlaces (Link in bio)',
 };
@@ -214,6 +215,7 @@ export default defineConfig({
                     S.documentTypeListItem('pregunta').title('Preguntas frecuentes de la portada'),
                     itemUnico(S, 'newsletter'),
                     itemUnico(S, 'consultaWhatsapp'),
+                    itemUnico(S, 'reservas'),
                     S.divider(),
                     itemUnico(S, 'buscadores'),
                     itemUnico(S, 'legal'),

@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'consultaWhatsapp', 'catalogoAjustes', 'enlaces'];
+export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'consultaWhatsapp', 'reservas', 'catalogoAjustes', 'enlaces'];
 
 const RUTAS_RESERVADAS = new Set(['blog', 'catalogo', 'condiciones', 'aviso-legal', 'privacidad', 'gracias', 'newsletter-gracias', 'newsletter-error', 'enlaces', '404']);
 
@@ -183,6 +183,45 @@ const consultaWhatsapp = defineType({
     parrafo('consentimiento', 'Texto de consentimiento', { description: 'Avisa de que sus datos se guardan para atender la consulta.' }),
   ],
   preview: { prepare: () => ({ title: 'Consulta por WhatsApp' }) },
+});
+
+const HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
+const reservas = defineType({
+  name: 'reservas', title: 'Reservas con Google Calendar', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Mostrar el formulario de reservas', false, {
+      description: 'Necesita conectar tu Google Calendar (ver GUIA-MODULOS). Si no lo has conectado, no lo actives.',
+    }),
+    texto('titulo', 'Título'),
+    parrafo('texto', 'Texto de invitación'),
+    texto('textoBoton', 'Texto del botón'),
+    parrafo('consentimiento', 'Texto de consentimiento', { description: 'Avisa de que sus datos se guardan para gestionar la reserva.' }),
+    defineField({
+      name: 'duraciones', title: 'Duraciones que se pueden reservar (en minutos)', type: 'array', initialValue: [60],
+      of: [{ type: 'number', validation: (r) => r.integer().min(15).max(480) }],
+      description: 'Por ejemplo 30, 60 y 90. Si pones solo una, no se pregunta. Entre 15 y 480 minutos.',
+      validation: (r) => r.required().min(1),
+    }),
+    defineField({
+      name: 'precioPorHora', title: 'Precio por hora (€)', type: 'number', initialValue: 0,
+      description: 'El precio de cada reserva se calcula con la duración: 60 min = 1 hora, 90 min = 1,5 horas. Con 0 no se muestra precio.',
+      validation: (r) => r.min(0),
+    }),
+    texto('horaInicio', 'Hora de apertura (HH:MM)', { initialValue: '09:00', validation: (r) => r.required().regex(HORA, { name: 'hora' }).error('Escribe la hora así: 09:00') }),
+    texto('horaFin', 'Hora de cierre (HH:MM)', { initialValue: '18:00', validation: (r) => r.required().regex(HORA, { name: 'hora' }).error('Escribe la hora así: 18:00') }),
+    defineField({
+      name: 'dias', title: 'Días de la semana con reservas', type: 'array', initialValue: [1, 2, 3, 4, 5],
+      of: [{ type: 'number' }],
+      options: { layout: 'grid', list: [
+        { title: 'Lunes', value: 1 }, { title: 'Martes', value: 2 }, { title: 'Miércoles', value: 3 }, { title: 'Jueves', value: 4 },
+        { title: 'Viernes', value: 5 }, { title: 'Sábado', value: 6 }, { title: 'Domingo', value: 7 },
+      ] },
+      validation: (r) => r.required().min(1),
+    }),
+    defineField({ name: 'antelacionHoras', title: 'Antelación mínima (horas)', type: 'number', initialValue: 24, description: 'Con cuántas horas de margen como mínimo se puede reservar.', validation: (r) => r.min(0).max(720) }),
+    defineField({ name: 'diasMaximos', title: 'Hasta cuántos días vista se puede reservar', type: 'number', initialValue: 60, validation: (r) => r.min(1).max(365) }),
+  ],
+  preview: { prepare: () => ({ title: 'Reservas con Google Calendar' }) },
 });
 
 const buscadores = defineType({
@@ -586,4 +625,4 @@ const enlaces = defineType({
   preview: { prepare: () => ({ title: 'Página /enlaces (Link in bio)' }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, consultaWhatsapp, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];
+export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, consultaWhatsapp, reservas, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];

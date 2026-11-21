@@ -1,0 +1,116 @@
+---
+// Reservas con Google Calendar: la persona elige día, duración y hora libre; la función de Netlify
+// (netlify/functions/reservas.mjs) consulta tu calendario y crea la reserva. Solo se muestra si está activado en el panel.
+import { getContenido } from '../lib/contenido';
+const { reservas: r } = await getContenido();
+const duraciones: number[] = r.duraciones?.length ? r.duraciones : [60];
+const hoy = new Date().toISOString().slice(0, 10);
+---
+{r.mostrar && (
+  <section class="alt" id="reservas" data-reservas data-precio={r.precioPorHora ?? 0}>
+    <div class="contenedor">
+      <h2>{r.titulo}</h2>
+      <p>{r.texto}</p>
+      <form>
+        <p class="oculto"><label>No rellenar: <input name="campo-trampa" tabindex="-1" autocomplete="off" /></label></p>
+        <label>Día <input type="date" name="fecha" min={hoy} required /></label>
+        {duraciones.length > 1
+          ? <label>Duración <select name="duracion">{duraciones.map((m) => <option value={m}>{m} minutos</option>)}</select></label>
+          : <input type="hidden" name="duracion" value={duraciones[0]} />}
+        <fieldset data-huecos>
+          <legend>Hora</legend>
+          <p data-aviso>Elige primero un día.</p>
+          <div class="huecos" data-lista></div>
+        </fieldset>
+        <p data-precio-linea hidden></p>
+        <label>Nombre <input name="nombre" required autocomplete="name" /></label>
+        <label>Teléfono <input type="tel" name="telefono" required autocomplete="tel" /></label>
+        <label>Email <input type="email" name="email" required autocomplete="email" /></label>
+        <label>Notas (opcional) <textarea name="notas" rows="3"></textarea></label>
+        <label class="check"><input type="checkbox" name="privacidad" required />
+          <span>{r.consentimiento} Más información en la <a href="/privacidad">política de privacidad</a>.</span></label>
+        <p role="alert" hidden data-mensaje></p>
+        <button class="boton" type="submit">{r.textoBoton}</button>
+      </form>
+    </div>
+  </section>
+)}
+<style>
+  .huecos { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .huecos button { padding: .5rem .9rem; border: 1px solid var(--principal); background: transparent; color: inherit; border-radius: .4rem; cursor: pointer; font: inherit; }
+  .huecos button[aria-pressed='true'] { background: var(--principal); color: #fff; }
+  [data-reservas] fieldset { border: 0; padding: 0; margin: 1rem 0; }
+</style>
+<script>
+  const caja = document.querySelector<HTMLElement>('[data-reservas]');
+  const form = caja?.querySelector('form');
+  if (caja && form) {
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    const lista = $('[data-lista]'), aviso = $('[data-aviso]'), mensaje = $('[data-mensaje]'), precioLinea = $('[data-precio-linea]');
+    const campo = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+    const precioHora = Number(caja.dataset.precio) || 0;
+    let hora = '';
+
+    const decir = (texto: string) => { mensaje.textContent = texto; mensaje.hidden = !texto; };
+    const actualizarPrecio = () => {
+      const total = Math.round(precioHora * (Number(campo('duracion').value) / 60) * 100) / 100;
+      precioLinea.textContent = `Precio: ${total.toLocaleString('es-ES')} €`;
+      precioLinea.hidden = !precioHora;
+    };
+
+    async function cargarHuecos() {
+      hora = '';
+      lista.replaceChildren();
+      actualizarPrecio();
+      if (!campo('fecha').value) { aviso.textContent = 'Elige primero un día.'; return; }
+      aviso.textContent = 'Comprobando disponibilidad…';
+      try {
+        const r = await fetch(`/.netlify/functions/reservas?fecha=${campo('fecha').value}&duracion=${campo('duracion').value}`);
+        if (!r.ok) throw new Error();
+        const { huecos } = await r.json();
+        aviso.textContent = huecos.length ? '' : 'No quedan horas libres ese día. Prueba con otro.';
+        for (const h of huecos as string[]) {
+          const b = document.createElement('button');
+          b.type = 'button'; b.textContent = h; b.setAttribute('aria-pressed', 'false');
+          b.addEventListener('click', () => {
+            hora = h;
+            lista.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+            decir('');
+          });
+          lista.append(b);
+        }
+      } catch {
+        aviso.textContent = 'No se ha podido consultar la disponibilidad. Inténtalo de nuevo en unos minutos.';
+      }
+    }
+
+    campo('fecha').addEventListener('change', cargarHuecos);
+    campo('duracion').addEventListener('change', cargarHuecos);
+    actualizarPrecio();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!hora) { decir('Elige una hora libre.'); return; }
+      if (campo('telefono').value.replace(/\D/g, '').length < 9) { decir('Escribe un teléfono válido, con al menos 9 números.'); return; }
+      const boton = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      boton.disabled = true;
+      decir('Reservando…');
+      try {
+        const datos = Object.fromEntries(new FormData(form));
+        const r = await fetch('/.netlify/functions/reservas', {
+          method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...datos, hora }),
+        });
+        if (r.ok) {
+          form.hidden = true;
+          decir(`¡Reserva hecha! ${datos.fecha} a las ${hora}. Te contactaremos para confirmarla.`);
+          return;
+        }
+        decir(r.status === 409 ? 'Esa hora acaba de ocuparse. Elige otra.' : 'No se ha podido hacer la reserva. Inténtalo de nuevo o escríbenos.');
+        if (r.status === 409) cargarHuecos();
+      } catch {
+        decir('No se ha podido hacer la reserva. Inténtalo de nuevo o escríbenos.');
+      }
+      boton.disabled = false;
+    });
+  }
+</script>

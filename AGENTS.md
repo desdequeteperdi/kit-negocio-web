@@ -11,6 +11,7 @@ Este repositorio es la plantilla base del curso (`COMM0006` / `IFCT029PO`): una 
 - `web/src/components/` y `web/src/pages/`: componentes y rutas estáticas (portada, blog, catálogo, legales, `/rss.xml`, `/llms.txt`, `/robots.txt`).
 - `web/netlify/functions/suscribir.mjs`: función serverless de newsletter conectada a Brevo.
 - `web/netlify/functions/consulta-whatsapp.mjs` y `modulos/consulta-whatsapp/apps-script.gs`: módulo opcional de consulta por WhatsApp que guarda en una hoja de Google (`ConsultaWhatsapp.astro`; guía en `GUIA-MODULOS.md`).
+- `web/netlify/functions/reservas.mjs` y `modulos/reservas/apps-script.gs`: módulo opcional de reservas con Google Calendar y cálculo de precio según duración (`Reservas.astro`; guía en `GUIA-MODULOS.md`).
 - `studio/schemas/index.ts`: definición de todos los tipos y campos editables de Sanity (`singletons` y colecciones).
 - `studio/sanity.config.ts`: menú del panel, idioma español, bloqueo de borrado en `singletons` y plantillas de creación (`templates`).
 - `scripts/`: `empezar.mjs`, `configurar.mjs` (escribe `studio/.env` y `web/.env` a partir del Project ID), `panel.mjs` (`semilla` y `publicar`) y `semilla.mjs` (genera `studio/semilla.ndjson` a partir de `web/src/data/negocio.json`).

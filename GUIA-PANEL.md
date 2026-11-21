@@ -24,7 +24,7 @@ El menú de la izquierda está organizado en **cuatro grupos** para que encuentr
 3. **3. Catálogo y tienda**
    - **Catálogo: ajustes**, **Categorías del catálogo** y **Productos**.
 4. **4. Contacto, buscadores y legal**
-   - **Contacto**, **Preguntas frecuentes de la portada**, **Newsletter**, **Google, IA y buscadores** (título, descripción, imagen al compartir, resumen `/llms.txt` para asistentes de IA, Search Console, Analytics y píxel) y **Datos legales**.
+   - **Contacto**, **Preguntas frecuentes de la portada**, **Newsletter**, **Consulta por WhatsApp** *(opcional)*, **Reservas con Google Calendar** *(opcional)*, **Google, IA y buscadores** (título, descripción, imagen al compartir, resumen `/llms.txt` para asistentes de IA, Search Console, Analytics y píxel) y **Datos legales**.
 
 ## Cambiar un texto
 
@@ -179,6 +179,15 @@ En **Google, IA y buscadores** hay cuatro campos opcionales. Pega solo el códig
 - **IndexNow *(opcional, en Netlify)*:** si quieres avisar al instante a **Bing / Copilot** cada vez que publicas cambios, genera tu clave en **Bing Webmaster Tools → IndexNow** y guárdala en **Netlify → Environment variables** como `INDEXNOW_KEY`. La web generará automáticamente `/<clave>.txt` y enviará el aviso tras cada publicación en producción. *(Google no usa IndexNow; sigue usando Search Console y `sitemap-index.xml`).*
 
 Si rellenas Analytics, Tag Manager o el píxel, la web muestra un aviso de cookies. Los scripts solo se cargan si la persona pulsa **Aceptar**. Con el campo vacío no se carga nada. La política de privacidad añade un párrafo de cookies por sí sola. Como todos los textos legales del kit, es un punto de partida: revísalo antes de usarlo con datos reales.
+
+## Consulta por WhatsApp y Reservas con Google Calendar *(módulos opcionales)*
+
+En **4. Contacto, buscadores y legal** tienes dos módulos opcionales que vienen **apagados por defecto** y usan **Google Apps Script** (gratuito, sin necesitar cuenta de WhatsApp Business API ni Google Cloud):
+
+1. **Consulta por WhatsApp + hoja de Google:** muestra un formulario (nombre, teléfono y mensaje) que, al pulsarse, **abre WhatsApp con el mensaje ya escrito** hacia el número de *Datos del negocio* y **guarda una fila en la pestaña `Consultas` de tu Google Sheets** (vía `APPS_SCRIPT_URL` y `APPS_SCRIPT_TOKEN` en Netlify).
+2. **Reservas con Google Calendar + hoja de Google:** permite elegir **fecha, duración** (p. ej. 30, 60 o 90 min) y **hora libre en tiempo real** según tu Google Calendar, **calcula el precio** automáticamente según el campo *Precio por hora (€)* (si es `0`, no muestra precio), crea el evento `Reserva: <Nombre>` en tu calendario y registra la cita en la pestaña `Reservas` de tu hoja (vía `RESERVAS_SCRIPT_URL` y `RESERVAS_SCRIPT_TOKEN` en Netlify).
+
+Tienes los pasos exactos para crear la hoja, pegar el script, autorizarlo en Google y conectarlo a Netlify en [`GUIA-MODULOS.md`](GUIA-MODULOS.md).
 
 ## Qué no se puede hacer desde el panel
 
