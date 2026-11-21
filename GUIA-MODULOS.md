@@ -77,6 +77,16 @@ La persona elige **día, duración y hora libre** en tiempo real (consultando tu
 
 Cualquier evento que tú tengas apuntado en ese calendario (incluso eventos personales o de día completo) bloquea automáticamente esas horas para que nadie reserve encima.
 
+**Cómo decide qué está libre**
+- Una hora está ocupada si algún evento del calendario se solapa con ella. Las horas se ofrecen cada 30 minutos, dentro del horario, los días y la antelación que configures en el panel.
+- Para cerrar una franja (una comida, una gestión) o un día entero (festivo, vacaciones), crea un evento en ese calendario.
+- El precio se calcula de nuevo en el servidor con los datos del panel: no se puede alterar desde el navegador.
+
+**Límites**
+- Apps Script tiene cuotas diarias y tarda un par de segundos en responder: sirve para un negocio pequeño con pocas reservas al día.
+- No envía correos de confirmación ni cobra: la reserva queda registrada y tú contactas con la persona.
+- No gestiona cancelaciones: se cancela borrando el evento del calendario.
+
 ### 1. Crear la hoja y el script de reservas
 
 Antes de empezar, comprueba arriba a la derecha que estás en **la cuenta de Google que tiene el calendario del negocio**.
