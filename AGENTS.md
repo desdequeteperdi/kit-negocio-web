@@ -12,7 +12,7 @@ Este repositorio es la plantilla base del curso (`COMM0006` / `IFCT029PO`): una 
 - `web/netlify/functions/suscribir.mjs`: función serverless de newsletter conectada a Brevo.
 - `studio/schemas/index.ts`: definición de todos los tipos y campos editables de Sanity (`singletons` y colecciones).
 - `studio/sanity.config.ts`: menú del panel, idioma español, bloqueo de borrado en `singletons` y plantillas de creación (`templates`).
-- `scripts/`: `empezar.mjs`, `panel.mjs` (`semilla` y `publicar`) y `semilla.mjs` (genera `studio/semilla.ndjson` a partir de `web/src/data/negocio.json`).
+- `scripts/`: `empezar.mjs`, `configurar.mjs` (escribe `studio/.env` y `web/.env` a partir del Project ID), `panel.mjs` (`semilla` y `publicar`) y `semilla.mjs` (genera `studio/semilla.ndjson` a partir de `web/src/data/negocio.json`).
 
 ## 2. Reglas al modificar Astro y Sanity
 

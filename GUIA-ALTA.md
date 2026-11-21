@@ -18,7 +18,7 @@ Usa siempre **tu email personal**, no el de ninguna empresa. Las tres cuentas se
 
 La terminal es la ventana donde escribes los comandos. La forma más fácil es abrirla desde Visual Studio Code, ya dentro de la carpeta del proyecto (lo harás en el paso 2):
 
-- Menú **Terminal → Nueva terminal** (o el atajo `Ctrl + ñ`; en Mac, `Control + ñ`).
+- Menú **Terminal → Nueva terminal** (si está en inglés, *Terminal → New Terminal*).
 - Se abre un panel en la parte de abajo. Todo lo que en esta guía dice «escribe» o «ejecuta» se escribe ahí, y se confirma con **Intro**.
 
 Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve a abrirlo** para que los reconozca. Para comprobarlo, en la terminal escribe `node -v` y pulsa Intro; después `git --version` y Intro. Los dos deben mostrar un número de versión (de Node, 22 o más).
@@ -36,15 +36,21 @@ Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve
 1. Crea tu cuenta en <https://github.com> con tu email personal.
 2. Abre <https://github.com/desdequeteperdi/kit-negocio-web> y pulsa **Fork** (arriba a la derecha). Así tienes tu propia copia en tu cuenta: `github.com/<tu-usuario>/kit-negocio-web`.
 3. En tu copia pulsa **Code**, copia la dirección HTTPS (empieza por `https://github.com/`).
-4. Elige dónde guardar el proyecto (por ejemplo, tu carpeta Documentos). Abre Visual Studio Code, ve a **Terminal → Nueva terminal** y escribe, sustituyendo el texto entre `<` y `>` por la dirección que copiaste:
+4. **Elige la carpeta donde guardarás tus proyectos.** No tienes que crear la del kit: se crea sola en el paso siguiente. Abre Visual Studio Code, ve a **Archivo → Abrir carpeta…** (en Mac, **Archivo → Abrir…**) y, en la ventana que sale, pulsa **Nueva carpeta** y llámala `proyectos`:
+
+   - **Windows:** créala dentro del disco `C:` (quedará `C:\proyectos`). Evita Documentos: en Windows suele sincronizarse con OneDrive y el proyecto tiene miles de archivos que ralentizan o dan problemas.
+   - **Mac:** créala dentro de tu carpeta personal (la que lleva tu nombre).
+
+   Selecciónala, pulsa **Seleccionar carpeta** (en Mac, **Abrir**) y, si pregunta si confías en los autores, pulsa **Sí, confío**.
+5. Abre la terminal con **Terminal → Nueva terminal**. Ya está dentro de `proyectos`: lo verás escrito al principio de la línea. Escribe, sustituyendo el texto entre `<` y `>` por la dirección que copiaste:
 
    ```bash
    git clone <la-dirección-que-has-copiado>
    ```
 
-   Si Git te pide iniciar sesión en GitHub, hazlo en la ventana del navegador que se abre.
-5. En Visual Studio Code: **Archivo → Abrir carpeta…** y elige la carpeta `kit-negocio-web` que se ha creado. Si pregunta si confías en los autores, pulsa **Sí, confío**. Abre una terminal nueva (**Terminal → Nueva terminal**): ya estará dentro del proyecto.
-6. Instala las dependencias. La primera vez puede tardar **entre 3 y 10 minutos**, según tu conexión, y salen muchas líneas de texto: es normal, no cierres la terminal:
+   Si Git te pide iniciar sesión en GitHub, hazlo en la ventana del navegador que se abre. Al terminar, dentro de `proyectos` habrá una carpeta nueva llamada `kit-negocio-web`.
+6. **Abre el proyecto.** En Visual Studio Code: **Archivo → Abrir carpeta…** (en Mac, **Archivo → Abrir…**), entra en `proyectos`, elige `kit-negocio-web` y pulsa **Seleccionar carpeta** (en Mac, **Abrir**). Si pregunta si confías en los autores, pulsa **Sí, confío**. Abre una terminal nueva (**Terminal → Nueva terminal**): ya estará dentro del proyecto. **Desde aquí, todos los comandos de la guía se escriben en esta terminal.**
+7. Instala las dependencias. La primera vez puede tardar **entre 3 y 10 minutos**, según tu conexión, y salen muchas líneas de texto: es normal, no cierres la terminal:
 
    ```bash
    npm run instalar
@@ -62,24 +68,20 @@ Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve
 
 ## 4. Conecta tu copia con tu panel
 
-1. Copia el archivo de configuración del panel. En la terminal de Visual Studio Code:
+1. Conecta tu copia con tu proyecto. En la terminal de Visual Studio Code, desde la carpeta principal del proyecto, escribe y pulsa Intro:
 
-   - Mac: `cp studio/.env.example studio/.env`
-   - Windows: `copy studio\.env.example studio\.env`
-
-   No da ningún aviso si sale bien. Comprueba que en el panel izquierdo de Visual Studio Code, dentro de la carpeta `studio`, aparece ahora un archivo `.env` además de `.env.example`. El nombre debe ser exactamente `.env`, sin `.txt` al final.
-
-2. Haz clic en `studio/.env` para abrirlo en Visual Studio Code, rellena estas tres líneas (sin espacios ni comillas) y guarda con `Ctrl + S` (Mac: `Cmd + S`):
-
-   ```text
-   SANITY_STUDIO_PROJECT_ID=tu-project-id
-   SANITY_STUDIO_DATASET=production
-   SANITY_STUDIO_HOST=nombre-de-tu-panel
+   ```bash
+   npm run configurar
    ```
 
-   `SANITY_STUDIO_HOST` es el nombre de tu panel: tu dirección será `https://nombre-de-tu-panel.sanity.studio`. Usa solo minúsculas, números y guiones. Visual Studio Code muestra los archivos que empiezan por punto; si en el Explorador de Windows o en el Finder no lo ves, no importa: trabaja desde Visual Studio Code.
+   Te hará dos preguntas. Responde y pulsa Intro después de cada una:
 
-3. Inicia sesión en Sanity desde la terminal. Escribe estos tres comandos, uno por línea, con Intro después de cada uno. Se abrirá el navegador: elige **GitHub** y acepta. Si la terminal pregunta algo, elige la opción de GitHub con las flechas y pulsa Intro.
+   - **Pega tu Project ID:** pega el que copiaste en el paso 3 (en la terminal de Visual Studio Code, `Ctrl + V`; en Mac, `Cmd + V`; también vale clic derecho → Pegar). Debe tener solo letras minúsculas y números.
+   - **Nombre de tu panel:** lo eliges tú. Será la dirección de tu panel: `https://nombre-de-tu-panel.sanity.studio`. Usa solo minúsculas, números y guiones, sin espacios ni tildes (por ejemplo, `mi-negocio`).
+
+   Si escribes algo no válido, te lo dice y te lo vuelve a preguntar. Si todo va bien, termina con dos líneas `✔ Escrito: studio/.env` y `✔ Escrito: web/.env`. No tienes que abrir ni editar ningún archivo. Puedes repetir el comando cuando quieras para cambiar el ID o el nombre del panel; si ya existen los archivos, te pide confirmación antes de actualizarlos.
+
+2. Inicia sesión en Sanity desde la terminal. Escribe estos tres comandos, uno por línea, con Intro después de cada uno. Se abrirá el navegador: elige **GitHub** y acepta. Si la terminal pregunta algo, elige la opción de GitHub con las flechas y pulsa Intro.
 
    ```bash
    cd studio
@@ -89,13 +91,13 @@ Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve
 
    El último comando (`cd ..`) te devuelve a la carpeta principal del proyecto: es importante, porque los siguientes comandos hay que ejecutarlos desde ahí.
 
-4. Carga el contenido de ejemplo en tu proyecto:
+3. Carga el contenido de ejemplo en tu proyecto:
 
    ```bash
    npm run semilla
    ```
 
-5. Publica tu panel:
+4. Publica tu panel:
 
    ```bash
    npm run publicar-panel
@@ -109,22 +111,9 @@ Cuando termine, abre `https://nombre-de-tu-panel.sanity.studio` y comprueba que 
 
 ## 5. Ve tu web en tu ordenador
 
-Antes de publicarla, comprueba que funciona en tu ordenador. Ya sabes tu Project ID, así que primero conecta la web con tu panel:
+Antes de publicarla, comprueba que funciona en tu ordenador. El comando del paso 4 (`npm run configurar`) ya conectó la web con tu panel, así que no tienes que configurar nada más.
 
-1. Copia el archivo de configuración de la web:
-
-   - Mac: `cp web/.env.example web/.env`
-   - Windows: `copy web\.env.example web\.env`
-
-2. Abre `web/.env` en Visual Studio Code y rellena solo esta línea con tu Project ID (sin espacios ni comillas). Guarda con `Ctrl + S` (Mac: `Cmd + S`):
-
-   ```text
-   SANITY_PROJECT_ID=tu-project-id
-   ```
-
-   Si la dejas vacía, la web mostrará los datos de ejemplo en lugar de tu contenido.
-
-3. Arranca la web. En la terminal, desde la carpeta principal del proyecto:
+1. Arranca la web. En la terminal, desde la carpeta principal del proyecto:
 
    ```bash
    npm run empezar
@@ -132,10 +121,10 @@ Antes de publicarla, comprueba que funciona en tu ordenador. Ya sabes tu Project
 
    También puedes hacer doble clic en `empezar.bat` (Windows) o `empezar.command` (Mac) dentro de la carpeta del proyecto. En Mac, la primera vez puede pedirte permiso: clic derecho sobre el archivo → **Abrir**.
 
-4. Cuando veas `Listo. Abre http://localhost:4321`, abre esa dirección en el navegador. Es tu web, que solo se ve en tu ordenador.
-5. **Para parar la web:** en la terminal pulsa `Ctrl + C`. Para volver a arrancarla, repite el paso 3.
+2. Cuando veas `Listo. Abre http://localhost:4321`, abre esa dirección en el navegador. Es tu web, que solo se ve en tu ordenador.
+3. **Para parar la web:** en la terminal pulsa `Ctrl + C`. Para volver a arrancarla, repite el paso 1.
 
-En tu ordenador, los cambios que publiques en el panel se ven al **recargar la página** (`F5`). Si no aparecen, para la web con `Ctrl + C` y arráncala otra vez.
+En tu ordenador, los cambios que publiques en el panel se ven al **recargar la página** (`F5` en Windows, `Cmd + R` en Mac). Si no aparecen, para la web con `Ctrl + C` y arráncala otra vez.
 
 ## 6. Netlify: publica tu web
 
@@ -234,9 +223,8 @@ Si la IA no lo resuelve, enséñale el error a quien te da el curso.
 | `node -v` da un error o un número menor que 22 | Instala Node LTS desde <https://nodejs.org>, cierra Visual Studio Code y vuelve a abrirlo. |
 | Windows: «la ejecución de scripts está deshabilitada» | Sigue el recuadro del paso 1 (`Set-ExecutionPolicy`). |
 | `npm run …` dice «Missing script» o «no se encuentra package.json» | Estás en la carpeta equivocada. Comprueba que la terminal está en la carpeta principal del proyecto (`kit-negocio-web`). Si sigues dentro de `studio`, escribe `cd ..`. |
-| El archivo se llama `.env.txt` o no encuentro `.env` | En Visual Studio Code, clic derecho sobre el archivo → **Cambiar nombre** y déjalo exactamente como `.env`. |
 | `localhost:4321` no carga | Mira que la terminal siga arrancada (no pulsaste `Ctrl + C`) y que no ha salido ningún error en rojo. Repite `npm run empezar`. |
-| Falta `studio/.env` o el Project ID no es válido | Revisa el paso 4. El Project ID está en <https://www.sanity.io/manage>. |
+| Falta `studio/.env`, o el Project ID no es válido | Ejecuta `npm run configurar` y vuelve a pegar tu Project ID. Está en <https://www.sanity.io/manage>. |
 | `npm run semilla` dice que el proyecto ya tiene contenido | No pasa nada, no se ha cambiado nada. Para volver al contenido de ejemplo (borra tus cambios): `npm run semilla -- --reemplazar`. |
 | Pide iniciar sesión | `cd studio`, `npx sanity login`, elige GitHub. |
 | Abro el panel desde Netlify y sale «La conexión no es privada» | El panel está en `https://nombre-de-tu-panel.sanity.studio`, no en Netlify. |
