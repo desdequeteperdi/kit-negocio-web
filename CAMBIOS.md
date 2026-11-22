@@ -16,10 +16,11 @@ Tu contenido (textos, imágenes, entradas) vive en Sanity, no en el código: act
 
 ---
 
-## 2026-11-22 · Bloque de reseñas y perfiles verificados
+## 2026-11-22 · Bloque de reseñas y perfiles verificados + MCPs opcionales sin Google Cloud
 
 - **Nuevo:** apartado **Reseñas y perfiles verificados** en *1. Mi negocio y portada* (`Resenas.astro`), con sellos hacia perfiles públicos (**Google Maps, ProvenExpert, Trustpilot, LinkedIn, Doctoralia, Habitissimo…**), botón para dejar reseña, tarjetas de reseñas reales con enlace a la fuente e integración en `sameAs` (JSON-LD) y `/llms.txt`. Viene apagado por defecto.
   - **Obligatorio si actualizas:** `npm run publicar-panel` (aparece el apartado nuevo en el grupo 1 del panel).
+- **Nuevo *(opcional, solo agentes de código)*:** `.mcp.json.example` y comando `npm run mcp` para activar con un clic los MCPs que no requieren Google Cloud (**Sanity**, **Netlify** y **Playwright**). Nada que hacer si no usas agente.
 
 ## 2026-11-21 · Módulos opcionales y comando `configurar`
 

@@ -56,6 +56,7 @@ Desde la carpeta del kit:
 | `npm run empezar` | Instala lo necesario y arranca la web en <http://localhost:4321> (también con doble clic en `empezar.command` o `empezar.bat`). |
 | `npm run instalar` | Solo instala las dependencias. |
 | `npm run configurar` | Te pregunta el Project ID de Sanity y el nombre de tu panel, escribe `studio/.env` y `web/.env` por ti y ofrece iniciar sesión en Sanity, cargar la semilla y publicar el panel de una vez. |
+| `npm run mcp` | *(Opcional, para agentes de código)* Crea `.mcp.json` con los MCPs de **Sanity**, **Netlify** y **Playwright** (sin Google Cloud). |
 | `npm run semilla` | Carga el contenido de ejemplo en tu proyecto de Sanity (`-- --reemplazar` sobrescribe lo editado). |
 | `npm run publicar-panel` | Publica el panel en `https://<nombre>.sanity.studio`. Hay que repetirlo cuando cambian los campos del panel. |
 | `npm run build` | Compila la web en `web/dist`. |

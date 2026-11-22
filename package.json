@@ -6,6 +6,7 @@
     "empezar": "node scripts/empezar.mjs",
     "instalar": "node scripts/empezar.mjs --sin-servidor",
     "configurar": "node scripts/configurar.mjs",
+    "mcp": "node scripts/mcp.mjs",
     "semilla": "node scripts/panel.mjs semilla",
     "publicar-panel": "node scripts/panel.mjs publicar",
     "dev": "npm --prefix web run dev",

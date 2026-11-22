@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "Sanity": {
+      "type": "http",
+      "url": "https://mcp.sanity.io"
+    },
+    "netlify": {
+      "type": "http",
+      "url": "https://mcp.netlify.com/mcp"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}
