@@ -195,7 +195,11 @@ const resenas = defineType({
           texto('nombrePersonalizado', 'Nombre del directorio (solo si elegiste «Otro»)', {
             description: 'Por ejemplo: «Colegio Oficial» o «Páginas Amarillas».',
           }),
-          url('url', 'Dirección web de tu perfil público (https://...)', 'Enlace directo a tu ficha de Google Maps, perfil de ProvenExpert, Trustpilot, LinkedIn o directorio.').validation((r) => r.required().uri({ scheme: ['https'] })),
+          defineField({
+            name: 'url', title: 'Dirección web de tu perfil público (https://...)', type: 'url',
+            description: 'Enlace directo a tu ficha de Google Maps, perfil de ProvenExpert, Trustpilot, LinkedIn o directorio.',
+            validation: (r) => r.required().uri({ scheme: ['https'] }),
+          }),
           texto('nota', 'Nota media actual (opcional)', {
             description: 'Por ejemplo: «4,9 / 5» o «Excelente». Pon solo el dato real que figure en ese perfil.',
           }),
