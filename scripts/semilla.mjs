@@ -11,6 +11,14 @@ unico('negocio', d.negocio);
 const { imagen, ...portada } = d.portada; // la imagen de ejemplo es un SVG local: se sube desde el panel
 unico('portada', portada);
 unico('sobre', d.sobre);
+if (d.resenas) {
+  const { perfiles = [], lista = [], ...restoResenas } = d.resenas;
+  unico('resenas', {
+    ...restoResenas,
+    perfiles: perfiles.map((p) => ({ _type: 'perfilResenas', _key: randomUUID().slice(0, 12), ...p })),
+    lista: lista.map((r) => ({ _type: 'resenaItem', _key: randomUUID().slice(0, 12), ...r })),
+  });
+}
 unico('contacto', d.contacto);
 unico('newsletter', d.newsletter);
 unico('consultaWhatsapp', d.consultaWhatsapp);

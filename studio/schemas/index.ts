@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 
-export const singletons = ['negocio', 'portada', 'sobre', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'consultaWhatsapp', 'reservas', 'catalogoAjustes', 'enlaces'];
+export const singletons = ['negocio', 'portada', 'sobre', 'resenas', 'contacto', 'buscadores', 'legal', 'blogAjustes', 'newsletter', 'consultaWhatsapp', 'reservas', 'catalogoAjustes', 'enlaces'];
 
 const RUTAS_RESERVADAS = new Set(['blog', 'catalogo', 'condiciones', 'aviso-legal', 'privacidad', 'gracias', 'newsletter-gracias', 'newsletter-error', 'enlaces', '404']);
 
@@ -151,6 +151,107 @@ const sobre = defineType({
     defineField({ name: 'puntos', title: 'Puntos destacados', type: 'array', of: [{ type: 'string' }] }),
   ],
   preview: { prepare: () => ({ title: 'Quiénes somos' }) },
+});
+
+const PLATAFORMAS_RESENAS = [
+  { title: 'Google Maps (Google Business Profile)', value: 'Google Maps' },
+  { title: 'ProvenExpert', value: 'ProvenExpert' },
+  { title: 'Trustpilot', value: 'Trustpilot' },
+  { title: 'LinkedIn (Recomendaciones)', value: 'LinkedIn' },
+  { title: 'Doctoralia', value: 'Doctoralia' },
+  { title: 'Habitissimo', value: 'Habitissimo' },
+  { title: 'Cronoshare', value: 'Cronoshare' },
+  { title: 'TripAdvisor / TheFork', value: 'TripAdvisor' },
+  { title: 'Bodas.net', value: 'Bodas.net' },
+  { title: 'Sortlist / Clutch', value: 'Sortlist' },
+  { title: 'Apple Maps / Facebook', value: 'Facebook' },
+  { title: 'Otro directorio o perfil público', value: 'Otro' },
+];
+
+const resenas = defineType({
+  name: 'resenas', title: 'Reseñas y perfiles verificados', type: 'document',
+  fields: [
+    interruptor('mostrar', 'Mostrar sección de reseñas en la portada', false, {
+      description: 'Muestra solo reseñas y perfiles reales que un visitante pueda comprobar. Nunca inventes testimonios ni puntuaciones.',
+    }),
+    texto('titulo', 'Título de la sección', { initialValue: 'Lo que dicen nuestros clientes' }),
+    parrafo('texto', 'Subtítulo o introducción (opcional)', {
+      rows: 2,
+      description: 'Por ejemplo: «Valoraciones reales verificadas en nuestros perfiles públicos».',
+    }),
+    url('urlDejarResena', 'Enlace para que un cliente te deje una reseña (opcional)', 'Tu enlace directo de invitación a reseña (Google Maps, ProvenExpert, Trustpilot…). Empieza por https://'),
+    texto('textoBotonResena', 'Texto del botón para dejar reseña', { initialValue: 'Dejar una reseña' }),
+    defineField({
+      name: 'perfiles', title: 'Perfiles de reseñas verificados (Google, ProvenExpert, Trustpilot, LinkedIn, directorios…)', type: 'array',
+      description: 'Añade los perfiles públicos donde se pueden comprobar tus valoraciones reales (y que refuerzan tu visibilidad local y en asistentes de IA).',
+      of: [{
+        type: 'object', name: 'perfilResenas', title: 'Perfil de reseñas',
+        fields: [
+          defineField({
+            name: 'plataforma', title: 'Plataforma o directorio', type: 'string', initialValue: 'Google Maps',
+            options: { list: PLATAFORMAS_RESENAS },
+            validation: (r) => r.required(),
+          }),
+          texto('nombrePersonalizado', 'Nombre del directorio (solo si elegiste «Otro»)', {
+            description: 'Por ejemplo: «Colegio Oficial» o «Páginas Amarillas».',
+          }),
+          url('url', 'Dirección web de tu perfil público (https://...)', 'Enlace directo a tu ficha de Google Maps, perfil de ProvenExpert, Trustpilot, LinkedIn o directorio.').validation((r) => r.required().uri({ scheme: ['https'] })),
+          texto('nota', 'Nota media actual (opcional)', {
+            description: 'Por ejemplo: «4,9 / 5» o «Excelente». Pon solo el dato real que figure en ese perfil.',
+          }),
+          texto('total', 'Total de reseñas (opcional)', {
+            description: 'Por ejemplo: «38 reseñas» o «14 recomendaciones».',
+          }),
+        ],
+        preview: {
+          select: { plataforma: 'plataforma', otro: 'nombrePersonalizado', nota: 'nota', total: 'total' },
+          prepare: ({ plataforma, otro, nota, total }) => ({
+            title: plataforma === 'Otro' && otro ? otro : plataforma || 'Perfil',
+            subtitle: [nota, total].filter(Boolean).join(' · ') || 'Ver perfil público',
+          }),
+        },
+      }],
+    }),
+    defineField({
+      name: 'lista', title: 'Reseñas destacadas', type: 'array',
+      description: 'Copia aquí entre 2 y 6 reseñas reales publicadas por tus clientes, indicando de qué plataforma proceden.',
+      of: [{
+        type: 'object', name: 'resenaItem', title: 'Reseña',
+        fields: [
+          texto('autor', 'Nombre o iniciales del cliente', { validation: (r) => r.required() }),
+          texto('detalleAutor', 'Contexto: servicio, barrio o cargo/empresa (opcional)', {
+            description: 'Por ejemplo: «Terraza en Chamberí» o «Directora en Clínica Norte». Ayuda al SEO local y da contexto real.',
+          }),
+          defineField({
+            name: 'estrellas', title: 'Puntuación (1 a 5 estrellas)', type: 'number', initialValue: 5,
+            validation: (r) => r.required().integer().min(1).max(5),
+          }),
+          parrafo('texto', 'Texto de la reseña', {
+            rows: 3,
+            description: 'El texto real que escribió el cliente.',
+            validation: (r) => r.required(),
+          }),
+          texto('fecha', 'Fecha o mes (opcional)', {
+            description: 'Por ejemplo: «Octubre 2026». Las reseñas recientes pesan más.',
+          }),
+          defineField({
+            name: 'fuente', title: 'Dónde está publicada', type: 'string', initialValue: 'Google Maps',
+            options: { list: PLATAFORMAS_RESENAS },
+          }),
+          texto('fuentePersonalizada', 'Nombre de la fuente (solo si elegiste «Otro»)'),
+          url('urlFuente', 'Enlace directo a la reseña o al perfil donde comprobarla (opcional)', 'Empieza por https://'),
+        ],
+        preview: {
+          select: { autor: 'autor', detalle: 'detalleAutor', fuente: 'fuente', estrellas: 'estrellas' },
+          prepare: ({ autor, detalle, fuente, estrellas }) => ({
+            title: `${'★'.repeat(Number(estrellas) || 5)} · ${autor || 'Reseña'}`,
+            subtitle: [detalle, fuente].filter(Boolean).join(' · '),
+          }),
+        },
+      }],
+    }),
+  ],
+  preview: { prepare: () => ({ title: 'Reseñas y perfiles verificados' }) },
 });
 
 const contacto = defineType({
@@ -625,4 +726,4 @@ const enlaces = defineType({
   preview: { prepare: () => ({ title: 'Página /enlaces (Link in bio)' }) },
 });
 
-export const schemaTypes = [negocio, portada, sobre, contacto, buscadores, legal, blogAjustes, newsletter, consultaWhatsapp, reservas, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];
+export const schemaTypes = [negocio, portada, sobre, resenas, contacto, buscadores, legal, blogAjustes, newsletter, consultaWhatsapp, reservas, catalogoAjustes, servicio, pregunta, entrada, categoria, producto, seccion, pagina, enlaces, bloqueImagen, bloqueGaleria, bloqueHtml];

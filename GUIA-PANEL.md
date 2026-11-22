@@ -15,6 +15,7 @@ El menú de la izquierda está organizado en **cuatro grupos** para que encuentr
    - **Datos del negocio:** nombre, descripción, **tipo de actividad** (para Google), contacto, horario, **redes sociales** (Instagram, YouTube, TikTok, Facebook y otra; las vacías no se muestran y las demás salen en el pie), colores y **estilo de la web** (Clásico, Moderno o Editorial).
    - **Portada:** titular, presentación, botón e imagen principal.
    - **Quiénes somos:** presentación y puntos destacados.
+   - **Reseñas y perfiles verificados** *(opcional, apagado por defecto)*: sellos hacia tus perfiles públicos de reseñas (Google Maps, ProvenExpert, Trustpilot, LinkedIn, Doctoralia, Habitissimo…), enlace para que te dejen una reseña y tarjetas con tus mejores reseñas reales verificables.
    - **Servicios** y **Secciones extra de la portada** (listas donde puedes añadir, ordenar o quitar elementos).
    - **Páginas y landings de campaña:** subpáginas independientes (`/{direccion-web}`) para separar apartados (como *Quiénes somos*) o crear landings específicas para anuncios y redes, eligiendo si salen o no en el menú superior.
    - **Página /enlaces (Link in bio):** página móvil con tus botones clave, WhatsApp, últimos artículos del blog y redes para poner en tu biografía de Instagram, TikTok o LinkedIn.
@@ -133,6 +134,21 @@ El producto muestra un botón de compra que lleva a la página de pago de Stripe
 Stripe cobra y emite el recibo; el IVA, los envíos y el stock los gestionas tú. No hay carrito: cada enlace cobra un solo producto. Prueba antes con el modo de pruebas de Stripe y revisa los textos legales (son un punto de partida).
 
 El catálogo aparece en el menú y en el pie solo cuando está activado y hay al menos un producto con categoría. Cada producto tiene su propia página, con datos estructurados para Google.
+
+## Reseñas y perfiles verificados *(Google, ProvenExpert, Trustpilot, LinkedIn y directorios)*
+
+En **1. Mi negocio y portada → Reseñas y perfiles verificados** puedes activar una sección de prueba social real sin widgets externos de pago ni cookies:
+
+1. **Perfiles de reseñas verificados:** pulsa **+** para enlazar tus perfiles públicos donde cualquiera (y los asistentes de IA) pueda comprobar tu reputación:
+   - **Google Maps (Google Business Profile):** para negocios con local físico o a domicilio con área de servicio.
+   - **ProvenExpert** (<https://www.provenexpert.com/es-es/>): muy útil para autónomos, profesionales y pymes (plan gratuito que permite reunir valoraciones de varias plataformas en un perfil verificable sin mostrar tu dirección privada).
+   - **Trustpilot** (<https://es.trustpilot.com>): ideal para negocios 100 % online; es una de las fuentes que más citan ChatGPT, Perplexity y Copilot.
+   - **LinkedIn (Recomendaciones):** para servicios B2B y consultoría.
+   - **Directorios de tu sector:** *Doctoralia, Habitissimo, Cronoshare, TripAdvisor / TheFork, Bodas.net, Sortlist / Clutch* o cualquier otro eligiendo *Otro*.
+   - Puedes indicar tu **nota media real** (p. ej. `4,9 / 5`) y el **total de reseñas** (`38 reseñas`).
+2. **Enlace para pedir reseñas (opcional):** pega tu enlace directo de invitación (de Google Maps, ProvenExpert o Trustpilot) para que aparezca el botón **Dejar una reseña**.
+3. **Reseñas destacadas:** copia entre 2 y 6 reseñas reales de clientes con su nombre/iniciales, el **contexto** (servicio y barrio o cargo/empresa, p. ej. *«Terraza en Chamberí»*), la fecha, de qué plataforma procede y el enlace donde comprobarla.
+4. **Regla de oro:** nunca inventes testimonios ni puntuaciones. La web añade automáticamente las URLs de tus perfiles verificados a los datos estructurados (`sameAs` en JSON-LD) y al resumen `/llms.txt` para asistentes de IA.
 
 ## Secciones extra en la portada
 

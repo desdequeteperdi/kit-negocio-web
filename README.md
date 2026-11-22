@@ -17,6 +17,7 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
 - **Estilo y colores:** tres estilos (Clásico, Moderno, Editorial) y tres colores (verde, azul, terracota), que se combinan. Se eligen en el panel.
 - **Redes sociales:** Instagram, YouTube, TikTok, Facebook y una más, en el pie.
 - **Opcionales, apagados por defecto:**
+  - **Reseñas y perfiles verificados:** bloque en portada con sellos y enlaces directos a perfiles públicos verificables (**Google Maps**, **ProvenExpert**, **Trustpilot**, **LinkedIn**, **Doctoralia**, **Habitissimo**, **TripAdvisor / TheFork** u otros directorios sectoriales), botón opcional para dejar reseña y tarjetas de reseñas reales con enlace a su fuente, sin scripts pesados ni cookies de terceros. Añade además los perfiles a `sameAs` en JSON-LD y a `/llms.txt`.
   - **Blog:** listado, entradas, **categorías** (`/blog/categoria/…`) y **etiquetas** (`/blog/etiqueta/…`), galería de fotos (en el cuerpo o al final de la entrada), bloque «En resumen» para lectura rápida e IA, preguntas frecuentes por entrada, **botones para compartir** (WhatsApp, LinkedIn, X y copiar enlace, sin librerías externas ni cookies), **comentarios moderados** opcionales (con Cusdis) y feed `/rss.xml`.
   - **Newsletter:** formulario con Brevo mediante una función de Netlify.
   - **Catálogo:** categorías y productos, con ficha propia, carrusel en portada y botón «Consultar» que rellena el formulario.

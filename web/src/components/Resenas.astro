@@ -1,0 +1,85 @@
+---
+// Reseñas y perfiles verificados (Google Maps, ProvenExpert, Trustpilot, LinkedIn, directorios sectoriales…).
+// Sin scripts ni cookies de terceros: muestra sellos con enlace directo a tus perfiles públicos y tarjetas de reseñas reales.
+import { getContenido, type PerfilResenas, type ResenaItem } from '../lib/contenido';
+const { resenas: r } = await getContenido();
+
+const nombrePlataforma = (p: PerfilResenas) =>
+  p.plataforma === 'Otro' && p.nombrePersonalizado ? p.nombrePersonalizado : p.plataforma;
+
+const nombreFuente = (x: ResenaItem) =>
+  x.fuente === 'Otro' && x.fuentePersonalizada ? x.fuentePersonalizada : x.fuente;
+
+// Si la reseña no tiene enlace propio pero sí existe el perfil de esa plataforma arriba, enlazamos a ese perfil
+const urlVerificacion = (x: ResenaItem): string => {
+  if (x.urlFuente) return x.urlFuente;
+  const f = nombreFuente(x);
+  const perfil = r.perfiles.find((p) => nombrePlataforma(p) === f || p.plataforma === x.fuente);
+  return perfil?.url ?? '';
+};
+
+const hayContenido = r.mostrar && (r.perfiles.length > 0 || r.lista.length > 0);
+---
+{hayContenido && (
+  <section id="resenas">
+    <div class="contenedor">
+      <div class="resenas-cabecera">
+        <div>
+          <h2>{r.titulo}</h2>
+          {r.texto && <p class="resenas-intro">{r.texto}</p>}
+        </div>
+        {r.urlDejarResena && (
+          <a class="boton secundario" href={r.urlDejarResena} target="_blank" rel="noopener noreferrer">
+            {r.textoBotonResena}
+          </a>
+        )}
+      </div>
+
+      {r.perfiles.length > 0 && (
+        <div class="resenas-perfiles" aria-label="Perfiles de reseñas verificados">
+          {r.perfiles.map((p) => (
+            <a class="sello-resena" href={p.url} target="_blank" rel="noopener noreferrer">
+              <span class="sello-plataforma">{nombrePlataforma(p)}</span>
+              {p.nota && <span class="sello-nota"><span class="estrellas" aria-hidden="true">★★★★★</span> {p.nota}</span>}
+              {p.total && <span class="sello-total">{p.total}</span>}
+              <span class="sello-ver">Ver perfil verificado ↗</span>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {r.lista.length > 0 && (
+        <div class="tarjetas resenas-grid">
+          {r.lista.map((x) => {
+            const url = urlVerificacion(x);
+            const fuente = nombreFuente(x);
+            return (
+              <article class="tarjeta tarjeta-resena">
+                <div class="resena-top">
+                  <span class="estrellas" aria-label={`${x.estrellas} de 5 estrellas`}>
+                    {'★'.repeat(x.estrellas)}{'☆'.repeat(5 - x.estrellas)}
+                  </span>
+                  {fuente && (
+                    url ? (
+                      <a class="resena-fuente" href={url} target="_blank" rel="noopener noreferrer">
+                        {fuente} ↗
+                      </a>
+                    ) : (
+                      <span class="resena-fuente">{fuente}</span>
+                    )
+                  )}
+                </div>
+                <blockquote class="resena-texto">«{x.texto}»</blockquote>
+                <footer class="resena-autor">
+                  <strong>{x.autor}</strong>
+                  {x.detalleAutor && <span> · {x.detalleAutor}</span>}
+                  {x.fecha && <span class="resena-fecha"> ({x.fecha})</span>}
+                </footer>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+)}

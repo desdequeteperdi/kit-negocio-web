@@ -16,6 +16,11 @@ Tu contenido (textos, imágenes, entradas) vive en Sanity, no en el código: act
 
 ---
 
+## 2026-11-22 · Bloque de reseñas y perfiles verificados
+
+- **Nuevo:** apartado **Reseñas y perfiles verificados** en *1. Mi negocio y portada* (`Resenas.astro`), con sellos hacia perfiles públicos (**Google Maps, ProvenExpert, Trustpilot, LinkedIn, Doctoralia, Habitissimo…**), botón para dejar reseña, tarjetas de reseñas reales con enlace a la fuente e integración en `sameAs` (JSON-LD) y `/llms.txt`. Viene apagado por defecto.
+  - **Obligatorio si actualizas:** `npm run publicar-panel` (aparece el apartado nuevo en el grupo 1 del panel).
+
 ## 2026-11-21 · Módulos opcionales y comando `configurar`
 
 - **Nuevo: consulta por WhatsApp + hoja de Google** y **reservas con Google Calendar** (apagados por defecto). Guía: `GUIA-MODULOS.md`.

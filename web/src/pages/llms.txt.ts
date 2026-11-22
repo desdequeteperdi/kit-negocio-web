@@ -49,6 +49,21 @@ export const GET: APIRoute = async ({ site }) => {
     lineas.push('');
   }
 
+  if (c.resenas.mostrar && (c.resenas.perfiles.length > 0 || c.resenas.lista.length > 0)) {
+    lineas.push(`## ${c.resenas.titulo || 'Reseñas y perfiles verificados'}`);
+    for (const p of c.resenas.perfiles) {
+      const nombre = p.plataforma === 'Otro' && p.nombrePersonalizado ? p.nombrePersonalizado : p.plataforma;
+      const detalle = [p.nota, p.total].filter(Boolean).join(' · ');
+      lineas.push(`- Perfil en [${nombre}](${p.url})${detalle ? `: ${detalle}` : ''}`);
+    }
+    for (const r of c.resenas.lista) {
+      const fuente = r.fuente === 'Otro' && r.fuentePersonalizada ? r.fuentePersonalizada : r.fuente;
+      const ctx = r.detalleAutor ? ` (${r.detalleAutor})` : '';
+      lineas.push(`- «${r.texto}» — ${r.autor}${ctx}${fuente ? ` [${fuente}]` : ''}`);
+    }
+    lineas.push('');
+  }
+
   if (c.preguntas.length > 0) {
     lineas.push('## Preguntas frecuentes');
     for (const p of c.preguntas) {

@@ -35,7 +35,14 @@ const grafo: Record<string, unknown>[] = [
     ...(n.email && { email: n.email }),
     ...(n.zona && { areaServed: n.zona }),
     ...(n.horario && { openingHours: n.horario }),
-    ...(redesSociales(n).length > 0 && { sameAs: redesSociales(n).map((r) => r.url) }),
+    ...( (() => {
+      const urls = [
+        ...redesSociales(n).map((r) => r.url),
+        ...(c.resenas.mostrar ? c.resenas.perfiles.map((p) => p.url) : []),
+      ];
+      const unicas = [...new Set(urls)];
+      return unicas.length > 0 ? { sameAs: unicas } : {};
+    })() ),
   },
 ];
 

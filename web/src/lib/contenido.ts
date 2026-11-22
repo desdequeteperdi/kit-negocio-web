@@ -37,12 +37,22 @@ export type EnlacesConfig = {
   mostrar: boolean; titulo: string; bio: string; imagen: string; alt: string;
   botones: BotonEnlace[]; mostrarWhatsapp: boolean; mostrarUltimasEntradas: boolean; mostrarRedes: boolean; noindex: boolean;
 };
-export type Contenido = Omit<typeof datos, 'blog' | 'catalogo' | 'paginas' | 'enlaces'> & {
+export type PerfilResenas = { plataforma: string; nombrePersonalizado: string; url: string; nota: string; total: string };
+export type ResenaItem = {
+  autor: string; detalleAutor: string; estrellas: number; texto: string;
+  fecha: string; fuente: string; fuentePersonalizada: string; urlFuente: string;
+};
+export type ResenasConfig = {
+  mostrar: boolean; titulo: string; texto: string; urlDejarResena: string; textoBotonResena: string;
+  perfiles: PerfilResenas[]; lista: ResenaItem[];
+};
+export type Contenido = Omit<typeof datos, 'blog' | 'catalogo' | 'paginas' | 'enlaces' | 'resenas'> & {
   blog: Omit<typeof datos.blog, 'entradas'> & { entradas: Entrada[] };
   catalogo: { mostrar: boolean; titulo: string; introduccion: string; textoBoton: string; tienda: boolean; textoBotonPago: string; categorias: Categoria[]; productos: Producto[] };
   secciones: Seccion[];
   paginas: Pagina[];
   enlaces: EnlacesConfig;
+  resenas: ResenasConfig;
 };
 
 const RUTAS_RESERVADAS = new Set(['blog', 'catalogo', 'condiciones', 'aviso-legal', 'privacidad', 'gracias', 'newsletter-gracias', 'newsletter-error', 'enlaces', '404']);
@@ -63,6 +73,11 @@ const consulta = `{
   "portada": *[_id == "portada"][0]{titular, presentacion, textoBoton, "imagen": imagen.asset->url, "alt": imagen.alt},
   "servicios": *[_type == "servicio"] | order(orden asc){orden, nombre, descripcion, precio},
   "sobre": *[_id == "sobre"][0]{mostrar, titulo, texto, puntos},
+  "resenas": *[_id == "resenas"][0]{
+    mostrar, titulo, texto, urlDejarResena, textoBotonResena,
+    perfiles[]{plataforma, nombrePersonalizado, url, nota, total},
+    lista[]{autor, detalleAutor, estrellas, texto, fecha, fuente, fuentePersonalizada, urlFuente}
+  },
   "preguntas": *[_type == "pregunta"] | order(orden asc){pregunta, respuesta},
   "contacto": *[_id == "contacto"][0]{texto, mostrarFormulario},
   "newsletter": *[_id == "newsletter"][0]{mostrar, titulo, texto, textoBoton, consentimiento},
@@ -182,6 +197,40 @@ function normalizarEnlaces(e: any): EnlacesConfig {
   };
 }
 
+function normalizarResenas(r: any): ResenasConfig {
+  const base = datos.resenas;
+  const src = { ...base, ...(r ?? {}) };
+  const esHttps = (u: unknown): u is string => typeof u === 'string' && /^https:\/\//.test(u.trim());
+  return {
+    mostrar: src.mostrar === true,
+    titulo: src.titulo || base.titulo,
+    texto: src.texto ?? '',
+    urlDejarResena: esHttps(src.urlDejarResena) ? src.urlDejarResena.trim() : '',
+    textoBotonResena: src.textoBotonResena || 'Dejar una reseña',
+    perfiles: (src.perfiles ?? [])
+      .filter((p: any) => p?.plataforma && esHttps(p?.url))
+      .map((p: any) => ({
+        plataforma: String(p.plataforma),
+        nombrePersonalizado: String(p.nombrePersonalizado ?? ''),
+        url: String(p.url).trim(),
+        nota: String(p.nota ?? ''),
+        total: String(p.total ?? ''),
+      })),
+    lista: (src.lista ?? [])
+      .filter((x: any) => x?.autor && x?.texto)
+      .map((x: any) => ({
+        autor: String(x.autor),
+        detalleAutor: String(x.detalleAutor ?? ''),
+        estrellas: Math.min(5, Math.max(1, Math.round(Number(x.estrellas) || 5))),
+        texto: String(x.texto),
+        fecha: String(x.fecha ?? ''),
+        fuente: String(x.fuente ?? 'Google Maps'),
+        fuentePersonalizada: String(x.fuentePersonalizada ?? ''),
+        urlFuente: esHttps(x.urlFuente) ? String(x.urlFuente).trim() : '',
+      })),
+  };
+}
+
 // «Terrazas y jardín» -> «terrazas-y-jardin»: dirección de la página de cada etiqueta
 export function slugEtiqueta(t: string): string {
   return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -198,6 +247,7 @@ async function desdeSanity(): Promise<Contenido> {
     portada: { ...datos.portada, ...r.portada, imagen: r.portada?.imagen ? optimizada(r.portada.imagen, 'w=1000&auto=format') : datos.portada.imagen, alt: r.portada?.alt ?? '' },
     servicios: r.servicios,
     sobre: { ...datos.sobre, ...r.sobre, puntos: r.sobre?.puntos ?? [] },
+    resenas: normalizarResenas(r.resenas),
     preguntas: r.preguntas,
     contacto: { ...datos.contacto, ...r.contacto },
     newsletter: { ...datos.newsletter, ...r.newsletter },
@@ -226,6 +276,7 @@ async function desdeSanity(): Promise<Contenido> {
 function desdeArchivo(): Contenido {
   return {
     ...datos,
+    resenas: normalizarResenas(datos.resenas),
     blog: { ...datos.blog, entradas: datos.blog.entradas.map(({ cuerpo, ...e }) => normalizar(e, parrafosAHtml(cuerpo))) },
     catalogo: { ...datos.catalogo, productos: datos.catalogo.productos.map(({ descripcion, ...p }) => normalizarProducto(p, parrafosAHtml(descripcion))) },
     secciones: [],

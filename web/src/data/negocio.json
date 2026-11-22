@@ -56,6 +56,51 @@
       "Presupuesto por escrito antes de empezar"
     ]
   },
+  "resenas": {
+    "mostrar": false,
+    "titulo": "Lo que dicen nuestros clientes",
+    "texto": "Valoraciones verificables en nuestros perfiles públicos.",
+    "urlDejarResena": "",
+    "textoBotonResena": "Dejar una reseña",
+    "perfiles": [
+      {
+        "plataforma": "Google Maps",
+        "nombrePersonalizado": "",
+        "url": "https://www.google.com/maps",
+        "nota": "4,9 / 5",
+        "total": "24 reseñas (ejemplo)"
+      },
+      {
+        "plataforma": "ProvenExpert",
+        "nombrePersonalizado": "",
+        "url": "https://www.provenexpert.com/es-es/",
+        "nota": "4,9 / 5",
+        "total": "Perfil verificado (ejemplo)"
+      }
+    ],
+    "lista": [
+      {
+        "autor": "Marta G. (ejemplo)",
+        "detalleAutor": "Diseño de terraza en Chamberí",
+        "estrellas": 5,
+        "texto": "Vinieron a medir la orientación, nos propusieron plantas que aguantan el sol de tarde y dejaron el riego automático instalado en un día.",
+        "fecha": "Octubre 2026",
+        "fuente": "Google Maps",
+        "fuentePersonalizada": "",
+        "urlFuente": ""
+      },
+      {
+        "autor": "Comunidad C/ Alcalá (ejemplo)",
+        "detalleAutor": "Mantenimiento mensual en Madrid",
+        "estrellas": 5,
+        "texto": "Puntuales cada mes y con informe claro de lo que podan o revisan en el jardín comunitario.",
+        "fecha": "Septiembre 2026",
+        "fuente": "ProvenExpert",
+        "fuentePersonalizada": "",
+        "urlFuente": ""
+      }
+    ]
+  },
   "preguntas": [
     {
       "pregunta": "¿Hacéis visita previa?",
