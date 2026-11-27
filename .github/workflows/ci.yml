@@ -36,6 +36,9 @@ jobs:
           SITE_URL: 'https://ejemplo.netlify.app'
         run: npm run build
 
+      - name: Auditar HTML compilado (Sesión 8, sin jq ni bash)
+        run: npm run auditar
+
       - name: Compilar panel (Sanity Studio)
         env:
           SANITY_STUDIO_PROJECT_ID: 'abc12345'

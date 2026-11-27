@@ -76,6 +76,7 @@ Desde la carpeta del kit:
 | `npm run semilla` | Carga el contenido de ejemplo en tu proyecto de Sanity (`-- --reemplazar` sobrescribe lo editado). |
 | `npm run publicar-panel` | Publica el panel en `https://<nombre>.sanity.studio`. Hay que repetirlo cuando cambian los campos del panel. |
 | `npm run build` | Compila la web en `web/dist`. |
+| `npm run auditar` | Revisa el HTML compilado en `web/dist` (accesibilidad, metadatos SEO, `alt`, `h1` y URLs `http://`), válido en Windows y Mac sin dependencias extra. |
 
 Requiere Node 22.12 o superior.
 

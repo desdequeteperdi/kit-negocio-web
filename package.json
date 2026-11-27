@@ -4,6 +4,7 @@
   "description": "Kit del curso: web de presentación y captación (Astro) con contenido editable",
   "scripts": {
     "diagnosticar": "node scripts/diagnostico.mjs",
+    "auditar": "node .agents/skills/web-quality-audit/scripts/analyze.mjs",
     "empezar": "node scripts/empezar.mjs",
     "instalar": "node scripts/empezar.mjs --sin-servidor",
     "configurar": "node scripts/configurar.mjs",

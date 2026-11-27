@@ -24,7 +24,7 @@ Comprehensive quality review that combines live browser evidence with source ins
 5. **Dual mode for Sanity content fixes:**
    - **With Sanity MCP active (`npm run mcp`):** inspect the current document first, propose exact fixes, **ask for confirmation before writing**, and update **only drafts (`drafts.*`)**, respecting singletons (`negocio`, `portada`, `sobre`, `resenas`, `contacto`, `buscadores`, `legal`, `blogAjustes`, `newsletter`, `consultaWhatsapp`, `reservas`, `catalogoAjustes`, `enlaces`) and never publishing or deleting without explicit authorization.
    - **Without MCP / manual:** output ready-to-paste values with the exact Sanity Studio path and remind the user to click **Publish**.
-6. Re-run `scripts/analyze.sh` and equivalent checks after fixes. Report what is verified and what still needs field or human validation.
+6. Re-run `npm run auditar` (or `node scripts/analyze.mjs`) and equivalent checks after fixes. Report what is verified and what still needs field or human validation.
 
 ## Tool routing
 
@@ -36,7 +36,7 @@ Use the best capability already available; do not block the audit on optional se
 | Real-user performance | CrUX values included in current DevTools trace summaries | PageSpeed Insights/CrUX Vis; direct CrUX API only when a key is already available or automation is requested |
 | Accessibility, SEO, Best Practices, Agentic Browsing | Run a live Lighthouse audit; with Chrome DevTools MCP, use `lighthouse_audit` | Category-specific Lighthouse CLI audits plus manual checks |
 | Rendered semantics and interaction | Inspect the accessibility tree and exercise the UI; with Chrome DevTools MCP, use `take_snapshot` and focused `evaluate_script` | Browser/manual testing |
-| Source smoke test (compiled HTML only) | `scripts/analyze.sh <kit-or-web/dist>` (auto-scopes to `web/dist`; skips `studio/`, `node_modules/`, `.astro/`) | Direct inspection of `web/src/` |
+| Source smoke test (compiled HTML only) | `npm run auditar` or `node scripts/analyze.mjs <kit-or-web/dist>` (cross-platform Windows/Mac, no `jq`; auto-scopes to `web/dist` and skips `studio/`, `node_modules/`, `.astro/`) | Direct inspection of `web/src/` |
 
 Chrome DevTools MCP's `lighthouse_audit` intentionally excludes performance. Its navigation mode reloads the page; use snapshot mode when preserving the current authenticated or user-created state matters. The static analyzer is a fast smoke test, not a substitute for a rendered-page audit.
 
