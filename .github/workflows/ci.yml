@@ -1,0 +1,64 @@
+name: Validar Windows y Mac
+
+on:
+  push:
+    branches: [main, 'ci/**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validar:
+    name: ${{ matrix.os }} (Node 22)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Comprobar diagnóstico previo
+        run: npm run diagnosticar
+
+      - name: Instalar dependencias (web y studio)
+        run: npm run instalar
+
+      - name: Compilar web (Astro con datos de ejemplo)
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+          SITE_URL: 'https://ejemplo.netlify.app'
+        run: npm run build
+
+      - name: Compilar panel (Sanity Studio)
+        env:
+          SANITY_STUDIO_PROJECT_ID: 'abc12345'
+          SANITY_STUDIO_DATASET: 'production'
+          DO_NOT_TRACK: '1'
+        run: npm --prefix studio run build -- --yes
+
+      - name: Verificar skills integradas y plantilla de memoria
+        shell: bash
+        run: |
+          node -e '
+            const fs = require("fs");
+            const path = require("path");
+            function walk(dir, base = dir) {
+              return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
+                const full = path.join(dir, d.name);
+                return d.isDirectory() ? walk(full, base) : [path.relative(base, full).split(path.sep).join("/")];
+              }).sort();
+            }
+            const a = walk(".agents/skills");
+            const c = walk(".claude/skills");
+            if (JSON.stringify(a) !== JSON.stringify(c)) throw new Error("Desajuste entre .agents/skills y .claude/skills");
+            if (!fs.existsSync("plantillas/memoria-negocio.md")) throw new Error("Falta plantillas/memoria-negocio.md");
+            if (!fs.existsSync(".agents/skills/arrancar-proyecto/SKILL.md")) throw new Error("Falta arrancar-proyecto");
+            console.log("OK skills:", a.length, "archivos idénticos");
+          '

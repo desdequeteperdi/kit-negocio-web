@@ -1,6 +1,18 @@
-# Kit de negocio: web de presentación, captación y catálogo
+# Kit de negocio: web de presentación, captación, catálogo y skills de marketing
 
-Base común del curso. Web estática en Astro con el contenido editable desde un panel de Sanity, publicada en Netlify y con el código en GitHub. El alumnado cambia textos e imágenes desde el panel; no programa.
+Base común del curso (`COMM0006` / `IFCT029PO`). Reúne en un solo repositorio la web estática en Astro (`web/`), el panel editable en Sanity (`studio/`), el despliegue en Netlify, la plantilla de memoria del negocio (`plantillas/memoria-negocio.md`) y las **13 skills del curso** listas para usar desde la terminal de Visual Studio Code con **Codex CLI**, **Antigravity CLI** o **Claude Code** (`.agents/skills/` y `.claude/skills/`). El alumnado cambia textos e imágenes desde el panel o trabaja su estrategia en `MEMORIA.md`; no programa.
+
+## Puesta en marcha desde el Día 1 (en Visual Studio Code)
+
+1. **Crear cuenta en GitHub** (`https://github.com`) con tu email personal o del negocio recuperable.
+2. **Instalar Node.js LTS (22.12+), Git y Visual Studio Code** (`https://code.visualstudio.com`).
+3. **Vincular VS Code a GitHub (sin clave SSH):** desde el icono de **Cuentas** (abajo a la izquierda) → *Iniciar sesión con GitHub*. Al usar HTTPS, no hace falta crear SSH key.
+4. **Fork y `git clone`:** haz **Fork** de `https://github.com/desdequeteperdi/kit-negocio-web`, clona tu copia en `C:\proyectos` (Windows, evitando OneDrive) o `~/proyectos` (Mac) y ábrela en VS Code.
+5. **Instalar el agente CLI (opcional):** en la terminal integrada de VS Code, instala **Codex CLI** (`npm install -g @openai/codex`), **Claude Code** (`npm install -g @anthropic-ai/claude-code`) o **Antigravity CLI** (`agy`). Las 13 skills ya vienen integradas en `.agents/skills/` y `.claude/skills/`.
+6. **Arrancar con un solo mensaje al agente (o a mano):** abre tu agente CLI en la carpeta y dile exactamente:
+   > *«Instálame el repo para empezar a construir el proyecto»*
+   *(Activa la skill `arrancar-proyecto`: revisa permisos/antivirus/PowerShell en Windows, instala dependencias, pregunta primero si es real o ficticio sin agobiar, pide tu web actual o webs de referencia para sacar colores/CSS y construye la primera versión en `http://localhost:4321`).*
+   Si prefieres hacerlo sin agente: ejecuta `npm run diagnosticar`, `npm run instalar`, `npm run empezar` (`http://localhost:4321`) y crea `MEMORIA.md` desde `plantillas/memoria-negocio.md`.
 
 ## Guías
 
@@ -33,6 +45,9 @@ Base común del curso. Web estática en Astro con el contenido editable desde un
 
 ```text
 kit-negocio/
+├── .agents/skills/          # 12 skills del curso (Codex CLI y Antigravity CLI)
+├── .claude/skills/          # 12 skills del curso (Claude Code)
+├── plantillas/              # Plantilla de memoria del negocio (memoria-negocio.md)
 ├── web/                     # Web pública (Astro)
 │   ├── src/data/negocio.json   # Contenido de ejemplo (se usa si no hay Sanity)
 │   ├── src/lib/contenido.ts    # Única puerta de entrada al contenido
@@ -53,6 +68,7 @@ Desde la carpeta del kit:
 
 | Comando | Qué hace |
 |---|---|
+| `npm run diagnosticar` | Comprueba Node, Git, permisos, OneDrive y PowerShell antes de instalar (útil en Windows con antivirus). |
 | `npm run empezar` | Instala lo necesario y arranca la web en <http://localhost:4321> (también con doble clic en `empezar.command` o `empezar.bat`). |
 | `npm run instalar` | Solo instala las dependencias. |
 | `npm run configurar` | Te pregunta el Project ID de Sanity y el nombre de tu panel, escribe `studio/.env` y `web/.env` por ti y ofrece iniciar sesión en Sanity, cargar la semilla y publicar el panel de una vez. |

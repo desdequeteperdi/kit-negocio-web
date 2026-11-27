@@ -31,26 +31,28 @@ Si instalaste Node o Git con Visual Studio Code ya abierto, **ciérralo y vuelve
 >
 > Responde `S` (o `Y`) si te pregunta, cierra Visual Studio Code, vuelve a abrirlo y repite el comando que falló.
 
-## 2. GitHub: cuenta y copia del kit
+## 2. GitHub: cuenta, vinculación en VS Code (sin SSH) y copia del kit
 
 1. Crea tu cuenta en <https://github.com> con tu email personal.
-2. Abre <https://github.com/desdequeteperdi/kit-negocio-web> y pulsa **Fork** (arriba a la derecha). Así tienes tu propia copia en tu cuenta: `github.com/<tu-usuario>/kit-negocio-web`.
-3. En tu copia pulsa **Code**, copia la dirección HTTPS (empieza por `https://github.com/`).
-4. **Elige la carpeta donde guardarás tus proyectos.** No tienes que crear la del kit: se crea sola en el paso siguiente. Abre Visual Studio Code, ve a **Archivo → Abrir carpeta…** (en Mac, **Archivo → Abrir…**) y, en la ventana que sale, pulsa **Nueva carpeta** y llámala `proyectos`:
+2. En Visual Studio Code, pulsa el icono de **Cuentas** (abajo a la izquierda) → **Iniciar sesión con GitHub** y autoriza en el navegador. **No hace falta crear clave SSH (`SSH key`)**: usando HTTPS y tu sesión vinculada en VS Code, Git se autentica mediante ventana del navegador.
+3. Abre <https://github.com/desdequeteperdi/kit-negocio-web> y pulsa **Fork** (arriba a la derecha). Así tienes tu propia copia en tu cuenta: `github.com/<tu-usuario>/kit-negocio-web`.
+4. En tu copia pulsa **Code**, copia la dirección HTTPS (empieza por `https://github.com/`).
+5. **Elige la carpeta donde guardarás tus proyectos.** No tienes que crear la del kit: se crea sola en el paso siguiente. Abre Visual Studio Code, ve a **Archivo → Abrir carpeta…** (en Mac, **Archivo → Abrir…**) y, en la ventana que sale, pulsa **Nueva carpeta** y llámala `proyectos`:
 
    - **Windows:** créala dentro del disco `C:` (quedará `C:\proyectos`). Evita Documentos: en Windows suele sincronizarse con OneDrive y el proyecto tiene miles de archivos que ralentizan o dan problemas.
    - **Mac:** créala dentro de tu carpeta personal (la que lleva tu nombre).
 
    Selecciónala, pulsa **Seleccionar carpeta** (en Mac, **Abrir**) y, si pregunta si confías en los autores, pulsa **Sí, confío**.
-5. Abre la terminal con **Terminal → Nueva terminal**. Ya está dentro de `proyectos`: lo verás escrito al principio de la línea. Escribe, sustituyendo el texto entre `<` y `>` por la dirección que copiaste:
+6. Abre la terminal con **Terminal → Nueva terminal**. Ya está dentro de `proyectos`: lo verás escrito al principio de la línea. Escribe, sustituyendo el texto entre `<` y `>` por la dirección que copiaste:
 
    ```bash
    git clone <la-dirección-que-has-copiado>
    ```
 
    Si Git te pide iniciar sesión en GitHub, hazlo en la ventana del navegador que se abre. Al terminar, dentro de `proyectos` habrá una carpeta nueva llamada `kit-negocio-web`.
-6. **Abre el proyecto.** En Visual Studio Code: **Archivo → Abrir carpeta…** (en Mac, **Archivo → Abrir…**), entra en `proyectos`, elige `kit-negocio-web` y pulsa **Seleccionar carpeta** (en Mac, **Abrir**). Si pregunta si confías en los autores, pulsa **Sí, confío**. Abre una terminal nueva (**Terminal → Nueva terminal**): ya estará dentro del proyecto. **Desde aquí, todos los comandos de la guía se escriben en esta terminal.**
-7. Instala las dependencias. La primera vez puede tardar **entre 3 y 10 minutos**, según tu conexión, y salen muchas líneas de texto: es normal, no cierres la terminal:
+7. **Abre el proyecto.** En Visual Studio Code: **Archivo → Abrir carpeta…** (en Mac, **Archivo → Abrir…**), entra en `proyectos`, elige `kit-negocio-web` y pulsa **Seleccionar carpeta** (en Mac, **Abrir**). Si pregunta si confías en los autores, pulsa **Sí, confío**. Abre una terminal nueva (**Terminal → Nueva terminal**): ya estará dentro del proyecto. **Desde aquí, todos los comandos de la guía se escriben en esta terminal.**
+8. *(Opcional, para usar las 12 skills integradas y controlar el proyecto desde la terminal)* Instala un agente CLI: **Codex CLI** (`npm install -g @openai/codex`), **Claude Code** (`npm install -g @anthropic-ai/claude-code`) o **Antigravity CLI** (`agy`). Las skills ya vienen incluidas en `.agents/skills/` y `.claude/skills/`, y la plantilla de memoria en `plantillas/memoria-negocio.md`.
+9. Instala las dependencias. La primera vez puede tardar **entre 3 y 10 minutos**, según tu conexión, y salen muchas líneas de texto: es normal, no cierres la terminal:
 
    ```bash
    npm run instalar
@@ -224,8 +226,10 @@ Si la IA no lo resuelve, enséñale el error a quien te da el curso.
 
 | Problema | Qué hacer |
 |---|---|
-| `node -v` da un error o un número menor que 22 | Instala Node LTS desde <https://nodejs.org>, cierra Visual Studio Code y vuelve a abrirlo. |
+| `node -v`, `git` o `codex`/`claude` no se reconoce (`PATH` en Windows) | Instala Node.js LTS y Git **antes** de abrir VS Code. En Windows, para refrescar el `PATH` sin reiniciar el ordenador, pega en PowerShell: `$env:Path = [Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [Environment]::GetEnvironmentVariable("Path","User")` (y si `codex`/`claude` sigue fallando por nombre, usa `npx @openai/codex` o `npx @anthropic-ai/claude-code`). |
 | Windows: «la ejecución de scripts está deshabilitada» | Sigue el recuadro del paso 1 (`Set-ExecutionPolicy`). |
+| Windows: `npm run instalar` falla con `EPERM`, `EBUSY` o bloquea `esbuild.exe` / `sharp` (antivirus o OneDrive) | Ejecuta `npm run diagnosticar`. Comprueba que la carpeta está en `C:\proyectos\kit-negocio-web` (fuera de OneDrive) y añade una exclusión **solo a esa carpeta** en Seguridad de Windows / tu antivirus (sin desactivar el antivirus completo). Luego borra el `node_modules` que falló, ejecuta `npm cache clean --force` y repite `npm run instalar`. |
+| Mac / Windows: error `EACCES` (permisos) al instalar dependencias o CLI | No trabajes en carpetas del sistema (`Program Files` o `/Applications`) ni uses `sudo` dentro del proyecto. Mueve el repo a `C:\proyectos` (Windows) o `~/proyectos` (Mac). |
 | `npm run …` dice «Missing script» o «no se encuentra package.json» | Estás en la carpeta equivocada. Comprueba que la terminal está en la carpeta principal del proyecto (`kit-negocio-web`). Si sigues dentro de `studio`, escribe `cd ..`. |
 | `localhost:4321` no carga | Mira que la terminal siga arrancada (no pulsaste `Ctrl + C`) y que no ha salido ningún error en rojo. Repite `npm run empezar`. |
 | Falta `studio/.env`, o el Project ID no es válido | Ejecuta `npm run configurar` y vuelve a pegar tu Project ID. Está en <https://www.sanity.io/manage>. |

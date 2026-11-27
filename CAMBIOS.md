@@ -16,6 +16,11 @@ Tu contenido (textos, imágenes, entradas) vive en Sanity, no en el código: act
 
 ---
 
+## 2026-11-27 · Skills de marketing integradas, arranque guiado para Windows y flujo con VS Code + CLI
+
+- **Nuevo:** integradas las **13 skills del curso** en `.agents/skills/` (para **Codex CLI** y **Antigravity CLI**) y `.claude/skills/` (para **Claude Code**), incluyendo **`arrancar-proyecto`** (instalación/diagnóstico Windows con antivirus y permisos, pregunta inicial *real vs. ficticio* sin abrumar, y extracción de CSS/tokens desde web propia o de referencia) junto a `plantillas/memoria-negocio.md` y el comando `npm run diagnosticar` (`scripts/diagnostico.mjs`).
+- **Cambiado:** `AGENTS.md`, `CLAUDE.md`, `README.md`, `GUIA-ALTA.md` y `scripts/empezar.mjs` actualizados para detectar OneDrive, errores `EPERM`/`EBUSY`/`EACCES` (antivirus/permisos) y reflejar el flujo completo en Visual Studio Code (vincular GitHub por HTTPS sin clave SSH, Fork + `git clone`, CLI opcional y arranque local). No requiere pasos extra si ya tienes tu web desplegada y no usas las skills en terminal.
+
 ## 2026-11-22 · Bloque de reseñas y perfiles verificados + MCPs opcionales sin Google Cloud
 
 - **Nuevo:** apartado **Reseñas y perfiles verificados** en *1. Mi negocio y portada* (`Resenas.astro`), con sellos hacia perfiles públicos (**Google Maps, ProvenExpert, Trustpilot, LinkedIn, Doctoralia, Habitissimo…**), botón para dejar reseña, tarjetas de reseñas reales con enlace a la fuente e integración en `sameAs` (JSON-LD) y `/llms.txt`. Viene apagado por defecto.

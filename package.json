@@ -3,6 +3,7 @@
   "private": true,
   "description": "Kit del curso: web de presentación y captación (Astro) con contenido editable",
   "scripts": {
+    "diagnosticar": "node scripts/diagnostico.mjs",
     "empezar": "node scripts/empezar.mjs",
     "instalar": "node scripts/empezar.mjs --sin-servidor",
     "configurar": "node scripts/configurar.mjs",

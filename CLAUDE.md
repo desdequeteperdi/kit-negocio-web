@@ -1,1 +1,1 @@
-Sigue las instrucciones de [AGENTS.md](AGENTS.md) para trabajar sobre este proyecto (`kit-negocio`).
+Sigue las instrucciones de [AGENTS.md](AGENTS.md) para trabajar sobre este proyecto (`kit-negocio`). Las 13 skills del curso (empezando por `arrancar-proyecto` cuando el alumno pida instalar y arrancar el repo) están listas en `.claude/skills/` para usar directamente sobre `MEMORIA.md`, Astro y Sanity.

@@ -1,6 +1,21 @@
-# Instrucciones para agentes de código (`kit-negocio`)
+# Instrucciones para agentes de código y marketing (`kit-negocio`)
 
-Este repositorio es la plantilla base del curso (`COMM0006` / `IFCT029PO`): una web estática en **Astro** (`web/`) conectada a un panel de contenidos en **Sanity Studio** (`studio/`) y desplegada en **Netlify**.
+Este repositorio es la base unificada del curso (`COMM0006` / `IFCT029PO`): integra las **12 skills de marketing del curso**, la plantilla de memoria del negocio (`plantillas/memoria-negocio.md`) y la web estática en **Astro** (`web/`) conectada a un panel de contenidos en **Sanity Studio** (`studio/`) y desplegada en **Netlify**.
+
+## 0. Protocolo de primer arranque y skills de marketing
+
+- **Disparador de arranque inicial:** si el usuario pide *"Instálame el repo para empezar a construir el proyecto"*, *"instálame el repo"*, *"arranca el proyecto"* o reporta errores de `npm` / permisos / antivirus al empezar, sigue obligatoriamente la skill **`arrancar-proyecto`** (`.agents/skills/arrancar-proyecto/SKILL.md` o `.claude/skills/arrancar-proyecto/SKILL.md`):
+  1. Ejecuta `node scripts/diagnostico.mjs`, resuelve bloqueos de Windows/antivirus/OneDrive/PowerShell/Mac y ejecuta `npm run instalar`.
+  2. **Pregunta #1 obligatoria y sin abrumar:** pregunta primero **solo** si el proyecto es **real o ficticio/de ejemplo** (en proyectos ficticios o arranque inicial, evita cuestionarios largos).
+  3. **Diseño y tokens CSS:** pregunta si tiene **web propia o webs de referencia** para extraer paleta, tipografía y tokens CSS (`web/src/styles/` + `web/src/data/negocio.json`) y construir la primera versión visible en `http://localhost:4321`.
+- **Dónde están las skills (13 en total):**
+  - `.agents/skills/` *(descubrimiento automático en **Codex CLI** y **Antigravity CLI**)*
+  - `.claude/skills/` *(descubrimiento automático en **Claude Code**)*
+- **Memoria del negocio (`MEMORIA.md`):** antes de ejecutar cualquier skill de estrategia, redacción o auditoría, lee `MEMORIA.md` en la raíz del proyecto (si no existe, créala copiando `plantillas/memoria-negocio.md`).
+- **Reglas de rigor y privacidad:**
+  - Separa siempre **declarado**, **evidencia** (con fuente y fecha), **inferencia** e **hipótesis**. Nunca inventes cifras, precios, reseñas, certificaciones ni conversaciones reales.
+  - Nunca introduzcas datos personales reales de clientes ni secretos (`.env`, tokens, build hooks) en prompts o archivos públicos.
+  - **Doble modo sobre Sanity Studio:** si el MCP de Sanity (`npm run mcp`) está activo, lee antes los documentos actuales, pide confirmación antes de escribir y guarda **solo borradores (`drafts.*`)** respetando los 13 *singletons* sin publicar ni borrar nada sin permiso; si no hay MCP, entrega los textos listos para copiar y pegar con su ruta exacta en Sanity Studio.
 
 ## 1. Mapa del proyecto
 
