@@ -7,6 +7,8 @@ import { basename, join, resolve } from 'node:path';
 
 const MAX_FINDINGS = 100;
 const MAX_PER_CATEGORY_PER_FILE = 20;
+const MAX_TITLE_LENGTH = 70;
+const MAX_DESCRIPTION_LENGTH = 160;
 const SKIP_DIRS = new Set(['studio', 'node_modules', '.astro', '.git']);
 
 function fail(type, message, suggestion) {
@@ -94,6 +96,30 @@ function lineNumberAt(content, index) {
   return line;
 }
 
+function decodeHtmlEntities(text) {
+  const named = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'", '&nbsp;': ' ' };
+  return text
+    .replace(/&#(\d+);/g, (raw, dec) => {
+      const cp = Number(dec);
+      return cp <= 0x10ffff ? String.fromCodePoint(cp) : raw;
+    })
+    .replace(/&#x([0-9a-f]+);/gi, (raw, hex) => {
+      const cp = parseInt(hex, 16);
+      return cp <= 0x10ffff ? String.fromCodePoint(cp) : raw;
+    })
+    .replace(/&(?:amp|lt|gt|quot|apos|nbsp);/gi, (ent) => named[ent.toLowerCase()] ?? ent);
+}
+
+function normalizeText(text) {
+  return decodeHtmlEntities(text).replace(/\s+/g, ' ').trim();
+}
+
+function getAttr(tag, attrName) {
+  const re = new RegExp(`(?:^|\\s)${attrName}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s"'=<>\\x60]+))`, 'i');
+  const m = tag.match(re);
+  return m ? (m[1] ?? m[2] ?? m[3] ?? '') : null;
+}
+
 function analyzeHtml(file) {
   filesScanned++;
   console.error(`Analyzing: ${file}`);
@@ -104,11 +130,32 @@ function analyzeHtml(file) {
   if (!/charset=["']?utf-8/i.test(content)) warnings.push(`${file}:0: Missing or non-UTF-8 charset`);
   if (!/<meta[^>]+name=["']viewport["']/i.test(content)) issues.push(`${file}:0: Missing viewport meta tag`);
   if (!/<html[^>]*\blang=/i.test(content)) issues.push(`${file}:0: Missing lang attribute on <html>`);
-  if (!/<title>\s*[^<\s][^<]*<\/title>/i.test(content)) issues.push(`${file}:0: Missing or empty <title> tag`);
+
+  const titleMatch = content.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i);
+  const titleText = titleMatch ? normalizeText(titleMatch[1]) : '';
+  if (!titleText) {
+    issues.push(`${file}:0: Missing or empty <title> tag`);
+  } else if (titleText.length > MAX_TITLE_LENGTH) {
+    const ln = lineNumberAt(content, titleMatch.index ?? 0);
+    warnings.push(`${file}:${ln}: <title> exceeds ${MAX_TITLE_LENGTH} chars (${titleText.length})`);
+  }
 
   if (!isErrorOrRedirect) {
-    if (!/<meta[^>]+name=["']description["'][^>]+content=["'][^"']+["']|<meta[^>]+content=["'][^"']+["'][^>]+name=["']description["']/i.test(content)) {
+    let descMatch = null;
+    let descText = '';
+    for (const m of content.matchAll(/<meta\b[^>]*>/gi)) {
+      const name = getAttr(m[0], 'name');
+      if (name && name.toLowerCase() === 'description') {
+        descMatch = m;
+        descText = normalizeText(getAttr(m[0], 'content') ?? '');
+        break;
+      }
+    }
+    if (!descMatch || !descText) {
       warnings.push(`${file}:0: Missing or empty meta description`);
+    } else if (descText.length > MAX_DESCRIPTION_LENGTH) {
+      const ln = lineNumberAt(content, descMatch.index ?? 0);
+      warnings.push(`${file}:${ln}: Meta description exceeds ${MAX_DESCRIPTION_LENGTH} chars (${descText.length})`);
     }
     if (!/<h1\b[^>]*>/i.test(content)) {
       warnings.push(`${file}:0: Missing <h1> heading`);
