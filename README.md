@@ -45,8 +45,8 @@ Base común del curso (`COMM0006` / `IFCT029PO`). Reúne en un solo repositorio 
 
 ```text
 kit-negocio/
-├── .agents/skills/          # 12 skills del curso (Codex CLI y Antigravity CLI)
-├── .claude/skills/          # 12 skills del curso (Claude Code)
+├── .agents/skills/          # 13 skills del kit (Codex CLI y Antigravity CLI)
+├── .claude/skills/          # 13 skills del kit (Claude Code)
 ├── plantillas/              # Plantilla de memoria del negocio (memoria-negocio.md)
 ├── web/                     # Web pública (Astro)
 │   ├── src/data/negocio.json   # Contenido de ejemplo (se usa si no hay Sanity)
